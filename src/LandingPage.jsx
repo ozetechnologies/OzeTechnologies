@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Code2,
   Smartphone,
@@ -18,6 +18,7 @@ import {
   MessageCircle,
   Sun,
   Moon,
+  CheckCircle2,
 } from "lucide-react";
 
 export default function LandingPage() {
@@ -25,6 +26,14 @@ export default function LandingPage() {
   const [form, setForm] = useState({ name: "", email: "", brief: "" });
   const [sent, setSent] = useState(false);
   const [theme, setTheme] = useState("light"); // "light" | "dark"
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate real asset/boot time. Swap this for your actual "ready" signal
+    // (e.g. Promise.all of image preloads, or removing it once data has arrived).
+    const timer = setTimeout(() => setLoading(false), 1400);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -114,6 +123,21 @@ export default function LandingPage() {
     },
   ];
 
+  const heroChecks = [
+    { title: "Deep engineering expertise", desc: "Fintech, healthtech, logistics, and e-commerce systems" },
+    { title: "8 years, 120+ shipped projects", desc: "Long-term maintainability over quick launches" },
+    { title: "95% client retention", desc: "Teams that stay because the code holds up" },
+  ];
+
+  const clientLogos = [
+    "NORTHGATE",
+    "Ferra & Co.",
+    "VELIX",
+    "Marlowe Health",
+    "ORBIT LOGISTICS",
+    "Hearthstone",
+  ];
+
   return (
     <div data-theme={theme} style={{ background: "var(--bc-base)", color: "var(--bc-text)" }} className="min-h-screen w-full">
       <style>{`
@@ -129,6 +153,8 @@ export default function LandingPage() {
           --bc-amber: #b45309;
           --bc-nav-bg: rgba(255,255,255,0.85);
           --bc-btn-primary-text: #ffffff;
+          --bc-shadow: 0 1px 2px rgba(15,23,42,0.04), 0 8px 24px -12px rgba(15,23,42,0.12);
+          --bc-shadow-lg: 0 4px 6px rgba(15,23,42,0.03), 0 20px 40px -16px rgba(15,23,42,0.16);
         }
         [data-theme="dark"] {
           --bc-base: #0a1220;
@@ -142,10 +168,87 @@ export default function LandingPage() {
           --bc-amber: #f2a93b;
           --bc-nav-bg: rgba(10,18,32,0.85);
           --bc-btn-primary-text: #06121a;
+          --bc-shadow: 0 1px 2px rgba(0,0,0,0.2), 0 8px 24px -12px rgba(0,0,0,0.45);
+          --bc-shadow-lg: 0 4px 6px rgba(0,0,0,0.2), 0 20px 45px -16px rgba(0,0,0,0.55);
         }
         .bc-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
         .bc-display { font-family: 'Space Grotesk', 'Inter', sans-serif; }
         .bc-body { font-family: 'Inter', sans-serif; }
+
+        /* ---------- LOADING SCREEN ---------- */
+        .bc-loader-screen {
+          position: fixed;
+          inset: 0;
+          z-index: 999;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 22px;
+          background: var(--bc-base);
+          transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .bc-loader-screen.bc-loader-hidden {
+          opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
+        }
+        .bc-loader-mark {
+          position: relative;
+          width: 64px;
+          height: 64px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .bc-loader-ring {
+          position: absolute;
+          inset: 0;
+          border-radius: 999px;
+          border: 2.5px solid var(--bc-line);
+          border-top-color: var(--bc-cyan);
+          animation: bc-spin 0.9s linear infinite;
+        }
+        .bc-loader-square {
+          width: 16px;
+          height: 16px;
+          border: 2.5px solid var(--bc-cyan);
+          border-radius: 3px;
+          animation: bc-loader-pulse 1.4s ease-in-out infinite;
+        }
+        @keyframes bc-spin {
+          to { transform: rotate(360deg); }
+        }
+        @keyframes bc-loader-pulse {
+          0%, 100% { transform: scale(0.85); opacity: 0.6; }
+          50% { transform: scale(1.05); opacity: 1; }
+        }
+        .bc-loader-word {
+          display: flex;
+          align-items: baseline;
+          gap: 2px;
+        }
+        .bc-loader-label {
+          font-size: 0.68rem;
+          letter-spacing: 0.32em;
+          text-transform: uppercase;
+          color: var(--bc-muted);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .bc-loader-ring, .bc-loader-square { animation: none !important; }
+        }
+
+        .bc-page-content {
+          opacity: 0;
+          transform: translateY(6px);
+          transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .bc-page-content.bc-page-visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        /* ---------- /LOADING SCREEN ---------- */
+
         .bc-grid-bg {
           background-image:
             linear-gradient(var(--bc-line-soft) 1px, transparent 1px),
@@ -155,15 +258,18 @@ export default function LandingPage() {
         .bc-card {
           background: var(--bc-panel);
           border: 1px solid var(--bc-line);
-          transition: border-color 0.25s ease, transform 0.25s ease;
+          box-shadow: var(--bc-shadow);
+          transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
         }
         .bc-card:hover {
           border-color: var(--bc-cyan);
           transform: translateY(-3px);
+          box-shadow: var(--bc-shadow-lg);
         }
         .bc-btn-primary {
           background: var(--bc-cyan);
           color: var(--bc-btn-primary-text);
+          box-shadow: 0 8px 20px -8px color-mix(in srgb, var(--bc-cyan) 55%, transparent);
           transition: filter 0.2s ease, transform 0.2s ease;
         }
         .bc-btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
@@ -186,25 +292,34 @@ export default function LandingPage() {
           font-size: 0.72rem;
           color: var(--bc-amber);
         }
+        .bc-diagram-panel {
+          background: var(--bc-panel);
+          border: 1px solid var(--bc-line);
+          box-shadow: var(--bc-shadow-lg);
+          border-radius: 14px;
+        }
         .bc-corner {
           position: relative;
         }
         .bc-corner::before, .bc-corner::after {
           content: "";
           position: absolute;
-          width: 10px;
-          height: 10px;
+          width: 14px;
+          height: 14px;
           border-color: var(--bc-cyan);
+          opacity: 0.55;
         }
         .bc-corner::before {
-          top: -1px; left: -1px;
+          top: 10px; left: 10px;
           border-top: 2px solid var(--bc-cyan);
           border-left: 2px solid var(--bc-cyan);
+          border-radius: 3px 0 0 0;
         }
         .bc-corner::after {
-          bottom: -1px; right: -1px;
+          bottom: 10px; right: 10px;
           border-bottom: 2px solid var(--bc-cyan);
           border-right: 2px solid var(--bc-cyan);
+          border-radius: 0 0 3px 0;
         }
         @keyframes bc-flow {
           to { stroke-dashoffset: -200; }
@@ -217,6 +332,9 @@ export default function LandingPage() {
           0%, 100% { opacity: 0.55; }
           50% { opacity: 1; }
         }
+        .bc-node-rect {
+          filter: drop-shadow(0 3px 6px rgba(15,23,42,0.10));
+        }
         .bc-node { animation: bc-pulse-node 3s ease-in-out infinite; }
         .bc-marquee-track {
           display: flex;
@@ -227,11 +345,78 @@ export default function LandingPage() {
           from { transform: translateX(0); }
           to { transform: translateX(-50%); }
         }
+        .bc-logo-strip {
+          background: var(--bc-panel-2);
+          border: 1px solid var(--bc-line);
+          border-radius: 14px;
+        }
+        .bc-logo-item {
+          color: var(--bc-muted);
+          opacity: 0.75;
+          transition: opacity 0.2s ease, color 0.2s ease;
+          letter-spacing: 0.04em;
+        }
+        .bc-logo-item:hover { opacity: 1; color: var(--bc-text); }
+        .bc-hero-media {
+          position: relative;
+          border-radius: 20px;
+          overflow: hidden;
+          box-shadow: var(--bc-shadow-lg);
+          border: 1px solid var(--bc-line);
+          aspect-ratio: 4 / 3.1;
+          background: var(--bc-panel-2);
+        }
+        .bc-hero-media img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        .bc-hero-media::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg, rgba(15,23,42,0) 40%, rgba(6,15,26,0.55) 100%);
+        }
+        .bc-float-card {
+          position: absolute;
+          right: 20px;
+          bottom: -34px;
+          left: 20px;
+          background: var(--bc-panel);
+          border: 1px solid var(--bc-line);
+          border-radius: 14px;
+          box-shadow: var(--bc-shadow-lg);
+          padding: 20px 22px;
+        }
+        @media (min-width: 768px) {
+          .bc-float-card { left: auto; width: 300px; right: -28px; bottom: -30px; }
+        }
+        .bc-check-row + .bc-check-row { margin-top: 14px; }
+        .bc-check-dot {
+          width: 22px; height: 22px; border-radius: 999px;
+          background: var(--bc-cyan);
+          display: flex; align-items: center; justify-content: center;
+          flex-shrink: 0;
+        }
         @media (prefers-reduced-motion: reduce) {
           .bc-flow-line, .bc-node, .bc-marquee-track { animation: none !important; }
         }
       `}</style>
 
+      {/* LOADING SCREEN */}
+      <div className={`bc-loader-screen ${!loading ? "bc-loader-hidden" : ""}`} aria-hidden={!loading}>
+        <div className="bc-loader-mark">
+          <div className="bc-loader-ring" />
+          <div className="bc-loader-square" />
+        </div>
+        <div className="bc-loader-word">
+          <span className="bc-display font-bold text-lg" style={{ color: "var(--bc-text)" }}>Bluecode</span>
+        </div>
+        <div className="bc-loader-label bc-mono">Loading</div>
+      </div>
+
+      <div className={`bc-page-content ${!loading ? "bc-page-visible" : ""}`}>
       {/* NAV */}
       <header className="sticky top-0 z-50 border-b" style={{ borderColor: "var(--bc-line)", background: "var(--bc-nav-bg)", backdropFilter: "blur(8px)" }}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
@@ -276,17 +461,16 @@ export default function LandingPage() {
 
       {/* HERO */}
       <section className="bc-grid-bg relative overflow-hidden border-b" style={{ borderColor: "var(--bc-line)" }}>
-        <div className="max-w-7xl mx-auto px-6 py-20 md:py-28 grid md:grid-cols-2 gap-14 items-center">
+        <div className="max-w-7xl mx-auto px-6 pt-20 md:pt-28 pb-14 md:pb-16 grid md:grid-cols-2 gap-14 items-center">
           <div>
-            <div className="bc-mono bc-eyebrow mb-5">Software engineering partner</div>
+            <div className="bc-mono bc-eyebrow mb-5">Your Business IT Partner</div>
             <h1 className="bc-display font-bold text-4xl md:text-5xl leading-tight mb-6">
-              We architect software the way engineers architect buildings —
-              <span style={{ color: "var(--bc-cyan)" }}> deliberately, load-tested, built to hold weight.</span>
+              Software that runs your business —
+              <span style={{ color: "var(--bc-cyan)" }}> not the other way around.</span>
             </h1>
             <p className="bc-body text-base md:text-lg mb-8" style={{ color: "var(--bc-muted)" }}>
-              Bluecode designs and builds custom software, web platforms, and mobile
-              apps for companies who need systems that still run cleanly two years
-              after launch.
+              Bluecode partners with growing businesses to build custom software,
+              web platforms, and mobile apps that stay reliable long after launch.
             </p>
             <div className="flex flex-wrap gap-4">
               <a href="#contact" className="bc-btn-primary bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
@@ -298,46 +482,49 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Signature: animated architecture diagram */}
-          <div className="bc-corner p-4 md:p-6" style={{ background: "var(--bc-panel)", border: "1px solid var(--bc-line)" }}>
-            <svg viewBox="0 0 460 360" className="w-full h-auto" role="img" aria-label="Animated system architecture diagram">
-              <g stroke="var(--bc-line)" strokeWidth="1.5" fill="none">
-                <path className="bc-flow-line" stroke="var(--bc-cyan)" d="M80 60 L80 160" />
-                <path className="bc-flow-line" stroke="var(--bc-cyan)" d="M230 60 L230 160" />
-                <path className="bc-flow-line" stroke="var(--bc-cyan)" d="M380 60 L380 160" />
-                <path className="bc-flow-line" stroke="var(--bc-amber)" d="M80 160 L230 220" />
-                <path className="bc-flow-line" stroke="var(--bc-amber)" d="M230 160 L230 220" />
-                <path className="bc-flow-line" stroke="var(--bc-amber)" d="M380 160 L230 220" />
-                <path className="bc-flow-line" stroke="var(--bc-cyan)" d="M230 220 L230 300" />
-              </g>
-
-              {[
-                { x: 80, y: 40, label: "Client" },
-                { x: 230, y: 40, label: "Mobile" },
-                { x: 380, y: 40, label: "Partner API" },
-              ].map((n, i) => (
-                <g key={i}>
-                  <rect className="bc-node" x={n.x - 38} y={n.y} width="76" height="34" rx="4" fill="var(--bc-panel-2)" stroke="var(--bc-line)" />
-                  <text x={n.x} y={n.y + 22} textAnchor="middle" fontSize="11" fontFamily="JetBrains Mono, monospace" fill="var(--bc-text)">{n.label}</text>
-                </g>
+          {/* Hero visual: photo + overlapping floating checklist card */}
+          <div className="relative pb-10 md:pb-0 md:pr-8">
+            <div className="bc-hero-media">
+              <img
+                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop"
+                alt="Bluecode engineering team at work"
+                referrerPolicy="no-referrer"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src =
+                    "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1200&auto=format&fit=crop";
+                }}
+              />
+            </div>
+            <div className="bc-float-card">
+              {heroChecks.map((c, i) => (
+                <div key={i} className="bc-check-row flex items-start gap-3">
+                  <span className="bc-check-dot mt-0.5">
+                    <CheckCircle2 size={14} color="var(--bc-btn-primary-text)" />
+                  </span>
+                  <div>
+                    <div className="bc-body font-semibold text-sm leading-tight">{c.title}</div>
+                    <div className="bc-body text-xs mt-0.5" style={{ color: "var(--bc-muted)" }}>{c.desc}</div>
+                  </div>
+                </div>
               ))}
+            </div>
+          </div>
+        </div>
 
-              <g>
-                <rect className="bc-node" x={230 - 60} y="160" width="120" height="40" rx="4" fill="var(--bc-panel-2)" stroke="var(--bc-cyan)" strokeWidth="1.5" />
-                <text x="230" y="185" textAnchor="middle" fontSize="12" fontFamily="JetBrains Mono, monospace" fill="var(--bc-cyan)">Gateway</text>
-              </g>
-
-              <g>
-                <rect className="bc-node" x={230 - 55} y="220" width="110" height="36" rx="4" fill="var(--bc-panel-2)" stroke="var(--bc-line)" />
-                <text x="230" y="243" textAnchor="middle" fontSize="11" fontFamily="JetBrains Mono, monospace" fill="var(--bc-text)">Services</text>
-              </g>
-
-              <g>
-                <rect className="bc-node" x={230 - 45} y="300" width="90" height="34" rx="4" fill="var(--bc-panel-2)" stroke="var(--bc-line)" />
-                <text x="230" y="322" textAnchor="middle" fontSize="11" fontFamily="JetBrains Mono, monospace" fill="var(--bc-text)">Database</text>
-              </g>
-            </svg>
-            <div className="bc-mono text-xs mt-2" style={{ color: "var(--bc-muted)" }}>fig. 01 — typical service architecture</div>
+        {/* TRUST BAR */}
+        <div className="max-w-7xl mx-auto px-6 pb-16 md:pb-20">
+          <div className="bc-logo-strip px-6 md:px-10 py-6 md:py-7">
+            <div className="bc-mono text-[0.68rem] tracking-widest uppercase mb-4 text-center md:text-left" style={{ color: "var(--bc-muted)" }}>
+              Trusted by engineering teams at
+            </div>
+            <div className="flex flex-wrap items-center justify-center md:justify-between gap-x-10 gap-y-4">
+              {clientLogos.map((name, i) => (
+                <span key={i} className="bc-logo-item bc-display font-semibold text-base md:text-lg whitespace-nowrap">
+                  {name}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -446,7 +633,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="bc-corner p-6 rounded-lg" style={{ background: "var(--bc-panel-2)", border: "1px solid var(--bc-line)" }}>
+          <form onSubmit={handleSubmit} className="bc-corner p-6 rounded-lg" style={{ background: "var(--bc-panel-2)", border: "1px solid var(--bc-line)", boxShadow: "var(--bc-shadow)" }}>
             {sent ? (
               <div className="bc-body text-sm">
                 <p className="font-semibold mb-1" style={{ color: "var(--bc-cyan)" }}>Message sent.</p>
@@ -545,6 +732,7 @@ export default function LandingPage() {
           © 2026 Bluecode. All rights reserved.
         </div>
       </footer>
+      </div>
     </div>
   );
 }
