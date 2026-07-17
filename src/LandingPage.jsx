@@ -16,17 +16,22 @@ import {
   Link2,
   Globe2,
   MessageCircle,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", brief: "" });
   const [sent, setSent] = useState(false);
+  const [theme, setTheme] = useState("light"); // "light" | "dark"
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setSent(true);
   };
+
+  const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
 
   const services = [
     {
@@ -110,9 +115,22 @@ export default function LandingPage() {
   ];
 
   return (
-    <div style={{ background: "var(--bc-base)", color: "var(--bc-text)" }} className="min-h-screen w-full">
+    <div data-theme={theme} style={{ background: "var(--bc-base)", color: "var(--bc-text)" }} className="min-h-screen w-full">
       <style>{`
-        :root {
+        [data-theme="light"] {
+          --bc-base: #f7f9fc;
+          --bc-panel: #ffffff;
+          --bc-panel-2: #f1f5f9;
+          --bc-line: #e2e8f0;
+          --bc-line-soft: #edf2f7;
+          --bc-text: #0f172a;
+          --bc-muted: #64748b;
+          --bc-cyan: #0d9488;
+          --bc-amber: #b45309;
+          --bc-nav-bg: rgba(255,255,255,0.85);
+          --bc-btn-primary-text: #ffffff;
+        }
+        [data-theme="dark"] {
           --bc-base: #0a1220;
           --bc-panel: #0f1b2d;
           --bc-panel-2: #101d31;
@@ -122,6 +140,8 @@ export default function LandingPage() {
           --bc-muted: #8fa1b8;
           --bc-cyan: #5eead4;
           --bc-amber: #f2a93b;
+          --bc-nav-bg: rgba(10,18,32,0.85);
+          --bc-btn-primary-text: #06121a;
         }
         .bc-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
         .bc-display { font-family: 'Space Grotesk', 'Inter', sans-serif; }
@@ -143,7 +163,7 @@ export default function LandingPage() {
         }
         .bc-btn-primary {
           background: var(--bc-cyan);
-          color: #06121a;
+          color: var(--bc-btn-primary-text);
           transition: filter 0.2s ease, transform 0.2s ease;
         }
         .bc-btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
@@ -153,6 +173,13 @@ export default function LandingPage() {
           transition: border-color 0.2s ease, background 0.2s ease;
         }
         .bc-btn-ghost:hover { border-color: var(--bc-cyan); background: rgba(94,234,212,0.06); }
+        .bc-theme-toggle {
+          border: 1px solid var(--bc-line);
+          color: var(--bc-text);
+          background: var(--bc-panel-2);
+          transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .bc-theme-toggle:hover { border-color: var(--bc-cyan); transform: translateY(-1px); }
         .bc-eyebrow {
           letter-spacing: 0.14em;
           text-transform: uppercase;
@@ -206,25 +233,35 @@ export default function LandingPage() {
       `}</style>
 
       {/* NAV */}
-      <header className="sticky top-0 z-50 border-b" style={{ borderColor: "var(--bc-line)", background: "rgba(10,18,32,0.85)", backdropFilter: "blur(8px)" }}>
+      <header className="sticky top-0 z-50 border-b" style={{ borderColor: "var(--bc-line)", background: "var(--bc-nav-bg)", backdropFilter: "blur(8px)" }}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
           <div className="flex items-center gap-2 bc-display font-bold text-lg">
             <span style={{ color: "var(--bc-cyan)" }}>&#9634;</span>
             Bluecode
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm bc-body" style={{ color: "var(--bc-muted)" }}>
-            <a href="#services" className="hover:text-white transition-colors">Services</a>
-            <a href="#work" className="hover:text-white transition-colors">Work</a>
-            <a href="#industries" className="hover:text-white transition-colors">Industries</a>
-            <a href="#testimonials" className="hover:text-white transition-colors">Clients</a>
-            <a href="#contact" className="hover:text-white transition-colors">Contact</a>
+            <a href="#services" className="hover:text-[var(--bc-text)] transition-colors">Services</a>
+            <a href="#work" className="hover:text-[var(--bc-text)] transition-colors">Work</a>
+            <a href="#industries" className="hover:text-[var(--bc-text)] transition-colors">Industries</a>
+            <a href="#testimonials" className="hover:text-[var(--bc-text)] transition-colors">Clients</a>
+            <a href="#contact" className="hover:text-[var(--bc-text)] transition-colors">Contact</a>
           </nav>
-          <a href="#contact" className="hidden md:inline-flex bc-btn-primary bc-body text-sm font-semibold px-4 py-2 rounded">
-            Start a project
-          </a>
-          <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
-            {menuOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={toggleTheme}
+              className="bc-theme-toggle w-9 h-9 rounded-full flex items-center justify-center"
+              aria-label="Toggle dark/light theme"
+              title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+            >
+              {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
+            </button>
+            <a href="#contact" className="hidden md:inline-flex bc-btn-primary bc-body text-sm font-semibold px-4 py-2 rounded">
+              Start a project
+            </a>
+            <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
+              {menuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
         </div>
         {menuOpen && (
           <div className="md:hidden px-6 pb-4 flex flex-col gap-3 text-sm bc-body" style={{ color: "var(--bc-muted)" }}>
