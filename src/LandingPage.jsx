@@ -31,6 +31,8 @@ import {
   Truck,
   GraduationCap,
   Home as HomeIcon,
+  Menu,
+  X,
 } from "lucide-react";
 
 export default function LandingPage() {
@@ -40,6 +42,7 @@ export default function LandingPage() {
   const [loading, setLoading] = useState(true);
   const [activeProductTab, setActiveProductTab] = useState(0);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     // Simulate real asset/boot time. Swap this for your actual "ready" signal
@@ -54,6 +57,13 @@ export default function LandingPage() {
     window.addEventListener("click", closeIt);
     return () => window.removeEventListener("click", closeIt);
   }, [openDropdown]);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -945,21 +955,19 @@ export default function LandingPage() {
           white-space: nowrap;
         }
         .bc-navbar-links {
-          display: flex;
-          align-items: center;
-          gap: 18px;
-          padding: 0 6px;
-          flex: 1;
-          min-width: 0;
-          justify-content: flex-start;
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-          -webkit-mask-image: linear-gradient(90deg, transparent 0, black 14px, black calc(100% - 14px), transparent 100%);
-          mask-image: linear-gradient(90deg, transparent 0, black 14px, black calc(100% - 14px), transparent 100%);
+          display: none;
         }
-        .bc-navbar-links::-webkit-scrollbar { display: none; }
+        @media (min-width: 768px) {
+          .bc-navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+            padding: 0 10px;
+            flex: 1;
+            min-width: 0;
+            justify-content: center;
+          }
+        }
         .bc-navbar-link {
           color: rgba(241,245,249,0.68);
           font-size: 0.82rem;
@@ -980,18 +988,10 @@ export default function LandingPage() {
           gap: 4px;
         }
         @media (min-width: 768px) {
-          .bc-navbar-links {
-            gap: 26px;
-            padding: 0 10px;
-            justify-content: center;
-            overflow-x: visible;
-            -webkit-mask-image: none;
-            mask-image: none;
-          }
           .bc-navbar-link { font-size: 0.88rem; }
         }
 
-        /* ---------- NAV DROPDOWNS ---------- */
+        /* ---------- NAV DROPDOWNS (desktop) ---------- */
         .bc-nav-dropdown-wrap {
           position: relative;
           flex-shrink: 0;
@@ -1087,6 +1087,107 @@ export default function LandingPage() {
         @media (min-width: 768px) {
           .bc-navbar-cta { padding: 9px 18px; font-size: 0.82rem; }
         }
+
+        /* ---------- MOBILE HAMBURGER MENU ---------- */
+        .bc-navbar-hamburger {
+          display: flex;
+          width: 34px;
+          height: 34px;
+          border-radius: 999px;
+          background: rgba(255,255,255,0.07);
+          border: 1px solid rgba(255,255,255,0.1);
+          color: #f1f5f9;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          cursor: pointer;
+        }
+        @media (min-width: 768px) {
+          .bc-navbar-hamburger { display: none; }
+        }
+        .bc-mobile-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.55);
+          z-index: 90;
+          opacity: 0;
+          visibility: hidden;
+          transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+        .bc-mobile-overlay.bc-mobile-open {
+          opacity: 1;
+          visibility: visible;
+        }
+        .bc-mobile-panel {
+          position: fixed;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          width: 80%;
+          max-width: 300px;
+          background: #0b1220;
+          z-index: 95;
+          padding: 26px 22px;
+          transform: translateX(100%);
+          transition: transform 0.3s ease;
+          overflow-y: auto;
+          display: flex;
+          flex-direction: column;
+        }
+        .bc-mobile-panel.bc-mobile-open {
+          transform: translateX(0);
+        }
+        @media (min-width: 768px) {
+          .bc-mobile-overlay, .bc-mobile-panel { display: none; }
+        }
+        .bc-mobile-panel-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 28px;
+        }
+        .bc-mobile-close {
+          width: 34px;
+          height: 34px;
+          border-radius: 999px;
+          background: rgba(255,255,255,0.07);
+          border: 1px solid rgba(255,255,255,0.1);
+          color: #f1f5f9;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          flex-shrink: 0;
+        }
+        .bc-mobile-link {
+          color: #f1f5f9;
+          font-size: 1rem;
+          font-weight: 600;
+          text-decoration: none;
+          padding: 14px 4px;
+          border-bottom: 1px solid rgba(255,255,255,0.08);
+          display: block;
+        }
+        .bc-mobile-sublink {
+          color: rgba(241,245,249,0.68);
+          font-size: 0.88rem;
+          text-decoration: none;
+          padding: 10px 4px 10px 14px;
+          display: block;
+        }
+        .bc-mobile-cta {
+          margin-top: auto;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          background: var(--bc-cyan, #5eead4);
+          color: #06121a;
+          border-radius: 999px;
+          padding: 12px 20px;
+          font-weight: 600;
+          text-decoration: none;
+        }
       `}</style>
 
       {/* LOADING SCREEN */}
@@ -1166,6 +1267,13 @@ export default function LandingPage() {
               >
                 {theme === "light" ? <Moon size={15} /> : <Sun size={15} />}
               </button>
+              <button
+                className="bc-navbar-hamburger"
+                aria-label="Open menu"
+                onClick={() => setMobileMenuOpen(true)}
+              >
+                <Menu size={17} />
+              </button>
             </div>
           </div>
 
@@ -1173,6 +1281,55 @@ export default function LandingPage() {
             Consultancy
           </a>
         </div>
+      </div>
+
+      {/* MOBILE MENU */}
+      <div
+        className={`bc-mobile-overlay ${mobileMenuOpen ? "bc-mobile-open" : ""}`}
+        onClick={() => setMobileMenuOpen(false)}
+      />
+      <div className={`bc-mobile-panel ${mobileMenuOpen ? "bc-mobile-open" : ""}`}>
+        <div className="bc-mobile-panel-header">
+          <span className="bc-navbar-name bc-display">Bluecode</span>
+          <button
+            className="bc-mobile-close"
+            aria-label="Close menu"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <X size={17} />
+          </button>
+        </div>
+        <div>
+          {navItems.map((item, i) => (
+            <div key={i}>
+              <a
+                href={item.href}
+                className="bc-mobile-link"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {item.label}
+              </a>
+              {item.dropdown &&
+                item.dropdown.map((sub, j) => (
+                  <a
+                    key={j}
+                    href={sub.href}
+                    className="bc-mobile-sublink"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {sub.label}
+                  </a>
+                ))}
+            </div>
+          ))}
+        </div>
+        <a
+          href="#contact"
+          className="bc-mobile-cta"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          Consultancy
+        </a>
       </div>
 
 
