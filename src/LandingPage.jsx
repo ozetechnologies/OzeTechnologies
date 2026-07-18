@@ -8,26 +8,38 @@ import {
   Layers,
   ArrowRight,
   ArrowUpRight,
-  Menu,
-  X,
+  ChevronDown,
   Mail,
   MapPin,
   Phone,
+  User,
+  Send,
+  PenLine,
+  Cpu,
+  Rocket,
+  Users,
+  Package,
   Link2,
   Globe2,
   MessageCircle,
   Sun,
   Moon,
-  CheckCircle2,
+  Quote,
+  Landmark,
+  HeartPulse,
+  ShoppingCart,
+  Truck,
+  GraduationCap,
+  Home as HomeIcon,
 } from "lucide-react";
 
 export default function LandingPage() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", brief: "" });
   const [sent, setSent] = useState(false);
   const [theme, setTheme] = useState("light"); // "light" | "dark"
   const [loading, setLoading] = useState(true);
   const [activeProductTab, setActiveProductTab] = useState(0);
+  const [openDropdown, setOpenDropdown] = useState(null);
 
   useEffect(() => {
     // Simulate real asset/boot time. Swap this for your actual "ready" signal
@@ -35,6 +47,13 @@ export default function LandingPage() {
     const timer = setTimeout(() => setLoading(false), 1400);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (!openDropdown) return;
+    const closeIt = () => setOpenDropdown(null);
+    window.addEventListener("click", closeIt);
+    return () => window.removeEventListener("click", closeIt);
+  }, [openDropdown]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -46,12 +65,30 @@ export default function LandingPage() {
   // Navbar items
   const navItems = [
     { label: "Home", href: "#home" },
-    { label: "Products", href: "#products" },
-    { label: "Projects", href: "#projects" },
+    {
+      label: "Products",
+      href: "#products",
+      dropdown: [
+        { label: "IT Development", desc: "Software, web & mobile builds", href: "#products" },
+        { label: "Specialized Solutions", desc: "AI, fintech & platform work", href: "#products" },
+        { label: "View all products", href: "#products" },
+      ],
+    },
+    {
+      label: "Projects",
+      href: "#projects",
+      dropdown: [
+        { label: "Fintech", href: "#projects" },
+        { label: "Healthcare", href: "#projects" },
+        { label: "E-commerce", href: "#projects" },
+        { label: "View all projects", href: "#projects" },
+      ],
+    },
     { label: "Blogs", href: "#blogs" },
     { label: "About Us", href: "#about" },
     { label: "Contact", href: "#contact" },
   ];
+
 
   const services = [
     {
@@ -126,13 +163,14 @@ export default function LandingPage() {
     { value: "95%", label: "Client retention" },
   ];
 
+  // Industries: each with an icon and a signature color for the card + orbit node
   const industries = [
-    "Fintech",
-    "Healthcare",
-    "E-commerce",
-    "Logistics",
-    "Education",
-    "Real Estate",
+    { label: "Fintech", Icon: Landmark, color: "#8b7ff0" },
+    { label: "Healthcare", Icon: HeartPulse, color: "#34d399" },
+    { label: "E-commerce", Icon: ShoppingCart, color: "#38bdf8" },
+    { label: "Logistics", Icon: Truck, color: "#f2a93b" },
+    { label: "Education", Icon: GraduationCap, color: "#8b7ff0" },
+    { label: "Real Estate", Icon: HomeIcon, color: "#38bdf8" },
   ];
 
   const stack = [
@@ -152,25 +190,37 @@ export default function LandingPage() {
         "They shipped our claims portal in twelve weeks and it's been in production, untouched, for a year.",
       name: "Operations Director",
       company: "Regional Insurer",
+      Icon: ShieldCheck,
+      color: "#f2795a",
     },
     {
       quote:
         "The team writes code like they'll be the ones on call for it. Because they are.",
       name: "VP Engineering",
       company: "Logistics Platform",
+      Icon: Truck,
+      color: "#38bdf8",
     },
     {
       quote:
         "We came in with a rough sketch. We left with an architecture doc, a working app, and a team that still answers our emails.",
       name: "Founder",
       company: "Healthtech Startup",
+      Icon: HeartPulse,
+      color: "#34d399",
     },
   ];
 
   const heroChecks = [
-    { title: "Deep engineering expertise", desc: "Fintech, healthtech, logistics, and e-commerce systems" },
-    { title: "8 years, 120+ shipped projects", desc: "Long-term maintainability over quick launches" },
-    { title: "95% client retention", desc: "Teams that stay because the code holds up" },
+    { title: "Deep engineering expertise", desc: "Fintech, healthtech, logistics, and e-commerce systems", Icon: Cpu },
+    { title: "8 years, 120+ shipped projects", desc: "Long-term maintainability over quick launches", Icon: Rocket },
+    { title: "95% client retention", desc: "Teams that stay because the code holds up", Icon: Users },
+  ];
+
+  const heroStats = [
+    { value: "8+", label: "Years of experience", Icon: Rocket },
+    { value: "120+", label: "Projects shipped", Icon: Package },
+    { value: "95%", label: "Client retention", Icon: Users },
   ];
 
   const clientLogos = [
@@ -199,6 +249,7 @@ export default function LandingPage() {
           --bc-amber: #b45309;
           --bc-nav-bg: rgba(255,255,255,0.85);
           --bc-btn-primary-text: #ffffff;
+          --bc-band: color-mix(in srgb, var(--bc-cyan) 7%, var(--bc-base));
           --bc-shadow: 0 1px 2px rgba(15,23,42,0.04), 0 8px 24px -12px rgba(15,23,42,0.12);
           --bc-shadow-lg: 0 4px 6px rgba(15,23,42,0.03), 0 20px 40px -16px rgba(15,23,42,0.16);
         }
@@ -214,6 +265,7 @@ export default function LandingPage() {
           --bc-amber: #f2a93b;
           --bc-nav-bg: rgba(10,18,32,0.85);
           --bc-btn-primary-text: #06121a;
+          --bc-band: color-mix(in srgb, var(--bc-cyan) 9%, var(--bc-base));
           --bc-shadow: 0 1px 2px rgba(0,0,0,0.2), 0 8px 24px -12px rgba(0,0,0,0.45);
           --bc-shadow-lg: 0 4px 6px rgba(0,0,0,0.2), 0 20px 45px -16px rgba(0,0,0,0.55);
         }
@@ -418,11 +470,15 @@ export default function LandingPage() {
           object-fit: cover;
           display: block;
         }
-        .bc-hero-media::after {
-          content: "";
+        .bc-hero-media-dots {
           position: absolute;
-          inset: 0;
-          background: linear-gradient(180deg, rgba(15,23,42,0) 40%, rgba(6,15,26,0.55) 100%);
+          top: 16px;
+          right: 16px;
+          width: 44px;
+          height: 64px;
+          background-image: radial-gradient(rgba(255,255,255,0.55) 1px, transparent 1px);
+          background-size: 8px 8px;
+          z-index: 2;
         }
         .bc-float-card {
           position: absolute;
@@ -434,9 +490,10 @@ export default function LandingPage() {
           border-radius: 14px;
           box-shadow: var(--bc-shadow-lg);
           padding: 20px 22px;
+          z-index: 2;
         }
         @media (min-width: 768px) {
-          .bc-float-card { left: auto; width: 300px; right: -28px; bottom: -30px; }
+          .bc-float-card { left: auto; width: 340px; right: -40px; bottom: -56px; }
         }
         .bc-check-row + .bc-check-row { margin-top: 14px; }
         .bc-check-dot {
@@ -511,6 +568,525 @@ export default function LandingPage() {
           transition: transform 0.2s ease, filter 0.2s ease;
         }
         .bc-cta-btn:hover { transform: translateY(-1px); filter: brightness(0.96); }
+
+        /* ---------- INDUSTRIES: cards + orbit globe ---------- */
+        .bc-industry-underline {
+          width: 46px;
+          height: 3px;
+          border-radius: 2px;
+          background: var(--bc-cyan);
+        }
+        .bc-industry-card {
+          background: var(--bc-panel);
+          border: 1px solid var(--bc-line);
+          border-radius: 12px;
+          padding: 18px 14px;
+          box-shadow: var(--bc-shadow);
+          transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .bc-industry-card:hover {
+          transform: translateY(-3px);
+          border-color: var(--bc-cyan);
+          box-shadow: var(--bc-shadow-lg);
+        }
+        .bc-industry-icon {
+          width: 44px;
+          height: 44px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 12px;
+        }
+        .bc-orbit-wrap {
+          position: relative;
+          width: 100%;
+          max-width: 420px;
+          aspect-ratio: 1 / 1;
+          margin: 0 auto;
+        }
+        .bc-orbit-globe {
+          position: absolute;
+          inset: 15%;
+          border-radius: 50%;
+        }
+        .bc-orbit-ring {
+          position: absolute;
+          inset: 2%;
+          border-radius: 50%;
+          border: 1px dashed var(--bc-line);
+        }
+        .bc-orbit-node {
+          position: absolute;
+          width: 58px;
+          height: 58px;
+          margin: -29px;
+          border-radius: 50%;
+          background: var(--bc-panel);
+          border-width: 1.5px;
+          border-style: solid;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: var(--bc-shadow);
+        }
+        .bc-orbit-dot {
+          position: absolute;
+          width: 6px;
+          height: 6px;
+          margin: -3px;
+          border-radius: 50%;
+          animation: bc-pulse-node 2.4s ease-in-out infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .bc-orbit-dot { animation: none; }
+        }
+
+        /* ---------- TESTIMONIALS / CLIENTS ---------- */
+        .bc-underline-fade {
+          width: 220px;
+          max-width: 60%;
+          height: 2px;
+          background: linear-gradient(90deg, var(--bc-cyan), transparent);
+        }
+        .bc-testimonial-card {
+          position: relative;
+          background: var(--bc-panel);
+          border: 1px solid var(--bc-line);
+          border-radius: 16px;
+          padding: 26px 24px 22px;
+          box-shadow: var(--bc-shadow);
+          transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .bc-testimonial-card::after {
+          content: "";
+          position: absolute;
+          left: 16px;
+          right: 16px;
+          bottom: -1px;
+          height: 2px;
+          border-radius: 2px;
+          background: linear-gradient(90deg, transparent, var(--bc-tcolor, var(--bc-cyan)), transparent);
+          opacity: 0.7;
+        }
+        .bc-testimonial-card:hover {
+          transform: translateY(-3px);
+          box-shadow: var(--bc-shadow-lg);
+        }
+        .bc-quote-badge {
+          width: 40px;
+          height: 40px;
+          border-radius: 999px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 18px;
+        }
+        .bc-testimonial-divider {
+          height: 1px;
+          background: var(--bc-line);
+          margin: 18px 0 16px;
+        }
+        .bc-testimonial-avatar {
+          width: 42px;
+          height: 42px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        /* ---------- CONTACT: glow card + icon badges ---------- */
+        .bc-contact-highlight { color: var(--bc-cyan); }
+        .bc-contact-divider {
+          position: relative;
+          height: 1px;
+          background: var(--bc-line);
+          margin: 28px 0 26px;
+          max-width: 340px;
+        }
+        .bc-contact-divider::after {
+          content: "";
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 6px;
+          height: 6px;
+          border-radius: 999px;
+          background: var(--bc-cyan);
+          transform: translate(-50%, -50%);
+          box-shadow: 0 0 10px 2px color-mix(in srgb, var(--bc-cyan) 60%, transparent);
+        }
+        .bc-contact-info-row {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+        }
+        .bc-contact-info-row + .bc-contact-info-row { margin-top: 18px; }
+        .bc-contact-icon-circle {
+          width: 44px;
+          height: 44px;
+          border-radius: 999px;
+          background: color-mix(in srgb, var(--bc-cyan) 14%, transparent);
+          border: 1px solid color-mix(in srgb, var(--bc-cyan) 35%, transparent);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+        .bc-contact-form-card {
+          position: relative;
+          border-radius: 20px;
+          padding: 32px;
+          background: var(--bc-panel);
+          border: 1px solid color-mix(in srgb, var(--bc-cyan) 30%, var(--bc-line));
+          box-shadow: var(--bc-shadow-lg), 0 0 40px -12px color-mix(in srgb, var(--bc-cyan) 35%, transparent);
+        }
+        .bc-input-wrap { position: relative; }
+        .bc-input-icon {
+          position: absolute;
+          right: 14px;
+          top: 14px;
+          color: var(--bc-muted);
+          pointer-events: none;
+        }
+        .bc-input-icon-area { top: 14px; }
+        .bc-contact-input {
+          width: 100%;
+          background: var(--bc-panel-2);
+          border: 1px solid var(--bc-line);
+          border-radius: 10px;
+          padding: 12px 40px 12px 14px;
+          font-size: 0.9rem;
+          outline: none;
+          transition: border-color 0.2s ease;
+        }
+        .bc-contact-input:focus { border-color: var(--bc-cyan); }
+        .bc-send-btn {
+          width: 100%;
+          border: none;
+          border-radius: 10px;
+          padding: 14px 20px;
+          font-weight: 600;
+          color: var(--bc-btn-primary-text);
+          background: linear-gradient(90deg, var(--bc-cyan), color-mix(in srgb, var(--bc-cyan) 60%, #14b8a6));
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          cursor: pointer;
+          transition: filter 0.2s ease, transform 0.2s ease;
+        }
+        .bc-send-btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
+        .bc-trust-line {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-top: 16px;
+          font-size: 0.78rem;
+          color: var(--bc-muted);
+        }
+
+        /* ---------- HERO DECORATIONS ---------- */
+        .bc-hero-badge-line1 {
+          font-family: 'JetBrains Mono', ui-monospace, monospace;
+          font-size: 0.78rem;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: var(--bc-muted);
+          margin-bottom: 4px;
+        }
+        .bc-hero-badge-line2 {
+          font-family: 'Space Grotesk', 'Inter', sans-serif;
+          font-weight: 700;
+          font-size: 1.5rem;
+          letter-spacing: 0.01em;
+          background: linear-gradient(90deg, var(--bc-cyan), var(--bc-amber), var(--bc-cyan));
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: bc-badge-shimmer 5s linear infinite;
+        }
+        @keyframes bc-badge-shimmer {
+          to { background-position: 200% center; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .bc-hero-badge-line2 { animation: none; }
+        }
+        .bc-hero-decor-dots {
+          position: absolute;
+          top: 8px;
+          left: 8px;
+          width: 100px;
+          height: 64px;
+          background-image: radial-gradient(var(--bc-cyan) 1px, transparent 1px);
+          background-size: 11px 11px;
+          opacity: 0.3;
+          pointer-events: none;
+        }
+        .bc-hero-wave {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 360px;
+          max-width: 60%;
+          height: auto;
+          opacity: 0.4;
+          pointer-events: none;
+        }
+        .bc-hero-media-wrap { position: relative; }
+        .bc-hero-blob {
+          position: absolute;
+          top: -46px;
+          right: -46px;
+          width: 260px;
+          height: 260px;
+          border-radius: 50%;
+          background: color-mix(in srgb, var(--bc-cyan) 18%, transparent);
+          z-index: 0;
+        }
+        .bc-float-row {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          padding: 11px 0;
+        }
+        .bc-float-row + .bc-float-row { border-top: 1px solid var(--bc-line); }
+        .bc-float-row-icon {
+          width: 38px;
+          height: 38px;
+          border-radius: 999px;
+          background: color-mix(in srgb, var(--bc-cyan) 14%, transparent);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+        .bc-hero-stats-row {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          margin-top: 30px;
+        }
+        .bc-hero-stat-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 0 20px;
+        }
+        .bc-hero-stat-item:first-child { padding-left: 0; }
+        .bc-hero-stat-divider {
+          width: 1px;
+          height: 30px;
+          background: var(--bc-line);
+        }
+        .bc-hero-stat-icon {
+          width: 34px;
+          height: 34px;
+          border-radius: 10px;
+          background: color-mix(in srgb, var(--bc-cyan) 14%, transparent);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        /* ---------- FLOATING PILL NAVBAR ---------- */
+        .bc-navbar-wrap {
+          display: flex;
+          justify-content: center;
+          padding: 16px 20px 0;
+        }
+        .bc-navbar-row {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          width: 100%;
+          max-width: 820px;
+        }
+        .bc-navbar-pill {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          flex: 1;
+          min-width: 0;
+          background: #0b1220;
+          border: 1px solid rgba(255,255,255,0.06);
+          border-radius: 999px;
+          padding: 6px 8px 6px 6px;
+          box-shadow: 0 10px 30px -10px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.25);
+        }
+        .bc-navbar-brand {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex-shrink: 0;
+          text-decoration: none;
+        }
+        .bc-navbar-logo {
+          width: 38px;
+          height: 38px;
+          flex-shrink: 0;
+          border-radius: 999px;
+          background: var(--bc-cyan);
+          color: #06121a;
+          font-weight: 700;
+          font-size: 1.05rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .bc-navbar-name {
+          color: #ffffff;
+          font-weight: 700;
+          font-size: 1rem;
+          white-space: nowrap;
+        }
+        .bc-navbar-links {
+          display: flex;
+          align-items: center;
+          gap: 18px;
+          padding: 0 6px;
+          flex: 1;
+          min-width: 0;
+          justify-content: flex-start;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          -webkit-mask-image: linear-gradient(90deg, transparent 0, black 14px, black calc(100% - 14px), transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, black 14px, black calc(100% - 14px), transparent 100%);
+        }
+        .bc-navbar-links::-webkit-scrollbar { display: none; }
+        .bc-navbar-link {
+          color: rgba(241,245,249,0.68);
+          font-size: 0.82rem;
+          white-space: nowrap;
+          text-decoration: none;
+          transition: color 0.2s ease;
+          flex-shrink: 0;
+        }
+        .bc-navbar-link:hover { color: #ffffff; }
+        button.bc-navbar-link {
+          background: none;
+          border: none;
+          padding: 0;
+          font-family: inherit;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+        }
+        @media (min-width: 768px) {
+          .bc-navbar-links {
+            gap: 26px;
+            padding: 0 10px;
+            justify-content: center;
+            overflow-x: visible;
+            -webkit-mask-image: none;
+            mask-image: none;
+          }
+          .bc-navbar-link { font-size: 0.88rem; }
+        }
+
+        /* ---------- NAV DROPDOWNS ---------- */
+        .bc-nav-dropdown-wrap {
+          position: relative;
+          flex-shrink: 0;
+        }
+        .bc-nav-dropdown-chevron {
+          transition: transform 0.2s ease;
+        }
+        .bc-nav-dropdown-chevron-open,
+        .bc-nav-dropdown-wrap:hover .bc-nav-dropdown-chevron {
+          transform: rotate(180deg);
+        }
+        .bc-nav-dropdown-panel {
+          position: absolute;
+          top: calc(100% + 16px);
+          left: 50%;
+          transform: translateX(-50%) translateY(6px);
+          min-width: 220px;
+          background: #0b1220;
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 14px;
+          padding: 8px;
+          box-shadow: 0 20px 45px -16px rgba(0,0,0,0.55), 0 4px 12px rgba(0,0,0,0.3);
+          opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
+          transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+          z-index: 70;
+        }
+        .bc-nav-dropdown-wrap:hover .bc-nav-dropdown-panel,
+        .bc-nav-dropdown-panel.bc-nav-dropdown-open {
+          opacity: 1;
+          visibility: visible;
+          transform: translateX(-50%) translateY(0);
+          pointer-events: auto;
+        }
+        .bc-nav-dropdown-item {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          padding: 9px 12px;
+          border-radius: 9px;
+          text-decoration: none;
+          transition: background 0.15s ease;
+        }
+        .bc-nav-dropdown-item:hover { background: rgba(255,255,255,0.07); }
+        .bc-nav-dropdown-item-label {
+          color: #f1f5f9;
+          font-size: 0.86rem;
+          font-weight: 600;
+        }
+        .bc-nav-dropdown-item-desc {
+          color: rgba(241,245,249,0.5);
+          font-size: 0.74rem;
+        }
+        .bc-navbar-right {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-shrink: 0;
+          margin-left: auto;
+        }
+        .bc-navbar-theme-btn {
+          width: 34px;
+          height: 34px;
+          border-radius: 999px;
+          background: rgba(255,255,255,0.07);
+          border: 1px solid rgba(255,255,255,0.1);
+          color: #f1f5f9;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .bc-navbar-theme-btn:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+        .bc-navbar-cta {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: #ffffff;
+          color: #0b1220;
+          border-radius: 999px;
+          padding: 9px 16px;
+          font-weight: 600;
+          font-size: 0.8rem;
+          white-space: nowrap;
+          text-decoration: none;
+          flex-shrink: 0;
+          box-shadow: 0 10px 30px -10px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.15);
+          transition: transform 0.2s ease, filter 0.2s ease;
+        }
+        .bc-navbar-cta:hover { transform: translateY(-1px); filter: brightness(0.95); }
+        @media (min-width: 768px) {
+          .bc-navbar-cta { padding: 9px 18px; font-size: 0.82rem; }
+        }
       `}</style>
 
       {/* LOADING SCREEN */}
@@ -527,55 +1103,95 @@ export default function LandingPage() {
 
       <div className={`bc-page-content ${!loading ? "bc-page-visible" : ""}`}>
       {/* NAV */}
-      <header className="sticky top-0 z-50 border-b" style={{ borderColor: "var(--bc-line)", background: "var(--bc-nav-bg)", backdropFilter: "blur(8px)" }}>
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
-          <div className="flex items-center gap-2 bc-display font-bold text-lg">
-            <span style={{ color: "var(--bc-cyan)" }}>&#9634;</span>
-            Bluecode
-          </div>
-          <nav className="hidden md:flex items-center gap-8 text-sm bc-body" style={{ color: "var(--bc-muted)" }}>
-            {navItems.map((item, i) => (
-              <a key={i} href={item.href} className="hover:text-[var(--bc-text)] transition-colors">
-                {item.label}
-              </a>
-            ))}
-          </nav>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={toggleTheme}
-              className="bc-theme-toggle w-9 h-9 rounded-full flex items-center justify-center"
-              aria-label="Toggle dark/light theme"
-              title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
-            >
-              {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
-            </button>
-            <a href="#contact" className="hidden md:inline-flex bc-btn-primary bc-body text-sm font-semibold px-4 py-2 rounded">
-              Consultancy
+      <div className="bc-navbar-wrap sticky top-0 z-50">
+        <div className="bc-navbar-row">
+          <div className="bc-navbar-pill">
+            <a href="#home" className="bc-navbar-brand">
+              <span className="bc-navbar-logo bc-display">B</span>
+              <span className="bc-navbar-name bc-display">Bluecode</span>
             </a>
-            <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
-              {menuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
+
+            <nav className="bc-navbar-links bc-body">
+              {navItems.map((item, i) =>
+                item.dropdown ? (
+                  <div
+                    key={i}
+                    className="bc-nav-dropdown-wrap"
+                    onMouseEnter={() => setOpenDropdown(item.label)}
+                    onMouseLeave={() => setOpenDropdown(null)}
+                  >
+                    <button
+                      type="button"
+                      className="bc-navbar-link bc-nav-dropdown-trigger"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenDropdown((cur) => (cur === item.label ? null : item.label));
+                      }}
+                      aria-expanded={openDropdown === item.label}
+                    >
+                      {item.label}
+                      <ChevronDown
+                        size={13}
+                        className={`bc-nav-dropdown-chevron ${openDropdown === item.label ? "bc-nav-dropdown-chevron-open" : ""}`}
+                      />
+                    </button>
+                    <div className={`bc-nav-dropdown-panel ${openDropdown === item.label ? "bc-nav-dropdown-open" : ""}`}>
+                      {item.dropdown.map((sub, j) => (
+                        <a
+                          key={j}
+                          href={sub.href}
+                          className="bc-nav-dropdown-item"
+                          onClick={() => setOpenDropdown(null)}
+                        >
+                          <span className="bc-nav-dropdown-item-label">{sub.label}</span>
+                          {sub.desc && <span className="bc-nav-dropdown-item-desc">{sub.desc}</span>}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <a key={i} href={item.href} className="bc-navbar-link">
+                    {item.label}
+                  </a>
+                )
+              )}
+            </nav>
+
+            <div className="bc-navbar-right">
+              <button
+                onClick={toggleTheme}
+                className="bc-navbar-theme-btn"
+                aria-label="Toggle dark/light theme"
+                title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+              >
+                {theme === "light" ? <Moon size={15} /> : <Sun size={15} />}
+              </button>
+            </div>
           </div>
+
+          <a href="#contact" className="bc-navbar-cta bc-body">
+            Consultancy
+          </a>
         </div>
-        {menuOpen && (
-          <div className="md:hidden px-6 pb-4 flex flex-col gap-3 text-sm bc-body" style={{ color: "var(--bc-muted)" }}>
-            {navItems.map((item, i) => (
-              <a key={i} href={item.href} onClick={() => setMenuOpen(false)}>
-                {item.label}
-              </a>
-            ))}
-          </div>
-        )}
-      </header>
+      </div>
+
 
       {/* HERO */}
-      <section id="home" className="bc-grid-bg relative overflow-hidden border-b" style={{ borderColor: "var(--bc-line)" }}>
-        <div className="max-w-7xl mx-auto px-6 pt-20 md:pt-28 pb-14 md:pb-16 grid md:grid-cols-2 gap-14 items-center">
+      <section id="home" className="bc-grid-bg relative overflow-hidden">
+        <div className="bc-hero-decor-dots" />
+        <svg className="bc-hero-wave" viewBox="0 0 300 120" fill="none">
+          <path d="M0 90 C 60 60, 100 110, 160 80 S 260 40, 300 70" stroke="var(--bc-cyan)" strokeWidth="1" opacity="0.5" />
+          <path d="M0 110 C 60 80, 100 130, 160 100 S 260 60, 300 90" stroke="var(--bc-cyan)" strokeWidth="1" opacity="0.3" />
+        </svg>
+        <div className="max-w-7xl mx-auto px-6 pt-20 md:pt-28 pb-14 md:pb-24 grid md:grid-cols-2 gap-14 items-center">
           <div>
-            <div className="bc-mono bc-eyebrow mb-5">Your Business IT Partner</div>
+            <div className="mb-6">
+              <div className="bc-hero-badge-line1">Your Business</div>
+              <div className="bc-hero-badge-line2">AI Powered IT Partner</div>
+            </div>
             <h1 className="bc-display font-bold text-4xl md:text-5xl leading-tight mb-6">
-              Software that runs your business —
-              <span style={{ color: "var(--bc-cyan)" }}> not the other way around.</span>
+              We build software
+              <span style={{ color: "var(--bc-cyan)" }}> that grows with your business.</span>
             </h1>
             <p className="bc-body text-base md:text-lg mb-8" style={{ color: "var(--bc-muted)" }}>
               Bluecode partners with growing businesses to build custom software,
@@ -589,28 +1205,50 @@ export default function LandingPage() {
                 See our work <ArrowUpRight size={18} />
               </a>
             </div>
+
+            {/* Mini stats row */}
+            <div className="bc-hero-stats-row">
+              {heroStats.map((s, i) => (
+                <div key={i} className="flex items-center">
+                  {i > 0 && <div className="bc-hero-stat-divider" />}
+                  <div className="bc-hero-stat-item">
+                    <div className="bc-hero-stat-icon">
+                      <s.Icon size={17} color="var(--bc-cyan)" />
+                    </div>
+                    <div>
+                      <div className="bc-body font-bold text-sm leading-tight">{s.value}</div>
+                      <div className="bc-body text-xs" style={{ color: "var(--bc-muted)" }}>{s.label}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Hero visual: photo + overlapping floating checklist card */}
-          <div className="relative pb-10 md:pb-0 md:pr-8">
-            <div className="bc-hero-media">
-              <img
-                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop"
-                alt="Bluecode engineering team at work"
-                referrerPolicy="no-referrer"
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src =
-                    "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1200&auto=format&fit=crop";
-                }}
-              />
+          <div className="relative pb-24 md:pb-0 md:pr-8">
+            <div className="bc-hero-media-wrap">
+              <div className="bc-hero-blob" />
+              <div className="bc-hero-media" style={{ position: "relative", zIndex: 1 }}>
+                <div className="bc-hero-media-dots" />
+                <img
+                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop"
+                  alt="Bluecode engineering team at work"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src =
+                      "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1200&auto=format&fit=crop";
+                  }}
+                />
+              </div>
             </div>
             <div className="bc-float-card">
               {heroChecks.map((c, i) => (
-                <div key={i} className="bc-check-row flex items-start gap-3">
-                  <span className="bc-check-dot mt-0.5">
-                    <CheckCircle2 size={14} color="var(--bc-btn-primary-text)" />
-                  </span>
+                <div key={i} className="bc-float-row">
+                  <div className="bc-float-row-icon">
+                    <c.Icon size={17} color="var(--bc-cyan)" />
+                  </div>
                   <div>
                     <div className="bc-body font-semibold text-sm leading-tight">{c.title}</div>
                     <div className="bc-body text-xs mt-0.5" style={{ color: "var(--bc-muted)" }}>{c.desc}</div>
@@ -639,8 +1277,8 @@ export default function LandingPage() {
       </section>
 
       {/* STATS */}
-      <section className="border-b" style={{ borderColor: "var(--bc-line)", background: "var(--bc-panel)" }}>
-        <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
+      <section style={{ background: "var(--bc-band)" }}>
+        <div className="max-w-7xl mx-auto px-6 py-14 grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((s, i) => (
             <div key={i}>
               <div className="bc-mono font-bold text-3xl md:text-4xl" style={{ color: "var(--bc-cyan)" }}>{s.value}</div>
@@ -696,22 +1334,89 @@ export default function LandingPage() {
       </section>
 
       {/* INDUSTRIES */}
-      <section id="about" className="border-y" style={{ borderColor: "var(--bc-line)", background: "var(--bc-panel)" }}>
-        <div className="max-w-7xl mx-auto px-6 py-16">
-          <div className="bc-mono bc-eyebrow mb-3">Where we work</div>
-          <h2 className="bc-display font-bold text-2xl md:text-3xl mb-8">Industries</h2>
-          <div className="flex flex-wrap gap-3">
-            {industries.map((ind, i) => (
-              <span key={i} className="bc-mono text-sm px-4 py-2 rounded-full" style={{ border: "1px solid var(--bc-line)", color: "var(--bc-muted)" }}>
-                {ind}
-              </span>
-            ))}
+      <section id="about" className="overflow-hidden" style={{ background: "var(--bc-band)" }}>
+        <div className="max-w-7xl mx-auto px-6 py-20 md:py-24 grid md:grid-cols-2 gap-14 items-center">
+          <div>
+            <div className="bc-mono bc-eyebrow mb-3">Where we work</div>
+            <h2 className="bc-display font-bold text-3xl md:text-4xl mb-4">Industries</h2>
+            <div className="bc-industry-underline mb-5" />
+            <p className="bc-body mb-9 max-w-md" style={{ color: "var(--bc-muted)" }}>
+              We deliver smart, scalable software across a wide range of industries — built by
+              teams who understand the domain, not just the code.
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {industries.map((ind, i) => (
+                <div key={i} className="bc-industry-card">
+                  <div
+                    className="bc-industry-icon"
+                    style={{ background: `${ind.color}1a`, border: `1px solid ${ind.color}55` }}
+                  >
+                    <ind.Icon size={22} color={ind.color} strokeWidth={1.75} />
+                  </div>
+                  <div className="bc-body font-semibold text-sm">{ind.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Orbit visual */}
+          <div className="bc-orbit-wrap hidden md:block">
+            <svg viewBox="0 0 200 200" className="bc-orbit-globe">
+              <defs>
+                <radialGradient id="bcGlobeGrad" cx="35%" cy="30%" r="75%">
+                  <stop offset="0%" stopColor="var(--bc-cyan)" stopOpacity="0.35" />
+                  <stop offset="100%" stopColor="var(--bc-panel-2)" stopOpacity="0.95" />
+                </radialGradient>
+                <clipPath id="bcGlobeClip">
+                  <circle cx="100" cy="100" r="90" />
+                </clipPath>
+              </defs>
+              <circle cx="100" cy="100" r="90" fill="url(#bcGlobeGrad)" stroke="var(--bc-line)" strokeWidth="1" />
+              <g clipPath="url(#bcGlobeClip)" opacity="0.45" stroke="var(--bc-cyan)" strokeWidth="0.5" fill="none">
+                <ellipse cx="100" cy="100" rx="90" ry="30" />
+                <ellipse cx="100" cy="100" rx="90" ry="60" />
+                <ellipse cx="100" cy="100" rx="30" ry="90" />
+                <ellipse cx="100" cy="100" rx="60" ry="90" />
+                <line x1="10" y1="100" x2="190" y2="100" />
+              </g>
+            </svg>
+            <div className="bc-orbit-ring" />
+            {industries.map((ind, i) => {
+              const angle = (360 / industries.length) * i - 90;
+              const rad = (angle * Math.PI) / 180;
+              const r = 49; // percent radius, matches inset:2% ring
+              const x = 50 + r * Math.cos(rad);
+              const y = 50 + r * Math.sin(rad);
+              return (
+                <div
+                  key={i}
+                  className="bc-orbit-node"
+                  style={{ left: `${x}%`, top: `${y}%`, borderColor: ind.color, boxShadow: `0 0 18px ${ind.color}40` }}
+                >
+                  <ind.Icon size={22} color={ind.color} strokeWidth={1.75} />
+                </div>
+              );
+            })}
+            {industries.map((ind, i) => {
+              const angle = (360 / industries.length) * (i + 0.5) - 90;
+              const rad = (angle * Math.PI) / 180;
+              const r = 49;
+              const x = 50 + r * Math.cos(rad);
+              const y = 50 + r * Math.sin(rad);
+              return (
+                <div
+                  key={`dot-${i}`}
+                  className="bc-orbit-dot"
+                  style={{ left: `${x}%`, top: `${y}%`, background: ind.color }}
+                />
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* TECH STACK MARQUEE / PROJECTS */}
-      <section id="projects" className="py-14 overflow-hidden border-b" style={{ borderColor: "var(--bc-line)" }}>
+      <section id="projects" className="py-14 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 mb-6">
           <div className="bc-mono bc-eyebrow mb-2">Tooling</div>
           <h2 className="bc-display font-bold text-2xl md:text-3xl">Our stack</h2>
@@ -726,98 +1431,149 @@ export default function LandingPage() {
       </section>
 
       {/* TESTIMONIALS / BLOGS */}
-      <section id="blogs" className="max-w-7xl mx-auto px-6 py-20 md:py-24">
+      <section id="blogs" style={{ background: "var(--bc-band)" }}>
+        <div className="max-w-7xl mx-auto px-6 py-20 md:py-24">
         <div className="bc-mono bc-eyebrow mb-3">In their words</div>
-        <h2 className="bc-display font-bold text-3xl md:text-4xl mb-12">Clients</h2>
+        <h2 className="bc-display font-bold text-3xl md:text-4xl mb-4">Clients</h2>
+        <div className="bc-underline-fade mb-5" />
+        <p className="bc-body mb-12" style={{ color: "var(--bc-muted)" }}>
+          Trusted by teams building what's next.
+        </p>
         <div className="grid md:grid-cols-3 gap-6">
           {testimonials.map((t, i) => (
-            <div key={i} className="bc-card rounded-lg p-6 flex flex-col justify-between">
-              <p className="bc-body text-sm mb-6 leading-relaxed">&ldquo;{t.quote}&rdquo;</p>
-              <div className="bc-mono text-xs" style={{ color: "var(--bc-muted)" }}>
-                {t.name} — {t.company}
+            <div key={i} className="bc-testimonial-card" style={{ "--bc-tcolor": t.color }}>
+              <div
+                className="bc-quote-badge"
+                style={{ background: `${t.color}22`, border: `1px solid ${t.color}55` }}
+              >
+                <Quote size={18} color={t.color} fill={t.color} strokeWidth={0} />
+              </div>
+              <p className="bc-body text-sm leading-relaxed">&ldquo;{t.quote}&rdquo;</p>
+              <div className="bc-testimonial-divider" />
+              <div className="flex items-center gap-3">
+                <div
+                  className="bc-testimonial-avatar"
+                  style={{ background: `${t.color}1a`, border: `1px solid ${t.color}55` }}
+                >
+                  <t.Icon size={20} color={t.color} strokeWidth={1.75} />
+                </div>
+                <div>
+                  <div className="bc-body font-semibold text-sm">{t.name}</div>
+                  <div className="bc-body text-xs" style={{ color: "var(--bc-muted)" }}>{t.company}</div>
+                </div>
               </div>
             </div>
           ))}
         </div>
+        </div>
       </section>
 
       {/* CONTACT */}
-      <section id="contact" className="border-t" style={{ borderColor: "var(--bc-line)", background: "var(--bc-panel)" }}>
+      <section id="contact">
         <div className="max-w-7xl mx-auto px-6 py-20 md:py-24 grid md:grid-cols-2 gap-14">
           <div>
             <div className="bc-mono bc-eyebrow mb-3">Get in touch</div>
             <h2 className="bc-display font-bold text-3xl md:text-4xl mb-6">Tell us about the project</h2>
-            <p className="bc-body mb-8" style={{ color: "var(--bc-muted)" }}>
+            <p className="bc-body mb-2" style={{ color: "var(--bc-muted)" }}>
               Send a short brief and we'll reply within one business day with next
-              steps — no discovery-call runaround.
+              steps — <span className="bc-contact-highlight">no discovery-call runaround.</span>
             </p>
-            <div className="space-y-4 bc-body text-sm">
-              <div className="flex items-center gap-3" style={{ color: "var(--bc-muted)" }}>
-                <Mail size={16} color="var(--bc-cyan)" /> hello@bluecode.dev
+            <div className="bc-contact-divider" />
+            <div>
+              <div className="bc-contact-info-row">
+                <div className="bc-contact-icon-circle">
+                  <Mail size={18} color="var(--bc-cyan)" />
+                </div>
+                <div>
+                  <div className="bc-body text-xs" style={{ color: "var(--bc-muted)" }}>Email</div>
+                  <div className="bc-body font-semibold text-sm">hello@bluecode.dev</div>
+                </div>
               </div>
-              <div className="flex items-center gap-3" style={{ color: "var(--bc-muted)" }}>
-                <Phone size={16} color="var(--bc-cyan)" /> +92 300 0000000
+              <div className="bc-contact-info-row">
+                <div className="bc-contact-icon-circle">
+                  <Phone size={18} color="var(--bc-cyan)" />
+                </div>
+                <div>
+                  <div className="bc-body text-xs" style={{ color: "var(--bc-muted)" }}>Phone</div>
+                  <div className="bc-body font-semibold text-sm">+92 300 0000000</div>
+                </div>
               </div>
-              <div className="flex items-center gap-3" style={{ color: "var(--bc-muted)" }}>
-                <MapPin size={16} color="var(--bc-cyan)" /> Islamabad, Pakistan
+              <div className="bc-contact-info-row">
+                <div className="bc-contact-icon-circle">
+                  <MapPin size={18} color="var(--bc-cyan)" />
+                </div>
+                <div>
+                  <div className="bc-body text-xs" style={{ color: "var(--bc-muted)" }}>Location</div>
+                  <div className="bc-body font-semibold text-sm">Islamabad, Pakistan</div>
+                </div>
               </div>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="bc-corner p-6 rounded-lg" style={{ background: "var(--bc-panel-2)", border: "1px solid var(--bc-line)", boxShadow: "var(--bc-shadow)" }}>
+          <div className="bc-contact-form-card">
             {sent ? (
               <div className="bc-body text-sm">
                 <p className="font-semibold mb-1" style={{ color: "var(--bc-cyan)" }}>Message sent.</p>
                 <p style={{ color: "var(--bc-muted)" }}>We'll get back to you within one business day.</p>
               </div>
             ) : (
-              <div className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <label className="bc-mono text-xs block mb-1" style={{ color: "var(--bc-muted)" }}>Name</label>
-                  <input
-                    required
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="w-full bg-transparent rounded px-3 py-2 bc-body text-sm outline-none"
-                    style={{ border: "1px solid var(--bc-line)", color: "var(--bc-text)" }}
-                    placeholder="Your name"
-                  />
+                  <label className="bc-body font-semibold text-sm block mb-2">Name</label>
+                  <div className="bc-input-wrap">
+                    <input
+                      required
+                      value={form.name}
+                      onChange={(e) => setForm({ ...form, name: e.target.value })}
+                      className="bc-contact-input bc-body"
+                      placeholder="Your name"
+                    />
+                    <User size={16} className="bc-input-icon" />
+                  </div>
                 </div>
                 <div>
-                  <label className="bc-mono text-xs block mb-1" style={{ color: "var(--bc-muted)" }}>Email</label>
-                  <input
-                    required
-                    type="email"
-                    value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    className="w-full bg-transparent rounded px-3 py-2 bc-body text-sm outline-none"
-                    style={{ border: "1px solid var(--bc-line)", color: "var(--bc-text)" }}
-                    placeholder="you@company.com"
-                  />
+                  <label className="bc-body font-semibold text-sm block mb-2">Email</label>
+                  <div className="bc-input-wrap">
+                    <input
+                      required
+                      type="email"
+                      value={form.email}
+                      onChange={(e) => setForm({ ...form, email: e.target.value })}
+                      className="bc-contact-input bc-body"
+                      placeholder="you@company.com"
+                    />
+                    <Mail size={16} className="bc-input-icon" />
+                  </div>
                 </div>
                 <div>
-                  <label className="bc-mono text-xs block mb-1" style={{ color: "var(--bc-muted)" }}>Project brief</label>
-                  <textarea
-                    required
-                    rows={4}
-                    value={form.brief}
-                    onChange={(e) => setForm({ ...form, brief: e.target.value })}
-                    className="w-full bg-transparent rounded px-3 py-2 bc-body text-sm outline-none resize-none"
-                    style={{ border: "1px solid var(--bc-line)", color: "var(--bc-text)" }}
-                    placeholder="What are you trying to build?"
-                  />
+                  <label className="bc-body font-semibold text-sm block mb-2">Project brief</label>
+                  <div className="bc-input-wrap">
+                    <textarea
+                      required
+                      rows={4}
+                      value={form.brief}
+                      onChange={(e) => setForm({ ...form, brief: e.target.value })}
+                      className="bc-contact-input bc-body resize-none"
+                      placeholder="What are you trying to build?"
+                    />
+                    <PenLine size={16} className="bc-input-icon bc-input-icon-area" />
+                  </div>
                 </div>
-                <button type="submit" className="bc-btn-primary bc-body font-semibold px-6 py-3 rounded w-full flex items-center justify-center gap-2">
-                  Send message <ArrowRight size={16} />
+                <button type="submit" className="bc-send-btn">
+                  Send message <Send size={16} />
                 </button>
-              </div>
+                <div className="bc-trust-line">
+                  <ShieldCheck size={15} color="var(--bc-cyan)" />
+                  We respect your privacy. Your information is safe with us.
+                </div>
+              </form>
             )}
-          </form>
+          </div>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t" style={{ borderColor: "var(--bc-line)" }}>
+      <footer style={{ background: "var(--bc-band)" }}>
         <div className="max-w-7xl mx-auto px-6 py-12 grid sm:grid-cols-2 md:grid-cols-4 gap-8">
           <div>
             <div className="bc-display font-bold text-lg mb-3 flex items-center gap-2">
