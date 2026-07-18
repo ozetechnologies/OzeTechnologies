@@ -27,6 +27,7 @@ export default function LandingPage() {
   const [sent, setSent] = useState(false);
   const [theme, setTheme] = useState("light"); // "light" | "dark"
   const [loading, setLoading] = useState(true);
+  const [activeProductTab, setActiveProductTab] = useState(0);
 
   useEffect(() => {
     // Simulate real asset/boot time. Swap this for your actual "ready" signal
@@ -41,6 +42,16 @@ export default function LandingPage() {
   };
 
   const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
+
+  // Navbar items
+  const navItems = [
+    { label: "Home", href: "#home" },
+    { label: "Products", href: "#products" },
+    { label: "Projects", href: "#projects" },
+    { label: "Blogs", href: "#blogs" },
+    { label: "About Us", href: "#about" },
+    { label: "Contact", href: "#contact" },
+  ];
 
   const services = [
     {
@@ -72,6 +83,39 @@ export default function LandingPage() {
       icon: ShieldCheck,
       title: "QA & Testing",
       desc: "Manual and automated test coverage built in from sprint one, not bolted on at the end.",
+    },
+  ];
+
+  const productTabs = [
+    {
+      label: "IT Development",
+      items: [
+        "Custom Software Development",
+        "Web Application Development",
+        "Mobile App Development",
+        "UI/UX Design",
+        "Cloud & DevOps",
+        "QA & Testing",
+        "Blockchain Development",
+        "Game Development",
+        "IoT & Embedded Solutions",
+        "API Integration Services",
+      ],
+    },
+    {
+      label: "Specialized Solutions",
+      items: [
+        "AI Chatbot Development",
+        "AI & LLM Integrations",
+        "Trading Products",
+        "Fin Tech Solutions",
+        "LMS Development",
+        "CMS Development",
+        "Gold & Commodities Platforms",
+        "Healthcare Solutions",
+        "Custom AI Automation",
+        "Data & Analytics Platforms",
+      ],
     },
   ];
 
@@ -130,12 +174,14 @@ export default function LandingPage() {
   ];
 
   const clientLogos = [
-    "NORTHGATE",
-    "Ferra & Co.",
-    "VELIX",
-    "Marlowe Health",
-    "ORBIT LOGISTICS",
-    "Hearthstone",
+    "AI Chatbot",
+    "AI LLM Integrations",
+    "Trading Products",
+    "Fin Tech",
+    "LMS",
+    "CMS",
+    "Gold",
+    "Healthcare",
   ];
 
   return (
@@ -402,6 +448,69 @@ export default function LandingPage() {
         @media (prefers-reduced-motion: reduce) {
           .bc-flow-line, .bc-node, .bc-marquee-track { animation: none !important; }
         }
+
+        /* ---------- PRODUCTS TABS ---------- */
+        .bc-tab-row {
+          display: flex;
+          gap: 40px;
+          border-bottom: 1px solid var(--bc-line);
+        }
+        .bc-tab-btn {
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 14px 2px;
+          font-weight: 600;
+          font-size: 0.95rem;
+          color: var(--bc-muted);
+          position: relative;
+          transition: color 0.2s ease;
+        }
+        .bc-tab-btn.bc-tab-active {
+          color: var(--bc-text);
+        }
+        .bc-tab-btn.bc-tab-active::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: -1px;
+          height: 2px;
+          background: var(--bc-cyan);
+        }
+        .bc-product-item {
+          font-family: 'Space Grotesk', 'Inter', sans-serif;
+          font-weight: 600;
+          font-size: 1.05rem;
+          line-height: 1.35;
+          color: var(--bc-text);
+        }
+        .bc-cta-banner {
+          background: #0b1220;
+          border-radius: 16px;
+          color: #f1f5f9;
+        }
+        [data-theme="dark"] .bc-cta-banner {
+          background: var(--bc-panel-2);
+          border: 1px solid var(--bc-line);
+        }
+        .bc-cta-highlight {
+          background: var(--bc-cyan);
+          color: #06121a;
+          padding: 0 4px;
+          box-decoration-break: clone;
+          -webkit-box-decoration-break: clone;
+        }
+        .bc-cta-btn {
+          background: #ffffff;
+          color: #0b1220;
+          border-radius: 999px;
+          font-weight: 600;
+          padding: 12px 24px;
+          white-space: nowrap;
+          transition: transform 0.2s ease, filter 0.2s ease;
+        }
+        .bc-cta-btn:hover { transform: translateY(-1px); filter: brightness(0.96); }
       `}</style>
 
       {/* LOADING SCREEN */}
@@ -425,11 +534,11 @@ export default function LandingPage() {
             Bluecode
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm bc-body" style={{ color: "var(--bc-muted)" }}>
-            <a href="#services" className="hover:text-[var(--bc-text)] transition-colors">Services</a>
-            <a href="#work" className="hover:text-[var(--bc-text)] transition-colors">Work</a>
-            <a href="#industries" className="hover:text-[var(--bc-text)] transition-colors">Industries</a>
-            <a href="#testimonials" className="hover:text-[var(--bc-text)] transition-colors">Clients</a>
-            <a href="#contact" className="hover:text-[var(--bc-text)] transition-colors">Contact</a>
+            {navItems.map((item, i) => (
+              <a key={i} href={item.href} className="hover:text-[var(--bc-text)] transition-colors">
+                {item.label}
+              </a>
+            ))}
           </nav>
           <div className="flex items-center gap-3">
             <button
@@ -441,7 +550,7 @@ export default function LandingPage() {
               {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
             </button>
             <a href="#contact" className="hidden md:inline-flex bc-btn-primary bc-body text-sm font-semibold px-4 py-2 rounded">
-              Start a project
+              Consultancy
             </a>
             <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
               {menuOpen ? <X size={22} /> : <Menu size={22} />}
@@ -450,17 +559,17 @@ export default function LandingPage() {
         </div>
         {menuOpen && (
           <div className="md:hidden px-6 pb-4 flex flex-col gap-3 text-sm bc-body" style={{ color: "var(--bc-muted)" }}>
-            <a href="#services" onClick={() => setMenuOpen(false)}>Services</a>
-            <a href="#work" onClick={() => setMenuOpen(false)}>Work</a>
-            <a href="#industries" onClick={() => setMenuOpen(false)}>Industries</a>
-            <a href="#testimonials" onClick={() => setMenuOpen(false)}>Clients</a>
-            <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
+            {navItems.map((item, i) => (
+              <a key={i} href={item.href} onClick={() => setMenuOpen(false)}>
+                {item.label}
+              </a>
+            ))}
           </div>
         )}
       </header>
 
       {/* HERO */}
-      <section className="bc-grid-bg relative overflow-hidden border-b" style={{ borderColor: "var(--bc-line)" }}>
+      <section id="home" className="bc-grid-bg relative overflow-hidden border-b" style={{ borderColor: "var(--bc-line)" }}>
         <div className="max-w-7xl mx-auto px-6 pt-20 md:pt-28 pb-14 md:pb-16 grid md:grid-cols-2 gap-14 items-center">
           <div>
             <div className="bc-mono bc-eyebrow mb-5">Your Business IT Partner</div>
@@ -476,7 +585,7 @@ export default function LandingPage() {
               <a href="#contact" className="bc-btn-primary bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
                 Start a project <ArrowRight size={18} />
               </a>
-              <a href="#work" className="bc-btn-ghost bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
+              <a href="#projects" className="bc-btn-ghost bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
                 See our work <ArrowUpRight size={18} />
               </a>
             </div>
@@ -514,13 +623,13 @@ export default function LandingPage() {
 
         {/* TRUST BAR */}
         <div className="max-w-7xl mx-auto px-6 pb-16 md:pb-20">
-          <div className="bc-logo-strip px-6 md:px-10 py-6 md:py-7">
+          <div className="bc-logo-strip px-6 md:px-10 py-6 md:py-7 overflow-hidden">
             <div className="bc-mono text-[0.68rem] tracking-widest uppercase mb-4 text-center md:text-left" style={{ color: "var(--bc-muted)" }}>
               Trusted by engineering teams at
             </div>
-            <div className="flex flex-wrap items-center justify-center md:justify-between gap-x-10 gap-y-4">
-              {clientLogos.map((name, i) => (
-                <span key={i} className="bc-logo-item bc-display font-semibold text-base md:text-lg whitespace-nowrap">
+            <div className="bc-marquee-track">
+              {[...clientLogos, ...clientLogos].map((name, i) => (
+                <span key={i} className="bc-logo-item bc-display font-semibold text-base md:text-lg whitespace-nowrap mx-8">
                   {name}
                 </span>
               ))}
@@ -541,31 +650,53 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* SERVICES */}
-      <section id="services" className="max-w-7xl mx-auto px-6 py-20 md:py-24">
+      {/* SERVICES / PRODUCTS */}
+      <section id="products" className="max-w-7xl mx-auto px-6 py-20 md:py-24">
         <div className="bc-mono bc-eyebrow mb-3">What we build</div>
-        <h2 className="bc-display font-bold text-3xl md:text-4xl mb-4">Services</h2>
-        <p className="bc-body max-w-2xl mb-12" style={{ color: "var(--bc-muted)" }}>
-          Every engagement starts with a working prototype, not a slide deck.
+        <h2 className="bc-display font-bold text-3xl md:text-4xl mb-4">
+          Our Core <span style={{ color: "var(--bc-cyan)" }}>Products</span>
+        </h2>
+        <p className="bc-body max-w-2xl mb-8" style={{ color: "var(--bc-muted)" }}>
+          Bluecode builds custom software and specialized digital products, standing
+          among the teams businesses trust to power their next platform.
         </p>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((s, i) => {
-            const Icon = s.icon;
-            return (
-              <div key={i} className="bc-card rounded-lg p-6">
-                <div className="w-11 h-11 rounded flex items-center justify-center mb-5" style={{ background: "var(--bc-panel-2)", border: "1px solid var(--bc-line)" }}>
-                  <Icon size={20} color="var(--bc-cyan)" />
-                </div>
-                <h3 className="bc-display font-semibold text-lg mb-2">{s.title}</h3>
-                <p className="bc-body text-sm" style={{ color: "var(--bc-muted)" }}>{s.desc}</p>
-              </div>
-            );
-          })}
+
+        {/* Tabs */}
+        <div className="bc-tab-row mb-10">
+          {productTabs.map((tab, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveProductTab(i)}
+              className={`bc-tab-btn ${activeProductTab === i ? "bc-tab-active" : ""}`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Category grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
+          {productTabs[activeProductTab].items.map((item, i) => (
+            <div key={i} className="bc-product-item">
+              {item}
+            </div>
+          ))}
+        </div>
+
+        {/* CTA Banner */}
+        <div className="bc-cta-banner mt-14 p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <p className="bc-display font-semibold text-xl md:text-2xl leading-snug max-w-xl">
+            Choose from our core products{" "}
+            <span className="bc-cta-highlight">to build the right solution for your business.</span>
+          </p>
+          <a href="#contact" className="bc-cta-btn flex-shrink-0">
+            Talk to Our Experts
+          </a>
         </div>
       </section>
 
       {/* INDUSTRIES */}
-      <section id="industries" className="border-y" style={{ borderColor: "var(--bc-line)", background: "var(--bc-panel)" }}>
+      <section id="about" className="border-y" style={{ borderColor: "var(--bc-line)", background: "var(--bc-panel)" }}>
         <div className="max-w-7xl mx-auto px-6 py-16">
           <div className="bc-mono bc-eyebrow mb-3">Where we work</div>
           <h2 className="bc-display font-bold text-2xl md:text-3xl mb-8">Industries</h2>
@@ -579,8 +710,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* TECH STACK MARQUEE */}
-      <section id="work" className="py-14 overflow-hidden border-b" style={{ borderColor: "var(--bc-line)" }}>
+      {/* TECH STACK MARQUEE / PROJECTS */}
+      <section id="projects" className="py-14 overflow-hidden border-b" style={{ borderColor: "var(--bc-line)" }}>
         <div className="max-w-7xl mx-auto px-6 mb-6">
           <div className="bc-mono bc-eyebrow mb-2">Tooling</div>
           <h2 className="bc-display font-bold text-2xl md:text-3xl">Our stack</h2>
@@ -594,8 +725,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section id="testimonials" className="max-w-7xl mx-auto px-6 py-20 md:py-24">
+      {/* TESTIMONIALS / BLOGS */}
+      <section id="blogs" className="max-w-7xl mx-auto px-6 py-20 md:py-24">
         <div className="bc-mono bc-eyebrow mb-3">In their words</div>
         <h2 className="bc-display font-bold text-3xl md:text-4xl mb-12">Clients</h2>
         <div className="grid md:grid-cols-3 gap-6">
