@@ -919,14 +919,17 @@ export default function LandingPage() {
         .bc-navbar-pill {
           display: flex;
           align-items: center;
-          gap: 6px;
+          gap: 10px;
           flex: 1;
           min-width: 0;
           background: #0b1220;
           border: 1px solid rgba(255,255,255,0.06);
           border-radius: 999px;
-          padding: 6px 8px 6px 6px;
+          padding: 10px 12px 10px 10px;
           box-shadow: 0 10px 30px -10px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.25);
+        }
+        @media (min-width: 768px) {
+          .bc-navbar-pill { padding: 6px 8px 6px 6px; gap: 6px; }
         }
         .bc-navbar-brand {
           display: flex;
@@ -1049,13 +1052,13 @@ export default function LandingPage() {
         .bc-navbar-right {
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 10px;
           flex-shrink: 0;
           margin-left: auto;
         }
         .bc-navbar-theme-btn {
-          width: 34px;
-          height: 34px;
+          width: 36px;
+          height: 36px;
           border-radius: 999px;
           background: rgba(255,255,255,0.07);
           border: 1px solid rgba(255,255,255,0.1);
@@ -1068,31 +1071,33 @@ export default function LandingPage() {
         }
         .bc-navbar-theme-btn:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
         .bc-navbar-cta {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          background: #ffffff;
-          color: #0b1220;
-          border-radius: 999px;
-          padding: 9px 16px;
-          font-weight: 600;
-          font-size: 0.8rem;
-          white-space: nowrap;
-          text-decoration: none;
-          flex-shrink: 0;
-          box-shadow: 0 10px 30px -10px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.15);
-          transition: transform 0.2s ease, filter 0.2s ease;
+          display: none;
         }
-        .bc-navbar-cta:hover { transform: translateY(-1px); filter: brightness(0.95); }
         @media (min-width: 768px) {
-          .bc-navbar-cta { padding: 9px 18px; font-size: 0.82rem; }
+          .bc-navbar-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #ffffff;
+            color: #0b1220;
+            border-radius: 999px;
+            padding: 9px 18px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            white-space: nowrap;
+            text-decoration: none;
+            flex-shrink: 0;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.15);
+            transition: transform 0.2s ease, filter 0.2s ease;
+          }
+          .bc-navbar-cta:hover { transform: translateY(-1px); filter: brightness(0.95); }
         }
 
         /* ---------- MOBILE HAMBURGER MENU ---------- */
         .bc-navbar-hamburger {
           display: flex;
-          width: 34px;
-          height: 34px;
+          width: 36px;
+          height: 36px;
           border-radius: 999px;
           background: rgba(255,255,255,0.07);
           border: 1px solid rgba(255,255,255,0.1);
