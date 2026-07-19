@@ -9,6 +9,7 @@ import {
   ArrowRight,
   ArrowUpRight,
   ChevronDown,
+  ChevronRight,
   Mail,
   MapPin,
   Phone,
@@ -1193,6 +1194,131 @@ export default function LandingPage() {
           font-weight: 600;
           text-decoration: none;
         }
+
+        /* ---------- FOOTER ---------- */
+        .bc-footer-card {
+          position: relative;
+          overflow: hidden;
+          border-radius: 24px;
+          background: var(--bc-panel);
+          border: 1px solid var(--bc-line);
+          box-shadow: var(--bc-shadow-lg);
+        }
+        .bc-footer-decor-dots {
+          position: absolute;
+          bottom: 24px;
+          right: 24px;
+          width: 120px;
+          height: 90px;
+          background-image: radial-gradient(var(--bc-cyan) 1px, transparent 1px);
+          background-size: 10px 10px;
+          opacity: 0.25;
+          pointer-events: none;
+        }
+        .bc-footer-decor-wave {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 45%;
+          max-width: 420px;
+          height: auto;
+          opacity: 0.35;
+          pointer-events: none;
+        }
+        .bc-footer-underline {
+          width: 40px;
+          height: 3px;
+          border-radius: 2px;
+          background: var(--bc-cyan);
+          margin: 14px 0 18px;
+        }
+        .bc-footer-social {
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+          background: var(--bc-panel-2);
+          border: 1px solid var(--bc-line);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        .bc-footer-social:hover {
+          border-color: var(--bc-cyan);
+          transform: translateY(-2px);
+        }
+        .bc-footer-col-divider {
+          display: none;
+        }
+        @media (min-width: 768px) {
+          .bc-footer-col-divider {
+            display: block;
+            width: 1px;
+            background: var(--bc-line);
+            align-self: stretch;
+          }
+        }
+        .bc-footer-heading-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 20px;
+        }
+        .bc-footer-heading-badge {
+          width: 34px;
+          height: 34px;
+          border-radius: 9px;
+          background: color-mix(in srgb, var(--bc-cyan) 14%, transparent);
+          border: 1px solid color-mix(in srgb, var(--bc-cyan) 35%, transparent);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+        .bc-footer-heading {
+          font-family: 'JetBrains Mono', ui-monospace, monospace;
+          font-size: 0.78rem;
+          letter-spacing: 0.1em;
+          font-weight: 700;
+          color: var(--bc-cyan);
+        }
+        .bc-footer-item {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          color: var(--bc-muted);
+          transition: color 0.2s ease;
+        }
+        .bc-footer-item:hover { color: var(--bc-text); }
+        .bc-footer-item + .bc-footer-item { margin-top: 14px; }
+        .bc-footer-contact-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          color: var(--bc-text);
+          font-weight: 500;
+        }
+        .bc-footer-contact-item + .bc-footer-contact-item { margin-top: 16px; }
+        .bc-footer-bottom {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          border-top: 1px solid var(--bc-line);
+          padding-top: 20px;
+          margin-top: 8px;
+          color: var(--bc-muted);
+          font-size: 0.85rem;
+        }
+        .bc-footer-bottom-badge {
+          width: 26px;
+          height: 26px;
+          border-radius: 999px;
+          background: color-mix(in srgb, var(--bc-cyan) 14%, transparent);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
       `}</style>
 
       {/* LOADING SCREEN */}
@@ -1736,49 +1862,113 @@ export default function LandingPage() {
 
       {/* FOOTER */}
       <footer style={{ background: "var(--bc-band)" }}>
-        <div className="max-w-7xl mx-auto px-6 py-12 grid sm:grid-cols-2 md:grid-cols-4 gap-8">
-          <div>
-            <div className="bc-display font-bold text-lg mb-3 flex items-center gap-2">
-              <span style={{ color: "var(--bc-cyan)" }}>&#9634;</span> Bluecode
+        <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
+          <div className="bc-footer-card p-8 md:p-12">
+            <div className="bc-footer-decor-dots" />
+            <svg className="bc-footer-decor-wave" viewBox="0 0 300 160" fill="none">
+              <path d="M0 40 C 60 10, 100 70, 160 40 S 260 -10, 300 30" stroke="var(--bc-cyan)" strokeWidth="1" />
+              <path d="M0 70 C 60 40, 100 100, 160 70 S 260 20, 300 60" stroke="var(--bc-cyan)" strokeWidth="1" opacity="0.6" />
+            </svg>
+
+            <div className="grid md:grid-cols-[1.2fr_auto_1fr_auto_1fr_auto_1fr] gap-x-8 gap-y-12">
+              {/* Brand column */}
+              <div>
+                <div className="bc-display font-bold text-lg flex items-center gap-2">
+                  <span style={{ color: "var(--bc-cyan)" }}>&#9634;</span> Bluecode
+                </div>
+                <div className="bc-footer-underline" />
+                <p className="bc-body text-sm mb-6" style={{ color: "var(--bc-muted)" }}>
+                  A software house building systems companies can rely on.
+                </p>
+                <div className="flex gap-3">
+                  <a href="#" className="bc-footer-social" aria-label="Website">
+                    <Globe2 size={17} color="var(--bc-cyan)" />
+                  </a>
+                  <a href="#" className="bc-footer-social" aria-label="LinkedIn">
+                    <Link2 size={17} color="var(--bc-cyan)" />
+                  </a>
+                  <a href="#" className="bc-footer-social" aria-label="Message us">
+                    <MessageCircle size={17} color="var(--bc-cyan)" />
+                  </a>
+                </div>
+              </div>
+
+              <div className="bc-footer-col-divider" />
+
+              {/* Services column */}
+              <div>
+                <div className="bc-footer-heading-row">
+                  <div className="bc-footer-heading-badge">
+                    <Layers size={16} color="var(--bc-cyan)" />
+                  </div>
+                  <span className="bc-footer-heading">SERVICES</span>
+                </div>
+                <div className="bc-body text-sm">
+                  {["Custom Software", "Web Applications", "Mobile Apps", "Cloud & DevOps"].map((item, i) => (
+                    <div key={i} className="bc-footer-item">
+                      <ChevronRight size={14} color="var(--bc-cyan)" />
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bc-footer-col-divider" />
+
+              {/* Company column */}
+              <div>
+                <div className="bc-footer-heading-row">
+                  <div className="bc-footer-heading-badge">
+                    <Users size={16} color="var(--bc-cyan)" />
+                  </div>
+                  <span className="bc-footer-heading">COMPANY</span>
+                </div>
+                <div className="bc-body text-sm">
+                  {[
+                    { label: "Our Work", href: "#projects" },
+                    { label: "Industries", href: "#about" },
+                    { label: "Clients", href: "#blogs" },
+                    { label: "Contact", href: "#contact" },
+                  ].map((item, i) => (
+                    <a key={i} href={item.href} className="bc-footer-item">
+                      <ChevronRight size={14} color="var(--bc-cyan)" />
+                      {item.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bc-footer-col-divider" />
+
+              {/* Contact column */}
+              <div>
+                <div className="bc-footer-heading-row">
+                  <div className="bc-footer-heading-badge">
+                    <Send size={15} color="var(--bc-cyan)" />
+                  </div>
+                  <span className="bc-footer-heading">CONTACT</span>
+                </div>
+                <div className="bc-body text-sm">
+                  <div className="bc-footer-contact-item">
+                    <Mail size={16} color="var(--bc-cyan)" /> hello@bluecode.dev
+                  </div>
+                  <div className="bc-footer-contact-item">
+                    <Phone size={16} color="var(--bc-cyan)" /> +92 300 0000000
+                  </div>
+                  <div className="bc-footer-contact-item">
+                    <MapPin size={16} color="var(--bc-cyan)" /> Islamabad, Pakistan
+                  </div>
+                </div>
+              </div>
             </div>
-            <p className="bc-body text-sm" style={{ color: "var(--bc-muted)" }}>
-              A software house building systems companies can rely on.
-            </p>
-            <div className="flex gap-4 mt-4">
-             <Link2 size={18} color="var(--bc-muted)" />
-<Globe2 size={18} color="var(--bc-muted)" />
-<MessageCircle size={18} color="var(--bc-muted)" />
+
+            <div className="bc-footer-bottom">
+              <div className="bc-footer-bottom-badge">
+                <ShieldCheck size={14} color="var(--bc-cyan)" />
+              </div>
+              © 2026 <span style={{ color: "var(--bc-cyan)", fontWeight: 600 }}>Bluecode</span>. All rights reserved.
             </div>
           </div>
-          <div>
-            <div className="bc-mono text-xs mb-3" style={{ color: "var(--bc-amber)" }}>SERVICES</div>
-            <ul className="space-y-2 bc-body text-sm" style={{ color: "var(--bc-muted)" }}>
-              <li>Custom Software</li>
-              <li>Web Applications</li>
-              <li>Mobile Apps</li>
-              <li>Cloud &amp; DevOps</li>
-            </ul>
-          </div>
-          <div>
-            <div className="bc-mono text-xs mb-3" style={{ color: "var(--bc-amber)" }}>COMPANY</div>
-            <ul className="space-y-2 bc-body text-sm" style={{ color: "var(--bc-muted)" }}>
-              <li>Our Work</li>
-              <li>Industries</li>
-              <li>Clients</li>
-              <li>Contact</li>
-            </ul>
-          </div>
-          <div>
-            <div className="bc-mono text-xs mb-3" style={{ color: "var(--bc-amber)" }}>CONTACT</div>
-            <ul className="space-y-2 bc-body text-sm" style={{ color: "var(--bc-muted)" }}>
-              <li>hello@bluecode.dev</li>
-              <li>+92 300 0000000</li>
-              <li>Islamabad, Pakistan</li>
-            </ul>
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto px-6 py-6 border-t bc-mono text-xs" style={{ borderColor: "var(--bc-line)", color: "var(--bc-muted)" }}>
-          © 2026 Bluecode. All rights reserved.
         </div>
       </footer>
       </div>
