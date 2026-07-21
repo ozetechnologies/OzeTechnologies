@@ -1,7 +1,14 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./LandingPage";
+import ServicesPage from "./ServicesPage";
 
-function App() {
-  return <LandingPage />;
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/services" element={<ServicesPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
-
-export default App;
