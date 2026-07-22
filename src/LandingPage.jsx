@@ -94,9 +94,9 @@ export default function LandingPage() {
       ],
     },
     { label: "Services", href: "/services", isRoute: true },
-    { label: "Blogs", href: "#blogs" },
-    { label: "About Us", href: "#about" },
-    { label: "Contact", href: "#contact" },
+    { label: "Blogs", href: "/blogs", isRoute: true },
+   { label: "About Us", href: "/about", isRoute: true },
+    { label: "Contact", href: "/contact", isRoute: true },
   ];
 
   const services = [
