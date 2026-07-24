@@ -185,7 +185,7 @@ export default function LandingPage() {
         .bc-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
         .bc-display { font-family: 'Space Grotesk', 'Inter', sans-serif; }
         .bc-body { font-family: 'Inter', sans-serif; }
-        .bc-loader-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100vh; height: 100dvh; margin: 0; padding: 0; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; background: var(--bc-base); transition: opacity 0.5s ease, visibility 0.5s ease; }
+        .bc-loader-screen { position: fixed; top: 0; right: 0; bottom: 0; left: 0; margin: 0; padding: 0; box-sizing: border-box; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; background: var(--bc-base); transition: opacity 0.5s ease, visibility 0.5s ease; }
         .bc-loader-screen.bc-loader-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
         .bc-loader-mark { position: relative; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; }
         .bc-loader-ring { position: absolute; inset: 0; border-radius: 999px; border: 2.5px solid var(--bc-line); border-top-color: var(--bc-cyan); animation: bc-spin 0.9s linear infinite; }
@@ -288,6 +288,11 @@ export default function LandingPage() {
         .bc-hero-stat-item:first-child { padding-left: 0; }
         .bc-hero-stat-divider { width: 1px; height: 30px; background: var(--bc-line); }
         .bc-hero-stat-icon { width: 34px; height: 34px; border-radius: 10px; background: color-mix(in srgb, var(--bc-cyan) 14%, transparent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        @media (max-width: 640px) {
+  .bc-hero-stats-row { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .bc-hero-stat-item { padding: 0 !important; }
+  .bc-hero-stat-divider { display: none; }
+}
         .bc-navbar-wrap { display: flex; justify-content: center; padding: 16px 20px 0; }
         .bc-navbar-row { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 920px; }
         .bc-navbar-pill { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; background: #0b1220; border: 1px solid rgba(255,255,255,0.06); border-radius: 999px; padding: 10px 12px 10px 10px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.25); }
