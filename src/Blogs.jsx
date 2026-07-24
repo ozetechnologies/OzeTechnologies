@@ -100,7 +100,8 @@ export default function Blogs() {
     inputText: isDark ? "text-white" : "text-slate-900",
     placeholder: isDark ? "placeholder-slate-500" : "placeholder-slate-400",
 
-    iconCircleBg: isDark ? "#0f172a" : "#f1f5f9",
+    iconCircleBg: isDark ? "rgba(16,185,129,0.14)" : "#000000",
+    iconCircleIcon: "#00ffa6",
   };
 
   const navItems = [
@@ -518,8 +519,13 @@ export default function Blogs() {
                 style={{ background: c.cardBg, borderColor: c.cardBorder }}
               >
                 <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center mb-4 text-[#00a884] transition-colors duration-500"
-                  style={{ background: c.iconCircleBg }}
+                  className="w-12 h-12 rounded-full flex items-center justify-center mb-4 transition-colors duration-500"
+                  style={{
+                    background: c.iconCircleBg,
+                    color: c.iconCircleIcon,
+                    border: isDark ? "1px solid rgba(16,185,129,0.4)" : "none",
+                    boxShadow: isDark ? "0 0 14px rgba(16,185,129,0.25)" : "none",
+                  }}
                 >
                   <IconComponent size={20} />
                 </div>

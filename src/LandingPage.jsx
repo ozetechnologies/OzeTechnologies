@@ -185,7 +185,7 @@ export default function LandingPage() {
         .bc-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
         .bc-display { font-family: 'Space Grotesk', 'Inter', sans-serif; }
         .bc-body { font-family: 'Inter', sans-serif; }
-        .bc-loader-screen { position: fixed; inset: 0; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; background: var(--bc-base); transition: opacity 0.5s ease, visibility 0.5s ease; }
+        .bc-loader-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100vh; height: 100dvh; margin: 0; padding: 0; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; background: var(--bc-base); transition: opacity 0.5s ease, visibility 0.5s ease; }
         .bc-loader-screen.bc-loader-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
         .bc-loader-mark { position: relative; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; }
         .bc-loader-ring { position: absolute; inset: 0; border-radius: 999px; border: 2.5px solid var(--bc-line); border-top-color: var(--bc-cyan); animation: bc-spin 0.9s linear infinite; }
@@ -197,7 +197,7 @@ export default function LandingPage() {
         @media (prefers-reduced-motion: reduce) { .bc-loader-ring, .bc-loader-square { animation: none !important; } }
         .bc-page-content { opacity: 0; transform: translateY(6px); transition: opacity 0.6s ease, transform 0.6s ease; }
         .bc-page-content.bc-page-visible { opacity: 1; transform: translateY(0); }
-        .bc-grid-bg { background-image: linear-gradient(var(--bc-line-soft) 1px, transparent 1px), linear-gradient(90deg, var(--bc-line-soft) 1px, transparent 1px); background-size: 48px 48px; }
+        .bc-grid-bg { background: transparent; }
         .bc-card { background: var(--bc-panel); border: 1px solid var(--bc-line); box-shadow: var(--bc-shadow); transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease; }
         .bc-card:hover { border-color: var(--bc-cyan); transform: translateY(-3px); box-shadow: var(--bc-shadow-lg); }
         .bc-btn-primary { background: var(--bc-cyan); color: var(--bc-btn-primary-text); box-shadow: 0 8px 20px -8px color-mix(in srgb, var(--bc-cyan) 55%, transparent); transition: filter 0.2s ease, transform 0.2s ease; }
@@ -276,7 +276,7 @@ export default function LandingPage() {
         .bc-hero-badge-line2 { font-family: 'Space Grotesk', 'Inter', sans-serif; font-weight: 700; font-size: 1.5rem; letter-spacing: 0.01em; background: linear-gradient(90deg, var(--bc-cyan), var(--bc-amber), var(--bc-cyan)); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: bc-badge-shimmer 5s linear infinite; }
         @keyframes bc-badge-shimmer { to { background-position: 200% center; } }
         @media (prefers-reduced-motion: reduce) { .bc-hero-badge-line2 { animation: none; } }
-        .bc-hero-decor-dots { position: absolute; top: 8px; left: 8px; width: 100px; height: 64px; background-image: radial-gradient(var(--bc-cyan) 1px, transparent 1px); background-size: 11px 11px; opacity: 0.3; pointer-events: none; }
+        .bc-hero-decor-dots { display: none; }
         .bc-hero-wave { position: absolute; bottom: 0; left: 0; width: 360px; max-width: 60%; height: auto; opacity: 0.4; pointer-events: none; }
         .bc-hero-media-wrap { position: relative; }
         .bc-hero-blob { position: absolute; top: -46px; right: -46px; width: 260px; height: 260px; border-radius: 50%; background: color-mix(in srgb, var(--bc-cyan) 18%, transparent); z-index: 0; }
