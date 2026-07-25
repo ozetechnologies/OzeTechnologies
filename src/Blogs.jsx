@@ -63,45 +63,45 @@ export default function Blogs() {
   // SELF-CONTAINED THEME PALETTE (no external CSS dependency)
   // ---------------------------------------------------------
   const c = {
-    pageBg: isDark ? "#0a0f1c" : "#f8fafc",
-    pageText: isDark ? "#e5e7eb" : "#1f2937",
+    pageBg: isDark ? "#17151F" : "#FAFAF9",
+    pageText: isDark ? "#F5F5F4" : "#1C1917",
 
     // Navbar stays permanently dark regardless of theme; only the stroke changes
-    navBg: "#0b1329",
-    navBorder: isDark ? "1px solid rgba(16, 185, 129, 0.6)" : "1px solid #1e293b",
-    navText: "text-slate-300",
+    navBg: "#18152A",
+    navBorder: isDark ? "1px solid rgba(99, 102, 241, 0.6)" : "1px solid #332D55",
+    navText: "text-stone-300",
     navTextHover: "hover:text-white",
 
-    dropdownBg: "#0b1329",
-    dropdownBorder: isDark ? "border-emerald-500/40" : "border-slate-800",
-    dropdownText: "text-slate-300",
+    dropdownBg: "#18152A",
+    dropdownBorder: isDark ? "border-indigo-500/40" : "border-stone-800",
+    dropdownText: "text-stone-300",
     dropdownHover: "hover:bg-white/5",
 
-    toggleBtnBg: "#0f172a",
-    toggleBtnBorder: "border-slate-800",
+    toggleBtnBg: "#201D2E",
+    toggleBtnBorder: "border-stone-800",
 
     // Hero stays permanently dark regardless of theme; only the stroke changes
-    heroBg: "linear-gradient(135deg, #060c17 0%, #0a1424 100%)",
-    heroBorder: isDark ? "rgba(16, 185, 129, 0.5)" : "#1e293b",
+    heroBg: "linear-gradient(135deg, #120F1C 0%, #1E1B32 100%)",
+    heroBorder: isDark ? "rgba(99, 102, 241, 0.5)" : "#332D55",
     heroHeading: "#ffffff",
-    heroSub: "#cbd5e1",
-    heroImgBorder: "border-slate-800",
+    heroSub: "#D6D3D1",
+    heroImgBorder: "border-stone-800",
 
-    cardBg: isDark ? "#0f172a" : "#ffffff",
-    cardBorder: isDark ? "#1e293b" : "#e2e8f0",
-    text: isDark ? "#f1f5f9" : "#0f172a",
-    muted: isDark ? "#94a3b8" : "#64748b",
-    line: isDark ? "#1e293b" : "#e2e8f0",
+    cardBg: isDark ? "#201D2E" : "#ffffff",
+    cardBorder: isDark ? "#322C47" : "#E7E5E4",
+    text: isDark ? "#F5F5F4" : "#1C1917",
+    muted: isDark ? "#A8A29E" : "#78716C",
+    line: isDark ? "#322C47" : "#E7E5E4",
 
-    newsletterBg: isDark ? "#0b1220" : "#ffffff",
-    newsletterBorder: isDark ? "border-slate-800" : "border-slate-200",
-    inputBg: isDark ? "#0f172a" : "#f8fafc",
-    inputBorder: isDark ? "border-slate-800" : "border-slate-300",
-    inputText: isDark ? "text-white" : "text-slate-900",
-    placeholder: isDark ? "placeholder-slate-500" : "placeholder-slate-400",
+    newsletterBg: isDark ? "#201D2E" : "#ffffff",
+    newsletterBorder: isDark ? "border-stone-800" : "border-stone-200",
+    inputBg: isDark ? "#2A2539" : "#F5F5F4",
+    inputBorder: isDark ? "border-stone-800" : "border-stone-300",
+    inputText: isDark ? "text-white" : "text-stone-900",
+    placeholder: isDark ? "placeholder-stone-500" : "placeholder-stone-400",
 
-    iconCircleBg: isDark ? "rgba(16,185,129,0.14)" : "#000000",
-    iconCircleIcon: "#00ffa6",
+    iconCircleBg: isDark ? "rgba(99,102,241,0.14)" : "#000000",
+    iconCircleIcon: "#A5B4FC",
   };
 
   const navItems = [
@@ -143,7 +143,7 @@ export default function Blogs() {
           style={{ background: c.navBg, color: "#ffffff", border: c.navBorder }}
         >
           <Link to="/" className="flex items-center gap-2 group">
-            <span className="w-8 h-8 rounded-full bg-[#00a884] text-white flex items-center justify-center font-bold text-base shadow-sm">
+            <span className="w-8 h-8 rounded-full bg-[#6366F1] text-white flex items-center justify-center font-bold text-base shadow-sm">
               B
             </span>
             <span className="font-bold tracking-wide text-lg" style={{ color: "#ffffff" }}>
@@ -170,7 +170,7 @@ export default function Blogs() {
                   {openDropdown === item.label && (
                     <div
                       className="absolute top-full left-0 mt-2 w-48 rounded-xl p-2 shadow-2xl flex flex-col gap-1 z-50 transition-all duration-500"
-                      style={{ background: c.dropdownBg, border: isDark ? "1px solid rgba(16, 185, 129, 0.4)" : "1px solid #1e293b" }}
+                      style={{ background: c.dropdownBg, border: isDark ? "1px solid rgba(99, 102, 241, 0.4)" : "1px solid #332D55" }}
                     >
                       {item.dropdown.map((sub, si) => (
                         <a
@@ -199,7 +199,7 @@ export default function Blogs() {
           <div className="flex items-center gap-3">
             <button
               onClick={toggleTheme}
-              className={`w-9 h-9 rounded-full border ${c.toggleBtnBorder} flex items-center justify-center hover:opacity-80 transition-all duration-300 text-[#00a884]`}
+              className={`w-9 h-9 rounded-full border ${c.toggleBtnBorder} flex items-center justify-center hover:opacity-80 transition-all duration-300 text-[#6366F1]`}
               style={{ background: c.toggleBtnBg }}
               title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
             >
@@ -224,7 +224,7 @@ export default function Blogs() {
           className="fixed inset-0 z-50 p-6 flex flex-col gap-4 w-64 right-0 top-0 bottom-0 transition-all duration-500"
           style={{ background: c.navBg, color: "#ffffff", borderLeft: c.navBorder }}
         >
-          <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div className="flex items-center justify-between pb-4 border-b border-stone-800">
             <span className="font-bold">Menu</span>
             <button onClick={() => setMobileMenuOpen(false)}><X size={20} /></button>
           </div>
@@ -250,19 +250,19 @@ export default function Blogs() {
         className="relative w-full overflow-hidden py-20 px-6 md:px-12 flex flex-col md:flex-row items-center justify-center gap-10 md:gap-14 transition-all duration-500 ease-in-out"
         style={{
           background: c.heroBg,
-          borderTop: isDark ? "1px solid rgba(16, 185, 129, 0.5)" : "1px solid #1e293b",
-          borderBottom: isDark ? "1px solid rgba(16, 185, 129, 0.5)" : "1px solid #1e293b",
-          boxShadow: isDark ? "0 0 60px -20px rgba(16, 185, 129, 0.25) inset" : "none",
+          borderTop: isDark ? "1px solid rgba(99, 102, 241, 0.5)" : "1px solid #332D55",
+          borderBottom: isDark ? "1px solid rgba(99, 102, 241, 0.5)" : "1px solid #332D55",
+          boxShadow: isDark ? "0 0 60px -20px rgba(99, 102, 241, 0.25) inset" : "none",
         }}
       >
         <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
         <div
           className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-20 pointer-events-none"
-          style={{ background: "radial-gradient(circle, #00a884 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(circle, #6366F1 0%, transparent 70%)" }}
         />
 
         <div className="relative z-10 max-w-xl flex-1">
-          <span className="font-bold text-sm uppercase tracking-widest block mb-4 text-[#00a884]">
+          <span className="font-bold text-sm uppercase tracking-widest block mb-4 text-[#6366F1]">
             OUR BLOG
           </span>
           <h1
@@ -271,7 +271,7 @@ export default function Blogs() {
           >
             Ideas.<br />
             Insights.<br />
-            <span className="text-[#00a884]">Inspiration.</span>
+            <span className="text-[#6366F1]">Inspiration.</span>
           </h1>
           <p className="text-base md:text-lg mb-8 max-w-md opacity-90 leading-relaxed transition-colors duration-500" style={{ color: c.heroSub }}>
             Explore articles, guides, and stories to fuel ideas and drive success in modern engineering realms.
@@ -282,19 +282,19 @@ export default function Blogs() {
               <div className="text-2xl font-extrabold" style={{ color: c.heroHeading }}>50+</div>
               <div className="text-xs uppercase tracking-wide" style={{ color: c.heroSub }}>Articles</div>
             </div>
-            <div className="w-px h-8" style={{ background: isDark ? "rgba(148,163,184,0.3)" : "#cbd5e1" }} />
+            <div className="w-px h-8" style={{ background: isDark ? "rgba(168,162,158,0.3)" : "#D6D3D1" }} />
             <div>
               <div className="text-2xl font-extrabold" style={{ color: c.heroHeading }}>10k+</div>
               <div className="text-xs uppercase tracking-wide" style={{ color: c.heroSub }}>Readers</div>
             </div>
-            <div className="w-px h-8" style={{ background: isDark ? "rgba(148,163,184,0.3)" : "#cbd5e1" }} />
+            <div className="w-px h-8" style={{ background: isDark ? "rgba(168,162,158,0.3)" : "#D6D3D1" }} />
             <div>
               <div className="text-2xl font-extrabold" style={{ color: c.heroHeading }}>Weekly</div>
               <div className="text-xs uppercase tracking-wide" style={{ color: c.heroSub }}>New Posts</div>
             </div>
           </div>
 
-          <button className="bg-[#00a884] hover:bg-[#008f70] text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 text-sm transition-all duration-200 shadow-md">
+          <button className="bg-[#6366F1] hover:bg-[#4F46E5] text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 text-sm transition-all duration-200 shadow-md">
             Explore Articles <ArrowUpRight size={16} />
           </button>
         </div>
@@ -312,11 +312,11 @@ export default function Blogs() {
             className="hidden lg:block absolute z-20 w-64 -left-10 bottom-8 rounded-2xl shadow-2xl p-5 transition-all duration-500"
             style={{
               background: isDark ? "#0b1329" : "#ffffff",
-              border: isDark ? "1px solid rgba(16,185,129,0.4)" : "1px solid #e2e8f0",
+              border: isDark ? "1px solid rgba(99,102,241,0.4)" : "1px solid #E7E5E4",
             }}
           >
-            <div className="flex items-start gap-3 pb-3 mb-3 border-b" style={{ borderColor: isDark ? "rgba(148,163,184,0.15)" : "#e2e8f0" }}>
-              <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-[#00a884]" style={{ background: "rgba(16,185,129,0.12)" }}>
+            <div className="flex items-start gap-3 pb-3 mb-3 border-b" style={{ borderColor: isDark ? "rgba(168,162,158,0.15)" : "#E7E5E4" }}>
+              <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-[#6366F1]" style={{ background: "rgba(99,102,241,0.12)" }}>
                 <BookOpen size={16} />
               </div>
               <div>
@@ -325,8 +325,8 @@ export default function Blogs() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3 pb-3 mb-3 border-b" style={{ borderColor: isDark ? "rgba(148,163,184,0.15)" : "#e2e8f0" }}>
-              <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-[#00a884]" style={{ background: "rgba(16,185,129,0.12)" }}>
+            <div className="flex items-start gap-3 pb-3 mb-3 border-b" style={{ borderColor: isDark ? "rgba(168,162,158,0.15)" : "#E7E5E4" }}>
+              <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-[#6366F1]" style={{ background: "rgba(99,102,241,0.12)" }}>
                 <TrendingUp size={16} />
               </div>
               <div>
@@ -336,7 +336,7 @@ export default function Blogs() {
             </div>
 
             <div className="flex items-start gap-3">
-              <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-[#00a884]" style={{ background: "rgba(16,185,129,0.12)" }}>
+              <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-[#6366F1]" style={{ background: "rgba(99,102,241,0.12)" }}>
                 <Users size={16} />
               </div>
               <div>
@@ -352,7 +352,7 @@ export default function Blogs() {
           2. FEATURED ARTICLE SECTION
          ========================================== */}
       <section className="max-w-6xl mx-auto px-6 py-20">
-        <span className="text-xs font-bold tracking-widest block mb-3 text-[#00a884]">FEATURED ARTICLE</span>
+        <span className="text-xs font-bold tracking-widest block mb-3 text-[#6366F1]">FEATURED ARTICLE</span>
 
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-14 mt-4">
           <div className="flex-1 max-w-lg">
@@ -364,7 +364,7 @@ export default function Blogs() {
             </p>
             <a
               href="#read"
-              className="inline-flex items-center gap-2 font-bold text-sm bg-[#00a884] hover:bg-[#008f70] text-white px-6 py-3 rounded-xl transition-all duration-200 shadow-md"
+              className="inline-flex items-center gap-2 font-bold text-sm bg-[#6366F1] hover:bg-[#4F46E5] text-white px-6 py-3 rounded-xl transition-all duration-200 shadow-md"
             >
               Read More <ArrowUpRight size={16} />
             </a>
@@ -383,9 +383,9 @@ export default function Blogs() {
             </div>
             <div
               className="absolute -left-5 top-1/2 -translate-y-1/2 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg border transition-colors duration-500"
-              style={{ background: c.cardBg, borderColor: "#00a884" }}
+              style={{ background: c.cardBg, borderColor: "#6366F1" }}
             >
-              <CheckCircle size={20} className="text-[#00a884]" />
+              <CheckCircle size={20} className="text-[#6366F1]" />
             </div>
           </div>
         </div>
@@ -399,16 +399,16 @@ export default function Blogs() {
           className="w-full h-px transition-all duration-500"
           style={{
             background: isDark
-              ? "linear-gradient(90deg, transparent 0%, rgba(16,185,129,0.7) 25%, rgba(16,185,129,0.9) 50%, rgba(16,185,129,0.7) 75%, transparent 100%)"
+              ? "linear-gradient(90deg, transparent 0%, rgba(99,102,241,0.7) 25%, rgba(99,102,241,0.9) 50%, rgba(99,102,241,0.7) 75%, transparent 100%)"
               : "linear-gradient(90deg, transparent 0%, rgba(15,23,42,0.5) 50%, transparent 100%)",
-            boxShadow: isDark ? "0 0 16px 2px rgba(16,185,129,0.55)" : "none",
+            boxShadow: isDark ? "0 0 16px 2px rgba(99,102,241,0.55)" : "none",
           }}
         />
       </div>
       <section className="max-w-6xl mx-auto px-6 py-12 transition-colors duration-500">
         <div className="flex items-center justify-between mb-10">
           <div>
-            <span className="text-xs font-bold tracking-widest block mb-2 text-[#00a884]">LATEST ARTICLES</span>
+            <span className="text-xs font-bold tracking-widest block mb-2 text-[#6366F1]">LATEST ARTICLES</span>
             <h2 className="text-2xl md:text-3xl font-bold transition-colors duration-500" style={{ color: c.text }}>Fresh Reads</h2>
           </div>
           <button
@@ -431,7 +431,7 @@ export default function Blogs() {
               </div>
               <div className="p-6 flex flex-col flex-1 justify-between">
                 <div>
-                  <span className="text-xs font-bold tracking-wider uppercase block mb-3 text-[#00a884]">
+                  <span className="text-xs font-bold tracking-wider uppercase block mb-3 text-[#6366F1]">
                     {post.category}
                   </span>
                   <h3 className="text-lg font-bold tracking-tight mb-4 leading-snug transition-colors duration-500" style={{ color: c.text }}>
@@ -447,7 +447,7 @@ export default function Blogs() {
                     <span className="flex items-center gap-1"><Calendar size={13} /> {post.date}</span>
                     <span className="flex items-center gap-1"><Clock size={13} /> {post.readTime}</span>
                   </div>
-                  <ArrowUpRight size={16} className="text-[#00a884]" />
+                  <ArrowUpRight size={16} className="text-[#6366F1]" />
                 </div>
               </div>
             </article>
@@ -466,9 +466,9 @@ export default function Blogs() {
           <div className="flex items-start gap-4">
             <div
               className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 border transition-colors duration-500"
-              style={{ background: "rgba(16,185,129,0.1)", borderColor: "rgba(16,185,129,0.2)" }}
+              style={{ background: "rgba(99,102,241,0.1)", borderColor: "rgba(99,102,241,0.2)" }}
             >
-              <Mail size={22} className="text-[#00a884]" />
+              <Mail size={22} className="text-[#6366F1]" />
             </div>
             <div>
               <h3 className="text-xl font-bold mb-2 transition-colors duration-500" style={{ color: c.text }}>Stay Inspired</h3>
@@ -482,10 +482,10 @@ export default function Blogs() {
             <input
               type="email"
               placeholder="Enter your email"
-              className={`w-full px-4 py-3 border ${c.inputBorder} rounded-xl text-sm ${c.inputText} ${c.placeholder} outline-none focus:border-[#00a884] transition-colors duration-300`}
+              className={`w-full px-4 py-3 border ${c.inputBorder} rounded-xl text-sm ${c.inputText} ${c.placeholder} outline-none focus:border-[#6366F1] transition-colors duration-300`}
               style={{ background: c.inputBg }}
             />
-            <button className="bg-[#00a884] hover:bg-[#008f70] text-white w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm whitespace-nowrap">
+            <button className="bg-[#6366F1] hover:bg-[#4F46E5] text-white w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm whitespace-nowrap">
               Subscribe
             </button>
           </div>
@@ -500,14 +500,14 @@ export default function Blogs() {
           className="w-full h-px transition-all duration-500"
           style={{
             background: isDark
-              ? "linear-gradient(90deg, transparent 0%, rgba(16,185,129,0.7) 25%, rgba(16,185,129,0.9) 50%, rgba(16,185,129,0.7) 75%, transparent 100%)"
+              ? "linear-gradient(90deg, transparent 0%, rgba(99,102,241,0.7) 25%, rgba(99,102,241,0.9) 50%, rgba(99,102,241,0.7) 75%, transparent 100%)"
               : "linear-gradient(90deg, transparent 0%, rgba(15,23,42,0.5) 50%, transparent 100%)",
-            boxShadow: isDark ? "0 0 16px 2px rgba(16,185,129,0.55)" : "none",
+            boxShadow: isDark ? "0 0 16px 2px rgba(99,102,241,0.55)" : "none",
           }}
         />
       </div>
       <section className="max-w-6xl mx-auto px-6 py-16 transition-colors duration-500">
-        <span className="text-xs font-bold tracking-widest text-center block mb-10 text-[#00a884]">BROWSE BY CATEGORY</span>
+        <span className="text-xs font-bold tracking-widest text-center block mb-10 text-[#6366F1]">BROWSE BY CATEGORY</span>
 
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-6">
           {CATEGORIES.map((cat, idx) => {
@@ -523,8 +523,8 @@ export default function Blogs() {
                   style={{
                     background: c.iconCircleBg,
                     color: c.iconCircleIcon,
-                    border: isDark ? "1px solid rgba(16,185,129,0.4)" : "none",
-                    boxShadow: isDark ? "0 0 14px rgba(16,185,129,0.25)" : "none",
+                    border: isDark ? "1px solid rgba(99,102,241,0.4)" : "none",
+                    boxShadow: isDark ? "0 0 14px rgba(99,102,241,0.25)" : "none",
                   }}
                 >
                   <IconComponent size={20} />

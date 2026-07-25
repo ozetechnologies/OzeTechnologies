@@ -78,27 +78,27 @@ export default function AboutUs() {
   ];
 
   const stats = [
-    { value: "40+", label: "Projects Delivered", color: "#0d9488" },
+    { value: "40+", label: "Projects Delivered", color: "#6366F1" },
     { value: "99%", label: "Client Satisfaction", color: "#38bdf8" },
     { value: "5+", label: "Years Experience", color: "#8b7ff0" },
     { value: "15+", label: "Expert Engineers", color: "#f2795a" },
   ];
 
   const coreValues = [
-    { Icon: Target, title: "Mission Driven", desc: "We focus heavily on shipping real working business outcomes, not just lines of code.", color: "#0d9488" },
+    { Icon: Target, title: "Mission Driven", desc: "We focus heavily on shipping real working business outcomes, not just lines of code.", color: "#6366F1" },
     { Icon: Award, title: "Quality Engineering", desc: "Built with production stability in mind. Senior engineering oversight on every piece.", color: "#38bdf8" },
     { Icon: Users, title: "Absolute Transparency", desc: "Weekly active sprint demos and clear communication. No vendors lock-ins, you own everything.", color: "#8b7ff0" },
     { Icon: Heart, title: "Long-Term Partnership", desc: "We remain on call long after launching to ensure software scaling runs smooth.", color: "#f2795a" },
   ];
 
   const whoWeArePillars = [
-    { Icon: Sparkles, title: "Engineering with Purpose", desc: "We use modern engineering practices where it creates measurable value — automation, insight, and faster decisions.", color: "#0d9488" },
+    { Icon: Sparkles, title: "Engineering with Purpose", desc: "We use modern engineering practices where it creates measurable value — automation, insight, and faster decisions.", color: "#6366F1" },
     { Icon: CheckCircle2, title: "Workflow-First", desc: "Every product is designed around how teams actually work, so adoption is easy and productivity improves from day one.", color: "#38bdf8" },
     { Icon: Award, title: "Built for Scale", desc: "From startups to enterprise teams, our solutions are secure, flexible, and ready to grow with your organization.", color: "#8b7ff0" },
   ];
 
   const processSteps = [
-    { Icon: Search, title: "Discover", desc: "We understand your business, goals, and challenges in depth.", color: "#0d9488" },
+    { Icon: Search, title: "Discover", desc: "We understand your business, goals, and challenges in depth.", color: "#6366F1" },
     { Icon: PenTool, title: "Design", desc: "We design intuitive workflows and clean, purposeful interfaces.", color: "#38bdf8" },
     { Icon: Code2, title: "Build", desc: "We develop scalable, reliable solutions using modern technologies.", color: "#8b7ff0" },
     { Icon: TrendingUp, title: "Optimize", desc: "We continuously measure, improve, and help you achieve more.", color: "#f2795a" },
@@ -110,21 +110,54 @@ export default function AboutUs() {
     { Icon: MapPin, label: "Visit Us", value: "Islamabad, Pakistan" },
   ];
 
+  // NOTE: swap the img URLs below for your real team photos whenever you have them —
+  // either replace with an import (like teamMeetingImg above) or paste your own image URL.
+  const teamMembers = [
+    {
+      name: "Ahmed Khan",
+      role: "Founder & CEO",
+      bio: "Leads product strategy and client partnerships, with 8+ years building software for growing teams.",
+      img: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop",
+      color: "#6366F1",
+    },
+    {
+      name: "Sara Malik",
+      role: "Lead Product Designer",
+      bio: "Designs intuitive interfaces from real user flows, turning complex workflows into simple experiences.",
+      img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=600&auto=format&fit=crop",
+      color: "#8b7ff0",
+    },
+    {
+      name: "Bilal Ahmad",
+      role: "Head of Engineering",
+      bio: "Oversees architecture and code quality across every project, from first sprint to long-term support.",
+      img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=600&auto=format&fit=crop",
+      color: "#38bdf8",
+    },
+    {
+      name: "Hina Raza",
+      role: "Client Success Manager",
+      bio: "Keeps every engagement on track with clear communication and weekly progress across active sprints.",
+      img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600&auto=format&fit=crop",
+      color: "#f2795a",
+    },
+  ];
+
   return (
     <div data-theme={theme} style={{ background: "var(--bc-base)", color: "var(--bc-text)" }} className="min-h-screen w-full bc-body">
       <style>{`
         [data-theme="light"] {
-          --bc-base: #f7f9fc; --bc-panel: #ffffff; --bc-panel-2: #f1f5f9; --bc-line: #e2e8f0; --bc-line-soft: #edf2f7;
-          --bc-text: #0f172a; --bc-muted: #64748b; --bc-cyan: #0d9488; --bc-amber: #b45309;
+          --bc-base: #FAFAF9; --bc-panel: #ffffff; --bc-panel-2: #F5F5F4; --bc-line: #E7E5E4; --bc-line-soft: #F0EFED;
+          --bc-text: #1C1917; --bc-muted: #78716C; --bc-cyan: #6366F1; --bc-amber: #C2410C;
           --bc-btn-primary-text: #ffffff;
-          --bc-band: color-mix(in srgb, var(--bc-cyan) 7%, var(--bc-base));
-          --bc-shadow: 0 1px 2px rgba(15,23,42,0.04), 0 8px 24px -12px rgba(15,23,42,0.12);
-          --bc-shadow-lg: 0 4px 6px rgba(15,23,42,0.03), 0 20px 40px -16px rgba(15,23,42,0.16);
+          --bc-band: color-mix(in srgb, var(--bc-cyan) 6%, var(--bc-base));
+          --bc-shadow: 0 1px 2px rgba(28,25,23,0.04), 0 8px 24px -12px rgba(28,25,23,0.12);
+          --bc-shadow-lg: 0 4px 6px rgba(28,25,23,0.03), 0 20px 40px -16px rgba(28,25,23,0.16);
         }
         [data-theme="dark"] {
-          --bc-base: #0a1220; --bc-panel: #0f1b2d; --bc-panel-2: #101d31; --bc-line: #1c3350; --bc-line-soft: #16283f;
-          --bc-text: #e7edf5; --bc-muted: #8fa1b8; --bc-cyan: #5eead4; --bc-amber: #f2a93b;
-          --bc-btn-primary-text: #06121a;
+          --bc-base: #17151F; --bc-panel: #201D2E; --bc-panel-2: #262238; --bc-line: #322C47; --bc-line-soft: #2A2539;
+          --bc-text: #F5F5F4; --bc-muted: #A8A29E; --bc-cyan: #818CF8; --bc-amber: #FB923C;
+          --bc-btn-primary-text: #1E1B4B;
           --bc-band: color-mix(in srgb, var(--bc-cyan) 9%, var(--bc-base));
           --bc-shadow: 0 1px 2px rgba(0,0,0,0.2), 0 8px 24px -12px rgba(0,0,0,0.45);
           --bc-shadow-lg: 0 4px 6px rgba(0,0,0,0.2), 0 20px 45px -16px rgba(0,0,0,0.55);
@@ -148,7 +181,7 @@ export default function AboutUs() {
         .bc-btn-primary { background: var(--bc-cyan); color: var(--bc-btn-primary-text); box-shadow: 0 8px 20px -8px color-mix(in srgb, var(--bc-cyan) 55%, transparent); transition: filter 0.2s ease, transform 0.2s ease; }
         .bc-btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
         .bc-btn-ghost { border: 1px solid var(--bc-line); color: var(--bc-text); background: var(--bc-panel); transition: border-color 0.2s ease, background 0.2s ease; }
-        .bc-btn-ghost:hover { border-color: var(--bc-cyan); background: rgba(94,234,212,0.06); }
+        .bc-btn-ghost:hover { border-color: var(--bc-cyan); background: rgba(99,102,241,0.08); }
         .bc-pill-badge { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--bc-line); background: var(--bc-panel); border-radius: 999px; padding: 7px 14px 7px 10px; font-size: 0.78rem; font-weight: 600; box-shadow: var(--bc-shadow); }
 
         /* ---------- NAVBAR ---------- */
@@ -157,7 +190,7 @@ export default function AboutUs() {
         .bc-navbar-pill { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; background: #0b1220; border: 1px solid rgba(255,255,255,0.06); border-radius: 999px; padding: 10px 12px 10px 10px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.25); }
         @media (min-width: 768px) { .bc-navbar-pill { padding: 6px 8px 6px 6px; gap: 6px; } }
         .bc-navbar-brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; }
-        .bc-navbar-logo { width: 38px; height: 38px; flex-shrink: 0; border-radius: 999px; background: var(--bc-cyan); color: #06121a; font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; }
+        .bc-navbar-logo { width: 38px; height: 38px; flex-shrink: 0; border-radius: 999px; background: var(--bc-cyan); color: #ffffff; font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; }
         .bc-navbar-name { color: #ffffff; font-weight: 700; font-size: 1rem; white-space: nowrap; }
         .bc-navbar-links { display: none; }
         @media (min-width: 768px) { .bc-navbar-links { display: flex; align-items: center; gap: 26px; padding: 0 10px; flex: 1; min-width: 0; justify-content: center; } }
@@ -191,7 +224,7 @@ export default function AboutUs() {
         .bc-mobile-close { width: 34px; height: 34px; border-radius: 999px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: #f1f5f9; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
         .bc-mobile-link { color: #f1f5f9; font-size: 1rem; font-weight: 600; text-decoration: none; padding: 14px 4px; border-bottom: 1px solid rgba(255,255,255,0.08); display: block; }
         .bc-mobile-sublink { color: rgba(241,245,249,0.68); font-size: 0.88rem; text-decoration: none; padding: 10px 4px 10px 14px; display: block; }
-        .bc-mobile-cta { margin-top: auto; display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--bc-cyan, #5eead4); color: #06121a; border-radius: 999px; padding: 12px 20px; font-weight: 600; text-decoration: none; }
+        .bc-mobile-cta { margin-top: auto; display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--bc-cyan, #6366F1); color: #ffffff; border-radius: 999px; padding: 12px 20px; font-weight: 600; text-decoration: none; }
 
         /* ---------- HERO / ABOUT LAYOUT ---------- */
         .bc-hero-grid { display: grid; grid-template-columns: 1fr; gap: 48px; align-items: center; }
@@ -252,14 +285,24 @@ export default function AboutUs() {
         .bc-team-image-wrapper { border-radius: 20px; overflow: hidden; border: 1px solid var(--bc-line); box-shadow: var(--bc-shadow-lg); }
         .bc-team-image { width: 100%; height: auto; display: block; object-fit: cover; }
 
+        /* ---------- TEAM MEMBERS GRID (NEW) ---------- */
+        .bc-team-members-grid { display: grid; grid-template-columns: 1fr; gap: 28px; }
+        @media (min-width: 640px) { .bc-team-members-grid { grid-template-columns: 1fr 1fr; } }
+        @media (min-width: 992px) { .bc-team-members-grid { grid-template-columns: repeat(4, 1fr); } }
+        .bc-team-member-card { background: var(--bc-panel); border: 1px solid var(--bc-line); border-radius: 20px; padding: 22px; box-shadow: var(--bc-shadow); transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+        .bc-team-member-card:hover { transform: translateY(-4px); box-shadow: var(--bc-shadow-lg); }
+        .bc-team-member-photo { position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: 14px; overflow: hidden; border: 1px solid var(--bc-line); margin-bottom: 16px; }
+        .bc-team-member-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.35s ease; }
+        .bc-team-member-card:hover .bc-team-member-photo img { transform: scale(1.06); }
+
         /* ---------- BOTTOM CTA BANNER ---------- */
-        .bc-cta-banner { border-radius: 24px; padding: 48px; background: linear-gradient(135deg, var(--bc-cyan), color-mix(in srgb, var(--bc-cyan) 55%, #1d4ed8)); color: #06121a; }
+        .bc-cta-banner { border-radius: 24px; padding: 48px; background: linear-gradient(135deg, var(--bc-cyan), color-mix(in srgb, var(--bc-cyan) 55%, #4338CA)); color: #ffffff; }
         .bc-cta-grid { display: grid; grid-template-columns: 1fr; gap: 32px; align-items: center; }
         @media (min-width: 992px) { .bc-cta-grid { grid-template-columns: 1.1fr 0.9fr; } }
         .bc-cta-contact-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
         @media (min-width: 560px) { .bc-cta-contact-grid { grid-template-columns: 1fr 1fr 1fr; } }
         .bc-cta-contact-card { background: rgba(255,255,255,0.85); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
-        .bc-cta-contact-icon { width: 34px; height: 34px; border-radius: 999px; background: #06121a; color: #fff; display: flex; align-items: center; justify-content: center; }
+        .bc-cta-contact-icon { width: 34px; height: 34px; border-radius: 999px; background: #1E1B4B; color: #fff; display: flex; align-items: center; justify-content: center; }
       `}</style>
 
       {/* Loading Screen */}
@@ -441,7 +484,7 @@ export default function AboutUs() {
         <section className="py-16 px-6 max-w-7xl mx-auto flex flex-col gap-10">
           <div className="bc-mv-grid">
             <div className="bc-mv-card">
-              <div className="bc-icon-box-soft" style={{ backgroundColor: "rgba(13,148,136,0.12)" }}>
+              <div className="bc-icon-box-soft" style={{ backgroundColor: "rgba(99,102,241,0.12)" }}>
                 <Target size={22} style={{ color: "var(--bc-cyan)" }} />
               </div>
               <span className="bc-eyebrow">Our Mission</span>
@@ -499,6 +542,32 @@ export default function AboutUs() {
           </div>
         </section>
 
+        {/* SECTION 4.5 (NEW): MEET THE TEAM */}
+        <section className="py-16 px-6 max-w-7xl mx-auto">
+          <div className="flex flex-col items-center text-center gap-3 mb-14 max-w-xl mx-auto">
+            <span className="bc-eyebrow">Meet The Team</span>
+            <h2 className="bc-display text-3xl md:text-4xl font-bold">The People Behind Bluecode</h2>
+            <p className="text-sm opacity-75 leading-relaxed">
+              A small, senior team that stays hands-on with every project from first sprint to long-term support.
+            </p>
+          </div>
+
+          <div className="bc-team-members-grid">
+            {teamMembers.map((member, idx) => (
+              <div key={idx} className="bc-team-member-card">
+                <div className="bc-team-member-photo">
+                  <img src={member.img} alt={member.name} />
+                </div>
+                <h3 className="bc-display text-base font-bold mb-1">{member.name}</h3>
+                <span className="text-xs font-semibold mb-3 inline-block" style={{ color: member.color }}>
+                  {member.role}
+                </span>
+                <p className="text-sm opacity-75 leading-relaxed">{member.bio}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* SECTION 5 (NEW): PROCESS */}
         <section className="py-16 px-6 max-w-7xl mx-auto">
           <div className="flex flex-col items-center text-center gap-3 mb-14 max-w-xl mx-auto">
@@ -541,8 +610,8 @@ export default function AboutUs() {
                         <card.Icon size={16} />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[10px] uppercase tracking-wider text-slate-500 font-bold">{card.label}</span>
-                        <span className="text-xs font-semibold text-slate-900 truncate">{card.value}</span>
+                        <span className="text-[10px] uppercase tracking-wider text-stone-500 font-bold">{card.label}</span>
+                        <span className="text-xs font-semibold text-stone-900 truncate">{card.value}</span>
                       </div>
                     </div>
                   ))}

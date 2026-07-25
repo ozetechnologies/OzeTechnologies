@@ -54,22 +54,22 @@ export default function ContactUs() {
 
   // Dynamic Theme Palette based on State
   const theme = {
-    pageBg: darkMode ? "#0f172a" : "#ffffff",
-    pageText: darkMode ? "#f8fafc" : "#1f2937",
-    cardBg: darkMode ? "#1e293b" : "#ffffff",
-    cardBorder: darkMode ? "1px solid rgba(16, 185, 129, 0.4)" : "1px solid transparent",
-    formBg: darkMode ? "#1e293b" : "#ffffff",
-    formText: darkMode ? "#f8fafc" : "#111827",
-    inputBg: darkMode ? "#334155" : "#f9fafb",
-    inputBorder: darkMode ? "#475569" : "#e5e7eb",
-    inputText: darkMode ? "#ffffff" : "#1f2937",
-    gridContainerBg: darkMode ? "#0f172a" : "#f9fafb",
-    navBg: darkMode ? "rgba(15, 23, 42, 0.9)" : "rgba(255, 255, 255, 0.9)",
-    navText: darkMode ? "#9ca3af" : "#4b5563",
+    pageBg: darkMode ? "#17151F" : "#FAFAF9",
+    pageText: darkMode ? "#F5F5F4" : "#1C1917",
+    cardBg: darkMode ? "#201D2E" : "#ffffff",
+    cardBorder: darkMode ? "1px solid rgba(99, 102, 241, 0.4)" : "1px solid #E7E5E4",
+    formBg: darkMode ? "#201D2E" : "#ffffff",
+    formText: darkMode ? "#F5F5F4" : "#1C1917",
+    inputBg: darkMode ? "#2A2539" : "#F5F5F4",
+    inputBorder: darkMode ? "#322C47" : "#E7E5E4",
+    inputText: darkMode ? "#F5F5F4" : "#1C1917",
+    gridContainerBg: darkMode ? "#17151F" : "#F5F5F4",
+    navBg: darkMode ? "rgba(23, 21, 31, 0.9)" : "rgba(250, 250, 249, 0.9)",
+    navText: darkMode ? "#A8A29E" : "#78716C",
     navBorder: darkMode ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.08)",
-    navLogo: darkMode ? "#ffffff" : "#0f172a",
-    navBtnBg: darkMode ? "#ffffff" : "#0f172a",
-    navBtnText: darkMode ? "#0f172a" : "#ffffff",
+    navLogo: darkMode ? "#ffffff" : "#1C1917",
+    navBtnBg: darkMode ? "#ffffff" : "#1C1917",
+    navBtnText: darkMode ? "#1C1917" : "#ffffff",
   };
 
   const navLinks = [
@@ -148,7 +148,7 @@ export default function ContactUs() {
             >
               <span
                 style={{
-                  backgroundColor: "#10B981",
+                  backgroundColor: "#6366F1",
                   color: "white",
                   width: "32px",
                   height: "32px",
@@ -164,7 +164,7 @@ export default function ContactUs() {
               >
                 B
               </span>
-              BLUECODE<span style={{ color: "#10B981" }}>.</span>
+              BLUECODE<span style={{ color: "#6366F1" }}>.</span>
             </Link>
 
             {/* Center Links - Desktop / Tablet only */}
@@ -200,7 +200,7 @@ export default function ContactUs() {
                       key={link.label}
                       to={link.to}
                       style={{
-                        color: link.active ? "#10B981" : theme.navText,
+                        color: link.active ? "#6366F1" : theme.navText,
                         textDecoration: "none",
                         fontSize: "14px",
                         fontWeight: link.active ? "600" : "500",
@@ -229,7 +229,7 @@ export default function ContactUs() {
                   alignItems: "center",
                   justifyContent: "center",
                   cursor: "pointer",
-                  color: darkMode ? "#E5E7EB" : "#1f2937",
+                  color: darkMode ? "#E7E5E4" : "#1C1917",
                   fontSize: "18px",
                   transition: "all 0.2s ease",
                   flexShrink: 0,
@@ -268,7 +268,7 @@ export default function ContactUs() {
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                   type="button"
                   style={{
-                    background: "rgba(16, 185, 129, 0.15)",
+                    background: "rgba(99, 102, 241, 0.15)",
                     border: "none",
                     borderRadius: "50%",
                     width: "36px",
@@ -277,7 +277,7 @@ export default function ContactUs() {
                     alignItems: "center",
                     justifyContent: "center",
                     cursor: "pointer",
-                    color: "#10B981",
+                    color: "#6366F1",
                     flexShrink: 0,
                   }}
                 >
@@ -323,7 +323,7 @@ export default function ContactUs() {
                     to={link.to}
                     onClick={() => setMobileMenuOpen(false)}
                     style={{
-                      color: link.active ? "#10B981" : theme.navText,
+                      color: link.active ? "#6366F1" : theme.navText,
                       textDecoration: "none",
                       fontSize: "15px",
                       fontWeight: link.active ? "600" : "500",
@@ -375,7 +375,7 @@ export default function ContactUs() {
         <div style={{ maxWidth: "750px" }}>
           <span
             style={{
-              color: "#10B981",
+              color: "#6366F1",
               fontWeight: "600",
               textTransform: "uppercase",
               fontSize: "13px",
@@ -395,7 +395,7 @@ export default function ContactUs() {
               wordBreak: "break-word",
             }}
           >
-            Let's Build Something <span style={{ color: "#10B981" }}>Great</span> Together.
+            Let's Build Something <span style={{ color: "#6366F1" }}>Great</span> Together.
           </h1>
           <p style={{ fontSize: isMobile ? "15px" : "18px", opacity: "0.9", lineHeight: "1.6" }}>
             Have a question, a project in mind, or just want to say hello?
@@ -423,7 +423,7 @@ export default function ContactUs() {
             border: theme.cardBorder,
             overflow: "hidden",
             boxShadow: darkMode
-              ? "0 25px 50px -12px rgba(16, 185, 129, 0.15)"
+              ? "0 25px 50px -12px rgba(99, 102, 241, 0.15)"
               : "0 20px 25px -5px rgba(0, 0, 0, 0.05)",
             transition: "all 0.3s ease",
           }}
@@ -431,14 +431,14 @@ export default function ContactUs() {
           {/* Info Panel */}
           <div
             style={{
-              backgroundColor: "#111827",
+              backgroundColor: "#1E1B4B",
               color: "#ffffff",
               padding: isMobile ? "36px 24px" : "50px 40px",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
-              borderRight: !isMobile && darkMode ? "1px solid rgba(16, 185, 129, 0.3)" : "none",
-              borderBottom: isMobile && darkMode ? "1px solid rgba(16, 185, 129, 0.3)" : "none",
+              borderRight: !isMobile && darkMode ? "1px solid rgba(99, 102, 241, 0.3)" : "none",
+              borderBottom: isMobile && darkMode ? "1px solid rgba(99, 102, 241, 0.3)" : "none",
               boxSizing: "border-box",
             }}
           >
@@ -448,36 +448,36 @@ export default function ContactUs() {
               </h2>
 
               <div style={{ display: "flex", alignItems: "flex-start", gap: "18px", marginBottom: "26px" }}>
-                <Mail size={22} style={{ color: "#10B981", marginTop: "4px", flexShrink: 0 }} />
+                <Mail size={22} style={{ color: "#6366F1", marginTop: "4px", flexShrink: 0 }} />
                 <div>
                   <span style={{ fontWeight: "600", display: "block", color: "#ffffff", fontSize: "16px", marginBottom: "4px" }}>Email Us</span>
-                  <span style={{ color: "#9CA3AF", fontSize: "14px", lineHeight: "1.5" }}>hello@bluecode.com</span>
+                  <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>hello@bluecode.com</span>
                 </div>
               </div>
 
               <div style={{ display: "flex", alignItems: "flex-start", gap: "18px", marginBottom: "26px" }}>
-                <Phone size={22} style={{ color: "#10B981", marginTop: "4px", flexShrink: 0 }} />
+                <Phone size={22} style={{ color: "#6366F1", marginTop: "4px", flexShrink: 0 }} />
                 <div>
                   <span style={{ fontWeight: "600", display: "block", color: "#ffffff", fontSize: "16px", marginBottom: "4px" }}>Call Us</span>
-                  <span style={{ color: "#9CA3AF", fontSize: "14px", lineHeight: "1.5" }}>+1 (555) 123-4567</span>
+                  <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>+1 (555) 123-4567</span>
                 </div>
               </div>
 
               <div style={{ display: "flex", alignItems: "flex-start", gap: "18px", marginBottom: "26px" }}>
-                <MapPin size={22} style={{ color: "#10B981", marginTop: "4px", flexShrink: 0 }} />
+                <MapPin size={22} style={{ color: "#6366F1", marginTop: "4px", flexShrink: 0 }} />
                 <div>
                   <span style={{ fontWeight: "600", display: "block", color: "#ffffff", fontSize: "16px", marginBottom: "4px" }}>Visit Us</span>
-                  <span style={{ color: "#9CA3AF", fontSize: "14px", lineHeight: "1.5" }}>
+                  <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>
                     123 Innovation Drive,<br />Suite 100,<br />San Francisco, CA 94103
                   </span>
                 </div>
               </div>
 
               <div style={{ display: "flex", alignItems: "flex-start", gap: "18px", marginBottom: isMobile ? "0" : "30px" }}>
-                <Clock size={22} style={{ color: "#10B981", marginTop: "4px", flexShrink: 0 }} />
+                <Clock size={22} style={{ color: "#6366F1", marginTop: "4px", flexShrink: 0 }} />
                 <div>
                   <span style={{ fontWeight: "600", display: "block", color: "#ffffff", fontSize: "16px", marginBottom: "4px" }}>Business Hours</span>
-                  <span style={{ color: "#9CA3AF", fontSize: "14px", lineHeight: "1.5" }}>
+                  <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>
                     Monday – Friday<br />9:00 AM – 6:00 PM
                   </span>
                 </div>
@@ -599,8 +599,8 @@ export default function ContactUs() {
             <button
               type="submit"
               style={{
-                backgroundColor: darkMode ? "#ffffff" : "#111827",
-                color: darkMode ? "#111827" : "#ffffff",
+                backgroundColor: darkMode ? "#ffffff" : "#1E1B4B",
+                color: darkMode ? "#1E1B4B" : "#ffffff",
                 padding: "14px 28px",
                 border: "none",
                 borderRadius: "8px",
@@ -624,7 +624,7 @@ export default function ContactUs() {
         <div style={{ maxWidth: "1140px", margin: isMobile ? "24px 16px 40px" : "40px auto 60px", padding: isMobile ? "0" : "0 20px" }}>
           <section
             style={{
-              backgroundColor: "#111827",
+              backgroundColor: "#1E1B4B",
               padding: isMobile ? "28px 20px" : "40px",
               borderRadius: "16px",
               border: theme.cardBorder,
@@ -640,9 +640,9 @@ export default function ContactUs() {
           >
             <div style={{ flex: "1", minWidth: isMobile ? "100%" : "280px" }}>
               <h2 style={{ fontSize: isMobile ? "24px" : "30px", fontWeight: "800", marginBottom: "15px", lineHeight: "1.2" }}>
-                Let's Connect and Create <span style={{ color: "#10B981" }}>Impact.</span>
+                Let's Connect and Create <span style={{ color: "#6366F1" }}>Impact.</span>
               </h2>
-              <p style={{ fontSize: "15px", color: "#9CA3AF", lineHeight: "1.6" }}>
+              <p style={{ fontSize: "15px", color: "#A8A29E", lineHeight: "1.6" }}>
                 We're always open to new ideas, strategic partnerships, and exciting digital innovations. Drop by our office or connect digitally!
               </p>
             </div>
@@ -664,7 +664,7 @@ export default function ContactUs() {
                 justifyContent: "center",
                 alignItems: "center",
                 gap: "12px",
-                color: "#9CA3AF",
+                color: "#A8A29E",
                 fontSize: isMobile ? "13px" : "15px",
                 marginTop: isMobile ? "20px" : "30px",
                 borderTop: "1px solid #374151",
@@ -674,7 +674,7 @@ export default function ContactUs() {
               }}
             >
               <span>We respond to every single message. Let's start the conversation.</span>
-              <div style={{ display: "flex", gap: "12px", color: "#10B981" }}>
+              <div style={{ display: "flex", gap: "12px", color: "#6366F1" }}>
                 <MessageSquare size={16} />
                 <Heart size={16} />
                 <Users size={16} />
@@ -687,12 +687,12 @@ export default function ContactUs() {
       {/* --- FOOTER --- */}
       <footer
         style={{
-          backgroundColor: "#111827",
-          color: "#9CA3AF",
+          backgroundColor: "#1E1B4B",
+          color: "#A8A29E",
           padding: "30px 5%",
           textAlign: "center",
           fontSize: "14px",
-          borderTop: "1px solid #1F2937",
+          borderTop: "1px solid #332D55",
         }}
       >
         <p>&copy; 2026 BLUECODE Landing Platform. All rights reserved.</p>
