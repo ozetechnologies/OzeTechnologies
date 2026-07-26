@@ -4,6 +4,7 @@ import {
   Calendar, Clock, ArrowUpRight, Mail, Sparkles, LayoutGrid, CheckCircle,
   Code2, Layers, Smartphone, Menu, X, Sun, Moon, ChevronDown, BookOpen, TrendingUp, Users, ArrowUp
 } from "lucide-react";
+import loadingGif from "../assets/loading.gif"; // TODO: place loading.gif in src/assets (adjust path if needed)
 
 const LATEST_POSTS = [
   {
@@ -121,6 +122,7 @@ export default function Blogs() {
   const [theme, setTheme] = useState("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [pageLoading, setPageLoading] = useState(true);
 
   // --- animation-related state ---
   const [scrolled, setScrolled] = useState(false);       // navbar blur/opacity on scroll
@@ -148,6 +150,19 @@ export default function Blogs() {
     document.documentElement.style.scrollBehavior = "smooth";
     return () => {
       document.documentElement.style.scrollBehavior = "auto";
+    };
+  }, []);
+
+  // Page loader — shows for 1s on mount, then fades out
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    const t = setTimeout(() => {
+      setPageLoading(false);
+      document.body.style.overflow = "";
+    }, 1000);
+    return () => {
+      clearTimeout(t);
+      document.body.style.overflow = "";
     };
   }, []);
 
@@ -394,6 +409,26 @@ export default function Blogs() {
           background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
         }
 
+        .bc-loader-screen {
+          position: fixed;
+          inset: 0;
+          z-index: 10000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: opacity 0.5s ease;
+        }
+        .bc-loader-screen.bc-loader-hidden {
+          opacity: 0;
+          pointer-events: none;
+        }
+        .bc-loader-gif {
+          width: 84px;
+          height: 84px;
+          object-fit: contain;
+          animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+        }
+
         .cursor-shadow {
           position: fixed;
           top: 0; left: 0;
@@ -438,6 +473,14 @@ export default function Blogs() {
           box-shadow: 0 14px 30px -10px rgba(99,102,241,0.6);
         }
       `}</style>
+
+      {/* Page loader — shows briefly on mount, then fades out */}
+      <div
+        className={`bc-loader-screen ${pageLoading ? "" : "bc-loader-hidden"}`}
+        style={{ background: c.pageBg }}
+      >
+        <img src={loadingGif} alt="Loading" className="bc-loader-gif" />
+      </div>
 
       {/* Custom cursor: soft blurred shadow trailing behind + "B" badge on top, exact position */}
       <div
