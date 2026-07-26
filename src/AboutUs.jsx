@@ -1,4 +1,5 @@
 import teamMeetingImg from "./assets/team-meeting.jpg";
+import loadingGif from "./assets/loading.gif";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -372,13 +373,11 @@ export default function AboutUs() {
         .bc-body { font-family: 'Inter', sans-serif; position: relative; }
         .bc-custom-cursor-active, .bc-custom-cursor-active a, .bc-custom-cursor-active button { cursor: none; }
 
-        .bc-loader-screen { position: fixed; inset: 0; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; background: var(--bc-base); transition: opacity 0.5s ease, visibility 0.5s ease; }
+        .bc-loader-screen { position: fixed; inset: 0; z-index: 999; overflow: hidden; background: var(--bc-base); transition: opacity 0.5s ease, visibility 0.5s ease; }
         .bc-loader-screen.bc-loader-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .bc-loader-mark { position: relative; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; }
-        .bc-loader-ring { position: absolute; inset: 0; border-radius: 999px; border: 2.5px solid var(--bc-line); border-top-color: var(--bc-cyan); animation: bc-spin 0.9s linear infinite; }
-        .bc-loader-square { width: 16px; height: 16px; border: 2.5px solid var(--bc-cyan); border-radius: 3px; animation: bc-loader-pulse 1.4s ease-in-out infinite; }
-        @keyframes bc-spin { to { transform: rotate(360deg); } }
-        @keyframes bc-loader-pulse { 0%, 100% { transform: scale(0.85); opacity: 0.6; } 50% { transform: scale(1.05); opacity: 1; } }
+        .bc-loader-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; width: max-content; }
+        .bc-loader-mark { width: 84px; height: 84px; display: flex; align-items: center; justify-content: center; }
+        .bc-loader-mark img { width: 100%; height: 100%; object-fit: contain; }
         .bc-loader-label { font-size: 0.68rem; letter-spacing: 0.32em; text-transform: uppercase; color: var(--bc-muted); }
         .bc-page-content { opacity: 0; transform: translateY(6px); transition: opacity 0.6s ease, transform 0.6s ease; position: relative; z-index: 1; }
         .bc-page-content.bc-page-visible { opacity: 1; transform: translateY(0); }
@@ -600,7 +599,7 @@ export default function AboutUs() {
           html { scroll-behavior: auto; }
           .bc-reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
           .bc-float, .bc-mesh-blob-1, .bc-mesh-blob-2, .bc-mesh-blob-3,
-          .bc-loader-ring, .bc-loader-square, .bc-cta-banner,
+          .bc-cta-banner,
           .bc-card, .bc-icon-box, .bc-icon-box-soft, .bc-team-member-photo img,
           .bc-btn-primary, .bc-btn-ghost, .bc-navbar-logo, .bc-navbar-theme-btn,
           .bc-process-connector-fill, .bc-navbar-link-active::after {
@@ -616,11 +615,12 @@ export default function AboutUs() {
 
       {/* Loading Screen */}
       <div className={`bc-loader-screen ${!loading ? "bc-loader-hidden" : ""}`}>
-        <div className="bc-loader-mark">
-          <div className="bc-loader-ring" />
-          <div className="bc-loader-square" />
+        <div className="bc-loader-center">
+          <div className="bc-loader-mark">
+            <img src={loadingGif} alt="Loading" />
+          </div>
+          <span className="bc-loader-label bc-mono">About Bluecode</span>
         </div>
-        <span className="bc-loader-label bc-mono">About Bluecode</span>
       </div>
 
       {/* Ambient mesh gradient + noise background — subtle, decorative only */}

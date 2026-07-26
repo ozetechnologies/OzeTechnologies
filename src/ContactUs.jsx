@@ -1,7 +1,7 @@
 // ==========================================
 // 1. IMPORTS & SETUP
 // ==========================================
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
 import {
@@ -13,7 +13,30 @@ import {
   MessageSquare,
   Heart,
   Users,
+  ArrowUp,
 } from "lucide-react";
+
+// Reusable scroll-reveal hook (IntersectionObserver-based fade/slide-in)
+function useReveal() {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  return [ref, inView];
+}
 
 // ==========================================
 // 2. MAIN COMPONENT FUNCTION
@@ -30,12 +53,88 @@ export default function ContactUs() {
     subject: "",
     message: "",
   });
+  const [pageLoaded, setPageLoaded] = useState(false);
 
   // ---- Track window resize for responsive behaviour ----
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // ---- Hero fade-up on load ----
+  useEffect(() => {
+    const t = setTimeout(() => setPageLoaded(true), 100);
+    return () => clearTimeout(t);
+  }, []);
+
+  // ---- Scroll-reveal refs for below-the-fold sections ----
+  const [cardRef, cardInView] = useReveal();
+  const [mapRef, mapInView] = useReveal();
+  const [footerRef, footerInView] = useReveal();
+
+  // ---- Scroll progress bar + Back-to-top visibility ----
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  useEffect(() => {
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        setScrollProgress(docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0);
+        setShowBackToTop(scrollTop > 300);
+        ticking = false;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+  // ---- Cursor glow: soft drifting glow that eases toward the mouse ----
+  const cursorGlowRef = useRef(null);
+  useEffect(() => {
+    const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!canHover || reduced) return;
+    const el = cursorGlowRef.current;
+    if (!el) return;
+    let targetX = window.innerWidth / 2;
+    let targetY = window.innerHeight / 2;
+    let curX = targetX;
+    let curY = targetY;
+    let raf = null;
+    let visible = false;
+    const onMove = (e) => {
+      targetX = e.clientX;
+      targetY = e.clientY;
+      if (!visible) {
+        visible = true;
+        el.style.opacity = "1";
+      }
+    };
+    const onLeave = () => {
+      visible = false;
+      el.style.opacity = "0";
+    };
+    const tick = () => {
+      curX += (targetX - curX) * 0.07;
+      curY += (targetY - curY) * 0.07;
+      el.style.transform = `translate(${curX}px, ${curY}px)`;
+      raf = requestAnimationFrame(tick);
+    };
+    window.addEventListener("mousemove", onMove, { passive: true });
+    document.addEventListener("mouseleave", onLeave);
+    raf = requestAnimationFrame(tick);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseleave", onLeave);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
   const isMobile = windowWidth <= 768;
@@ -94,6 +193,61 @@ export default function ContactUs() {
         overflowX: "hidden",
       }}
     >
+      <style>{`
+        @keyframes bc-fadeInUp { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
+        @keyframes bc-slideInLeft { 0% { opacity: 0; transform: translateX(-40px); } 100% { opacity: 1; transform: translateX(0); } }
+        @keyframes bc-slideInRight { 0% { opacity: 0; transform: translateX(40px); } 100% { opacity: 1; transform: translateX(0); } }
+        @keyframes bc-scaleIn { 0% { opacity: 0; transform: scale(0.94); } 100% { opacity: 1; transform: scale(1); } }
+        .bc-reveal { opacity: 0; }
+        .bc-reveal.bc-in-view { animation: bc-fadeInUp 0.8s ease-out forwards; }
+        .bc-reveal-left { opacity: 0; }
+        .bc-reveal-left.bc-in-view { animation: bc-slideInLeft 0.8s ease-out forwards; }
+        .bc-reveal-right { opacity: 0; }
+        .bc-reveal-right.bc-in-view { animation: bc-slideInRight 0.8s ease-out forwards; }
+        .bc-reveal-scale { opacity: 0; }
+        .bc-reveal-scale.bc-in-view { animation: bc-scaleIn 0.7s cubic-bezier(0.22,1,0.36,1) forwards; }
+        @media (prefers-reduced-motion: reduce) { .bc-reveal, .bc-reveal-left, .bc-reveal-right, .bc-reveal-scale { opacity: 1 !important; animation: none !important; } }
+
+        .bc-card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .bc-card-hover:hover { transform: translateY(-6px); box-shadow: 0 30px 55px -18px rgba(99, 102, 241, 0.35); }
+
+        .bc-submit-btn { transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease; }
+        .bc-submit-btn:hover { transform: translateY(-2px) scale(1.05); filter: brightness(1.08); box-shadow: 0 12px 26px -8px rgba(99, 102, 241, 0.55); }
+
+        .bc-input-glow { transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .bc-input-glow:focus { border-color: #6366F1 !important; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.18); }
+
+        .bc-icon-hover { transition: transform 0.3s ease, color 0.3s ease; }
+        .bc-icon-hover:hover { transform: scale(1.15) rotate(6deg); color: #818CF8 !important; }
+
+        .bc-scroll-progress { position: fixed; top: 0; left: 0; height: 3px; background: #6366F1; z-index: 1100; transition: width 0.1s linear; }
+
+        .bc-back-to-top { position: fixed; bottom: 28px; right: 28px; width: 46px; height: 46px; border-radius: 999px; background: #6366F1; color: #ffffff; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 900; box-shadow: 0 10px 25px -8px rgba(99,102,241,0.6); opacity: 0; visibility: hidden; transform: translateY(12px) scale(0.9); transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease; }
+        .bc-back-to-top.bc-back-to-top-visible { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+        .bc-back-to-top:hover { transform: translateY(-3px) scale(1.08); }
+
+        .bc-cursor-glow { position: fixed; top: 0; left: 0; width: 640px; height: 640px; margin: -320px 0 0 -320px; pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.6s ease; will-change: transform; }
+        .bc-cursor-glow-layer { position: absolute; inset: 0; border-radius: 50%; filter: blur(60px); mix-blend-mode: screen; }
+        .bc-cursor-glow-core { background: radial-gradient(circle at 42% 45%, rgba(99,102,241,0.5) 0%, transparent 60%); }
+        .bc-cursor-glow-warm { background: radial-gradient(circle at 62% 55%, rgba(194,65,12,0.35) 0%, transparent 55%); }
+        .bc-cursor-glow-soft { background: radial-gradient(circle at 50% 50%, rgba(99,102,241,0.18) 0%, transparent 70%); filter: blur(90px); }
+        @media (hover: none), (pointer: coarse) { .bc-cursor-glow { display: none; } }
+      `}</style>
+
+      <div className="bc-scroll-progress" style={{ width: `${scrollProgress * 100}%` }} />
+      <div ref={cursorGlowRef} className="bc-cursor-glow">
+        <div className="bc-cursor-glow-layer bc-cursor-glow-soft" />
+        <div className="bc-cursor-glow-layer bc-cursor-glow-core" />
+        <div className="bc-cursor-glow-layer bc-cursor-glow-warm" />
+      </div>
+      <button
+        className={`bc-back-to-top ${showBackToTop ? "bc-back-to-top-visible" : ""}`}
+        onClick={scrollToTop}
+        aria-label="Back to top"
+      >
+        <ArrowUp size={20} />
+      </button>
+
       {/* -------------------------------------------------------------
           NAVBAR: Floating Capsule Design (Responsive)
           ------------------------------------------------------------- */}
@@ -372,7 +526,7 @@ export default function ContactUs() {
           boxSizing: "border-box",
         }}
       >
-        <div style={{ maxWidth: "750px" }}>
+        <div className={`bc-reveal ${pageLoaded ? "bc-in-view" : ""}`} style={{ maxWidth: "750px" }}>
           <span
             style={{
               color: "#6366F1",
@@ -413,6 +567,8 @@ export default function ContactUs() {
         }}
       >
         <section
+          ref={cardRef}
+          className="bc-card-hover"
           style={{
             display: "grid",
             gridTemplateColumns: isMobile ? "1fr" : "1fr 1.5fr",
@@ -430,6 +586,7 @@ export default function ContactUs() {
         >
           {/* Info Panel */}
           <div
+            className={`bc-reveal-left ${cardInView ? "bc-in-view" : ""}`}
             style={{
               backgroundColor: "#1E1B4B",
               color: "#ffffff",
@@ -448,7 +605,7 @@ export default function ContactUs() {
               </h2>
 
               <div style={{ display: "flex", alignItems: "flex-start", gap: "18px", marginBottom: "26px" }}>
-                <Mail size={22} style={{ color: "#6366F1", marginTop: "4px", flexShrink: 0 }} />
+                <Mail size={22} className="bc-icon-hover" style={{ color: "#6366F1", marginTop: "4px", flexShrink: 0 }} />
                 <div>
                   <span style={{ fontWeight: "600", display: "block", color: "#ffffff", fontSize: "16px", marginBottom: "4px" }}>Email Us</span>
                   <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>hello@bluecode.com</span>
@@ -456,7 +613,7 @@ export default function ContactUs() {
               </div>
 
               <div style={{ display: "flex", alignItems: "flex-start", gap: "18px", marginBottom: "26px" }}>
-                <Phone size={22} style={{ color: "#6366F1", marginTop: "4px", flexShrink: 0 }} />
+                <Phone size={22} className="bc-icon-hover" style={{ color: "#6366F1", marginTop: "4px", flexShrink: 0 }} />
                 <div>
                   <span style={{ fontWeight: "600", display: "block", color: "#ffffff", fontSize: "16px", marginBottom: "4px" }}>Call Us</span>
                   <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>+1 (555) 123-4567</span>
@@ -464,7 +621,7 @@ export default function ContactUs() {
               </div>
 
               <div style={{ display: "flex", alignItems: "flex-start", gap: "18px", marginBottom: "26px" }}>
-                <MapPin size={22} style={{ color: "#6366F1", marginTop: "4px", flexShrink: 0 }} />
+                <MapPin size={22} className="bc-icon-hover" style={{ color: "#6366F1", marginTop: "4px", flexShrink: 0 }} />
                 <div>
                   <span style={{ fontWeight: "600", display: "block", color: "#ffffff", fontSize: "16px", marginBottom: "4px" }}>Visit Us</span>
                   <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>
@@ -474,7 +631,7 @@ export default function ContactUs() {
               </div>
 
               <div style={{ display: "flex", alignItems: "flex-start", gap: "18px", marginBottom: isMobile ? "0" : "30px" }}>
-                <Clock size={22} style={{ color: "#6366F1", marginTop: "4px", flexShrink: 0 }} />
+                <Clock size={22} className="bc-icon-hover" style={{ color: "#6366F1", marginTop: "4px", flexShrink: 0 }} />
                 <div>
                   <span style={{ fontWeight: "600", display: "block", color: "#ffffff", fontSize: "16px", marginBottom: "4px" }}>Business Hours</span>
                   <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>
@@ -487,6 +644,7 @@ export default function ContactUs() {
 
           {/* Form Panel */}
           <form
+            className={`bc-reveal-right ${cardInView ? "bc-in-view" : ""}`}
             style={{
               backgroundColor: theme.formBg,
               padding: isMobile ? "32px 24px" : "50px 40px",
@@ -508,6 +666,7 @@ export default function ContactUs() {
               }}
             >
               <input
+                className="bc-input-glow"
                 type="text"
                 name="fullName"
                 placeholder="Full Name"
@@ -528,6 +687,7 @@ export default function ContactUs() {
                 required
               />
               <input
+                className="bc-input-glow"
                 type="email"
                 name="emailAddress"
                 placeholder="Email Address"
@@ -551,6 +711,7 @@ export default function ContactUs() {
 
             <div style={{ marginBottom: "20px" }}>
               <input
+                className="bc-input-glow"
                 type="text"
                 name="subject"
                 placeholder="Subject"
@@ -574,6 +735,7 @@ export default function ContactUs() {
 
             <div style={{ marginBottom: "20px" }}>
               <textarea
+                className="bc-input-glow"
                 name="message"
                 placeholder="Your Message"
                 style={{
@@ -598,6 +760,7 @@ export default function ContactUs() {
 
             <button
               type="submit"
+              className="bc-submit-btn"
               style={{
                 backgroundColor: darkMode ? "#ffffff" : "#1E1B4B",
                 color: darkMode ? "#1E1B4B" : "#ffffff",
@@ -621,8 +784,9 @@ export default function ContactUs() {
         </section>
 
         {/* --- SECTION 3: MAP BLOCK --- */}
-        <div style={{ maxWidth: "1140px", margin: isMobile ? "24px 16px 40px" : "40px auto 60px", padding: isMobile ? "0" : "0 20px" }}>
+        <div ref={mapRef} className={`bc-reveal ${mapInView ? "bc-in-view" : ""}`} style={{ maxWidth: "1140px", margin: isMobile ? "24px 16px 40px" : "40px auto 60px", padding: isMobile ? "0" : "0 20px" }}>
           <section
+            className="bc-card-hover"
             style={{
               backgroundColor: "#1E1B4B",
               padding: isMobile ? "28px 20px" : "40px",
@@ -675,9 +839,9 @@ export default function ContactUs() {
             >
               <span>We respond to every single message. Let's start the conversation.</span>
               <div style={{ display: "flex", gap: "12px", color: "#6366F1" }}>
-                <MessageSquare size={16} />
-                <Heart size={16} />
-                <Users size={16} />
+                <MessageSquare size={16} className="bc-icon-hover" />
+                <Heart size={16} className="bc-icon-hover" />
+                <Users size={16} className="bc-icon-hover" />
               </div>
             </div>
           </section>
@@ -686,6 +850,8 @@ export default function ContactUs() {
 
       {/* --- FOOTER --- */}
       <footer
+        ref={footerRef}
+        className={`bc-reveal ${footerInView ? "bc-in-view" : ""}`}
         style={{
           backgroundColor: "#1E1B4B",
           color: "#A8A29E",

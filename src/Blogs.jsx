@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   Calendar, Clock, ArrowUpRight, Mail, Sparkles, LayoutGrid, CheckCircle,
-  Code2, Layers, Smartphone, Menu, X, Sun, Moon, ChevronDown, BookOpen, TrendingUp, Users, ArrowUp
+  Code2, Layers, Smartphone, Menu, X, Sun, Moon, ChevronDown, BookOpen, TrendingUp, Users
 } from "lucide-react";
-import loadingGif from "../assets/loading.gif"; // TODO: place loading.gif in src/assets (adjust path if needed)
 
 const LATEST_POSTS = [
   {
@@ -41,98 +40,16 @@ const CATEGORIES = [
   { name: "Productivity", count: "10 Articles", icon: Smartphone }
 ];
 
-/* =========================================================
-   ANIMATION HELPERS
-   ========================================================= */
-
-// Scroll-reveal wrapper — fades/slides an element in once it enters the viewport.
-// direction: "up" | "left" | "right" | "center"
-function Reveal({ children, direction = "up", delay = 0, duration = 0.8, className = "", style = {} }) {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          obs.unobserve(el);
-        }
-      },
-      { threshold: 0.15 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  const hiddenTransforms = {
-    up: "translateY(40px)",
-    left: "translateX(-48px)",
-    right: "translateX(48px)",
-    center: "scale(0.94)",
-  };
-
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translate(0,0) scale(1)" : hiddenTransforms[direction],
-        transition: `opacity ${duration}s cubic-bezier(0.16,1,0.3,1) ${delay}s, transform ${duration}s cubic-bezier(0.16,1,0.3,1) ${delay}s`,
-        ...style,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-// Mouse-parallax hook — returns a small x/y offset based on cursor position within a container.
-function useParallax(strength = 4) {
-  const ref = useRef(null);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const handleMove = (e) => {
-      const rect = el.getBoundingClientRect();
-      const px = (e.clientX - rect.left) / rect.width - 0.5;
-      const py = (e.clientY - rect.top) / rect.height - 0.5;
-      setOffset({ x: px * strength * 2, y: py * strength * 2 });
-    };
-    const handleLeave = () => setOffset({ x: 0, y: 0 });
-
-    el.addEventListener("mousemove", handleMove);
-    el.addEventListener("mouseleave", handleLeave);
-    return () => {
-      el.removeEventListener("mousemove", handleMove);
-      el.removeEventListener("mouseleave", handleLeave);
-    };
-  }, [strength]);
-
-  return [ref, offset];
-}
-
 export default function Blogs() {
   const [theme, setTheme] = useState("dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
-  const [pageLoading, setPageLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  // --- animation-related state ---
-  const [scrolled, setScrolled] = useState(false);       // navbar blur/opacity on scroll
-  const [scrollPct, setScrollPct] = useState(0);          // top progress bar
-  const [showBackToTop, setShowBackToTop] = useState(false);
-  const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
-  const [cursorHover, setCursorHover] = useState(false);
-  const [heroLoaded, setHeroLoaded] = useState(false);
-
-  const [heroImgRef, heroImgOffset] = useParallax(5);
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Still set data-theme / .dark on <html> in case other parts of the app rely on it
   useEffect(() => {
@@ -145,86 +62,6 @@ export default function Blogs() {
     }
   }, [theme]);
 
-  // Smooth native scrolling
-  useEffect(() => {
-    document.documentElement.style.scrollBehavior = "smooth";
-    return () => {
-      document.documentElement.style.scrollBehavior = "auto";
-    };
-  }, []);
-
-  // Page loader — shows for 1s on mount, then fades out
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    const t = setTimeout(() => {
-      setPageLoading(false);
-      document.body.style.overflow = "";
-    }, 1000);
-    return () => {
-      clearTimeout(t);
-      document.body.style.overflow = "";
-    };
-  }, []);
-
-  // Trigger hero reveal shortly after mount
-  useEffect(() => {
-    const t = setTimeout(() => setHeroLoaded(true), 50);
-    return () => clearTimeout(t);
-  }, []);
-
-  // Scroll listener: navbar state, progress bar, back-to-top visibility
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      setScrolled(y > 20);
-      setShowBackToTop(y > 300);
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      setScrollPct(docHeight > 0 ? (y / docHeight) * 100 : 0);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Custom cursor tracking (desktop only — hidden on touch via CSS)
-  const cursorTargetRef = useRef({ x: -100, y: -100 });
-  const [shadowPos, setShadowPos] = useState({ x: -100, y: -100 }); // soft blurred glow — trails behind with lag
-
-  useEffect(() => {
-    const move = (e) => {
-      cursorTargetRef.current = { x: e.clientX, y: e.clientY };
-      setCursorPos({ x: e.clientX, y: e.clientY });
-    };
-    const overCheck = (e) => {
-      const el = e.target.closest("a, button, input");
-      setCursorHover(!!el);
-    };
-    window.addEventListener("mousemove", move);
-    window.addEventListener("mouseover", overCheck);
-    return () => {
-      window.removeEventListener("mousemove", move);
-      window.removeEventListener("mouseover", overCheck);
-    };
-  }, []);
-
-  // Smoothly lerp the blurred shadow toward the cursor for a soft trailing effect
-  useEffect(() => {
-    let raf;
-    const tick = () => {
-      setShadowPos((prev) => {
-        const target = cursorTargetRef.current;
-        const ease = 0.12;
-        return {
-          x: prev.x + (target.x - prev.x) * ease,
-          y: prev.y + (target.y - prev.y) * ease,
-        };
-      });
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, []);
-
   const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
   const isDark = theme === "dark";
 
@@ -235,6 +72,7 @@ export default function Blogs() {
     pageBg: isDark ? "#17151F" : "#FAFAF9",
     pageText: isDark ? "#F5F5F4" : "#1C1917",
 
+    // Navbar stays permanently dark regardless of theme; only the stroke changes
     navBg: "#18152A",
     navBorder: isDark ? "1px solid rgba(99, 102, 241, 0.6)" : "1px solid #332D55",
     navText: "text-stone-300",
@@ -248,6 +86,7 @@ export default function Blogs() {
     toggleBtnBg: "#201D2E",
     toggleBtnBorder: "border-stone-800",
 
+    // Hero stays permanently dark regardless of theme; only the stroke changes
     heroBg: "linear-gradient(135deg, #120F1C 0%, #1E1B32 100%)",
     heroBorder: isDark ? "rgba(99, 102, 241, 0.5)" : "#332D55",
     heroHeading: "#ffffff",
@@ -267,8 +106,8 @@ export default function Blogs() {
     inputText: isDark ? "text-white" : "text-stone-900",
     placeholder: isDark ? "placeholder-stone-500" : "placeholder-stone-400",
 
-    iconCircleBg: "linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)",
-    iconCircleIcon: "#ffffff",
+    iconCircleBg: isDark ? "rgba(99,102,241,0.14)" : "#000000",
+    iconCircleIcon: "#A5B4FC",
   };
 
   const navItems = [
@@ -298,235 +137,45 @@ export default function Blogs() {
 
   return (
     <div
-      className="w-full min-h-screen transition-colors duration-500 ease-in-out relative"
+      className="w-full min-h-screen transition-colors duration-500 ease-in-out"
       style={{ background: c.pageBg, color: c.pageText }}
     >
-      {/* ==========================================
-          GLOBAL ANIMATION STYLES
-         ========================================== */}
       <style>{`
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(24px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes floatY {
-          0%, 100% { transform: translateY(0px); }
-          50%      { transform: translateY(-14px); }
-        }
-        @keyframes popIn {
-          0%   { opacity: 0; transform: scale(0.85) translateY(10px); }
-          70%  { opacity: 1; transform: scale(1.03) translateY(0); }
-          100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        @keyframes pulseDot {
-          0%   { box-shadow: 0 0 0 0 rgba(99,102,241,0.55); }
-          70%  { box-shadow: 0 0 0 10px rgba(99,102,241,0); }
-          100% { box-shadow: 0 0 0 0 rgba(99,102,241,0); }
-        }
-        @keyframes gradientShift {
-          0%   { background-position: 0% 50%; }
-          50%  { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        @keyframes meshMove {
-          0%   { transform: translate(0,0) scale(1); }
-          50%  { transform: translate(4%, -3%) scale(1.08); }
-          100% { transform: translate(0,0) scale(1); }
-        }
-
-        .hero-fade-up { opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards; }
-        .hero-loaded .hero-fade-up { animation-play-state: running; }
-
-        .float-slow { animation: floatY 9s ease-in-out infinite; }
-        .pop-on-load { animation: popIn 0.7s cubic-bezier(0.34,1.56,0.64,1) forwards; opacity: 0; }
-        .dot-pulse { animation: pulseDot 2.2s ease-out infinite; }
-
-        .btn-anim {
-          position: relative;
-          transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
-          background-size: 200% 200%;
-        }
-        .btn-anim:hover {
-          transform: scale(1.05);
-          box-shadow: 0 10px 28px -8px rgba(99,102,241,0.55);
-          animation: gradientShift 2.5s ease infinite;
-        }
-        .btn-anim:active { transform: scale(0.96); }
-        .btn-arrow { transition: transform 0.3s ease; }
-        .btn-anim:hover .btn-arrow { transform: translateX(4px); }
-
-        .card-hover-glow {
-          transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease, border-color 0.4s ease, background-color 0.4s ease;
-        }
-        .card-hover-glow:hover {
-          transform: translateY(-10px);
-          box-shadow: 0 24px 46px -18px rgba(99,102,241,0.4);
-          border-color: rgba(99,102,241,0.55) !important;
-        }
-
-        .img-zoom { transition: transform 0.5s ease; }
-        .card-hover-glow:hover .img-zoom { transform: scale(1.06); }
-
-        .cat-icon-circle {
-          transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s ease, background-color 0.35s ease;
-        }
-        .cat-card:hover .cat-icon-circle {
-          transform: scale(1.15) rotate(8deg);
-          box-shadow: 0 0 0 6px rgba(99,102,241,0.14), 0 0 22px rgba(99,102,241,0.4);
-        }
-
-        .navbar-scrolled {
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
-        }
-
-        .nav-link { position: relative; }
-        .nav-link::after {
-          content: "";
-          position: absolute;
-          left: 0; bottom: -4px;
-          width: 0%;
-          height: 1.5px;
-          background: #6366F1;
-          transition: width 0.3s ease;
-        }
-        .nav-link:hover::after { width: 100%; }
-
-        .mesh-blob {
-          position: absolute;
-          border-radius: 9999px;
-          filter: blur(60px);
-          pointer-events: none;
-          animation: meshMove 26s ease-in-out infinite;
-        }
-
-        .noise-overlay {
-          position: absolute;
-          inset: 0;
-          pointer-events: none;
-          opacity: 0.035;
-          mix-blend-mode: overlay;
-          background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-        }
-
-        .bc-loader-screen {
-          position: fixed;
-          inset: 0;
-          z-index: 10000;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: opacity 0.5s ease;
-        }
-        .bc-loader-screen.bc-loader-hidden {
-          opacity: 0;
-          pointer-events: none;
-        }
-        .bc-loader-gif {
-          width: 84px;
-          height: 84px;
-          object-fit: contain;
-          animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
-        }
-
-        .cursor-shadow {
-          position: fixed;
-          top: 0; left: 0;
-          width: 420px; height: 420px;
-          border-radius: 9999px;
-          pointer-events: none;
-          z-index: 9998;
-          transform: translate(-50%, -50%);
-          background: radial-gradient(circle, rgba(180,150,255,0.85) 0%, rgba(167,139,250,0.6) 35%, rgba(216,180,190,0.3) 60%, rgba(216,180,190,0) 78%);
-          filter: blur(20px);
-          transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
-        }
-
-        .cursor-badge {
-          position: fixed;
-          top: 0; left: 0;
-          width: 30px; height: 30px;
-          border-radius: 9999px;
-          pointer-events: none;
-          z-index: 9999;
-          transform: translate(-50%, -50%);
-          background: #6366F1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #ffffff;
-          font-weight: 700;
-          font-size: 12px;
-          box-shadow: 0 0 0 6px rgba(99,102,241,0.18), 0 4px 18px rgba(99,102,241,0.55);
-          transition: width 0.2s ease, height 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
-        }
-
-        @media (pointer: coarse) {
-          .cursor-shadow, .cursor-badge { display: none; }
-        }
-
-        .back-to-top-btn {
-          transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease, box-shadow 0.3s ease;
-        }
-        .back-to-top-btn:hover {
-          transform: translateY(-4px) scale(1.08);
-          box-shadow: 0 14px 30px -10px rgba(99,102,241,0.6);
-        }
+        .bc-loader-screen { position: fixed; inset: 0; z-index: 999; overflow: hidden; background: ${c.pageBg}; transition: opacity 0.5s ease, visibility 0.5s ease; }
+        .bc-loader-screen.bc-loader-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .bc-loader-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; width: max-content; }
+        .bc-loader-diamonds { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; width: 46px; height: 46px; animation: bc-diamond-spin 1.6s linear infinite; }
+        .bc-loader-diamond { width: 100%; height: 100%; border-radius: 4px; }
+        .bc-loader-diamond-dark { background: #1E1B4B; }
+        .bc-loader-diamond-accent { background: #6366F1; }
+        @keyframes bc-diamond-spin { from { transform: rotate(45deg); } to { transform: rotate(405deg); } }
+        .bc-loader-label { font-size: 0.68rem; letter-spacing: 0.32em; text-transform: uppercase; color: ${c.muted}; }
+        @media (prefers-reduced-motion: reduce) { .bc-loader-diamonds { animation: none !important; } }
       `}</style>
 
-      {/* Page loader — shows briefly on mount, then fades out */}
-      <div
-        className={`bc-loader-screen ${pageLoading ? "" : "bc-loader-hidden"}`}
-        style={{ background: c.pageBg }}
-      >
-        <img src={loadingGif} alt="Loading" className="bc-loader-gif" />
+      <div className={`bc-loader-screen ${!loading ? "bc-loader-hidden" : ""}`} aria-hidden={!loading}>
+        <div className="bc-loader-center">
+          <div className="bc-loader-diamonds">
+            <div className="bc-loader-diamond bc-loader-diamond-dark" />
+            <div className="bc-loader-diamond bc-loader-diamond-accent" />
+            <div className="bc-loader-diamond bc-loader-diamond-accent" />
+            <div className="bc-loader-diamond bc-loader-diamond-dark" />
+          </div>
+          <span className="font-bold text-lg" style={{ color: c.text }}>Bluecode</span>
+          <div className="bc-loader-label">Loading</div>
+        </div>
       </div>
-
-      {/* Custom cursor: soft blurred shadow trailing behind + "B" badge on top, exact position */}
-      <div
-        className="cursor-shadow hidden md:block"
-        style={{
-          left: shadowPos.x,
-          top: shadowPos.y,
-          width: cursorHover ? 560 : 420,
-          height: cursorHover ? 560 : 420,
-          opacity: cursorHover ? 1 : 0.85,
-        }}
-      />
-      <div
-        className="cursor-badge hidden md:flex"
-        style={{
-          left: cursorPos.x,
-          top: cursorPos.y,
-          width: cursorHover ? 38 : 30,
-          height: cursorHover ? 38 : 30,
-          fontSize: cursorHover ? 13 : 12,
-        }}
-      >
-        B
-      </div>
-
-      {/* Scroll progress bar */}
-      <div
-        className="fixed top-0 left-0 h-[3px] z-[60] bg-[#6366F1] transition-[width] duration-150 ease-out"
-        style={{ width: `${scrollPct}%`, boxShadow: "0 0 8px rgba(99,102,241,0.7)" }}
-      />
 
       {/* ==========================================
           PILL NAVBAR
          ========================================== */}
       <header className="w-full sticky top-0 z-50 px-4 md:px-8 pt-4">
         <div
-          className={`max-w-6xl mx-auto flex items-center justify-between px-4 md:px-6 py-3 rounded-full shadow-xl transition-all duration-500 ease-in-out ${scrolled ? "navbar-scrolled" : ""}`}
-          style={{
-            background: scrolled ? "rgba(24,21,42,0.85)" : c.navBg,
-            color: "#ffffff",
-            border: c.navBorder,
-            boxShadow: scrolled ? "0 8px 30px -10px rgba(0,0,0,0.5)" : undefined,
-          }}
+          className="max-w-6xl mx-auto flex items-center justify-between px-4 md:px-6 py-3 rounded-full shadow-xl transition-all duration-500 ease-in-out"
+          style={{ background: c.navBg, color: "#ffffff", border: c.navBorder }}
         >
           <Link to="/" className="flex items-center gap-2 group">
-            <span className="w-8 h-8 rounded-full bg-[#6366F1] text-white flex items-center justify-center font-bold text-base shadow-sm transition-transform duration-300 group-hover:scale-110">
+            <span className="w-8 h-8 rounded-full bg-[#6366F1] text-white flex items-center justify-center font-bold text-base shadow-sm">
               B
             </span>
             <span className="font-bold tracking-wide text-lg" style={{ color: "#ffffff" }}>
@@ -545,24 +194,15 @@ export default function Blogs() {
                 >
                   <button
                     type="button"
-                    className={`nav-link text-[14px] font-medium ${c.navText} ${c.navTextHover} flex items-center gap-1 transition-colors duration-300`}
+                    className={`text-[14px] font-medium ${c.navText} ${c.navTextHover} flex items-center gap-1 transition-colors duration-300`}
                   >
-                    {item.label}
-                    <ChevronDown
-                      size={14}
-                      className="opacity-70 transition-transform duration-300"
-                      style={{ transform: openDropdown === item.label ? "rotate(180deg)" : "rotate(0deg)" }}
-                    />
+                    {item.label} <ChevronDown size={14} className="opacity-70" />
                   </button>
 
                   {openDropdown === item.label && (
                     <div
-                      className="absolute top-full left-0 mt-2 w-48 rounded-xl p-2 shadow-2xl flex flex-col gap-1 z-50"
-                      style={{
-                        background: c.dropdownBg,
-                        border: isDark ? "1px solid rgba(99, 102, 241, 0.4)" : "1px solid #332D55",
-                        animation: "fadeUp 0.25s ease forwards",
-                      }}
+                      className="absolute top-full left-0 mt-2 w-48 rounded-xl p-2 shadow-2xl flex flex-col gap-1 z-50 transition-all duration-500"
+                      style={{ background: c.dropdownBg, border: isDark ? "1px solid rgba(99, 102, 241, 0.4)" : "1px solid #332D55" }}
                     >
                       {item.dropdown.map((sub, si) => (
                         <a
@@ -580,7 +220,7 @@ export default function Blogs() {
                 <Link
                   key={i}
                   to={item.href}
-                  className={`nav-link text-[14px] font-medium ${c.navText} ${c.navTextHover} transition-colors duration-300`}
+                  className={`text-[14px] font-medium ${c.navText} ${c.navTextHover} transition-colors duration-300`}
                 >
                   {item.label}
                 </Link>
@@ -591,7 +231,7 @@ export default function Blogs() {
           <div className="flex items-center gap-3">
             <button
               onClick={toggleTheme}
-              className={`w-9 h-9 rounded-full border ${c.toggleBtnBorder} flex items-center justify-center hover:opacity-80 hover:scale-110 transition-all duration-300 text-[#6366F1]`}
+              className={`w-9 h-9 rounded-full border ${c.toggleBtnBorder} flex items-center justify-center hover:opacity-80 transition-all duration-300 text-[#6366F1]`}
               style={{ background: c.toggleBtnBg }}
               title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
             >
@@ -613,8 +253,8 @@ export default function Blogs() {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div
-          className="fixed inset-0 z-50 p-6 flex flex-col gap-4 w-64 right-0 top-0 bottom-0"
-          style={{ background: c.navBg, color: "#ffffff", borderLeft: c.navBorder, animation: "fadeUp 0.3s ease forwards" }}
+          className="fixed inset-0 z-50 p-6 flex flex-col gap-4 w-64 right-0 top-0 bottom-0 transition-all duration-500"
+          style={{ background: c.navBg, color: "#ffffff", borderLeft: c.navBorder }}
         >
           <div className="flex items-center justify-between pb-4 border-b border-stone-800">
             <span className="font-bold">Menu</span>
@@ -639,7 +279,7 @@ export default function Blogs() {
           1. DYNAMIC HERO SECTION
          ========================================== */}
       <section
-        className={`relative w-full overflow-hidden py-20 px-6 md:px-12 flex flex-col md:flex-row items-center justify-center gap-10 md:gap-14 transition-all duration-500 ease-in-out ${heroLoaded ? "hero-loaded" : ""}`}
+        className="relative w-full overflow-hidden py-20 px-6 md:px-12 flex flex-col md:flex-row items-center justify-center gap-10 md:gap-14 transition-all duration-500 ease-in-out"
         style={{
           background: c.heroBg,
           borderTop: isDark ? "1px solid rgba(99, 102, 241, 0.5)" : "1px solid #332D55",
@@ -648,32 +288,28 @@ export default function Blogs() {
         }}
       >
         <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
-
-        {/* Subtle animated mesh gradient blobs */}
-        <div className="mesh-blob w-96 h-96 top-[-10%] right-[-5%]" style={{ background: "radial-gradient(circle, #6366F1 0%, transparent 70%)", opacity: 0.22 }} />
-        <div className="mesh-blob w-72 h-72 bottom-[-10%] left-[-5%]" style={{ background: "radial-gradient(circle, #4F46E5 0%, transparent 70%)", opacity: 0.16, animationDelay: "4s" }} />
-        <div className="noise-overlay" />
+        <div
+          className="absolute top-0 right-0 w-96 h-96 rounded-full opacity-20 pointer-events-none"
+          style={{ background: "radial-gradient(circle, #6366F1 0%, transparent 70%)" }}
+        />
 
         <div className="relative z-10 max-w-xl flex-1">
-          <span className="hero-fade-up font-bold text-sm uppercase tracking-widest block mb-4 text-[#6366F1]" style={{ animationDelay: "0s" }}>
+          <span className="font-bold text-sm uppercase tracking-widest block mb-4 text-[#6366F1]">
             OUR BLOG
           </span>
           <h1
-            className="hero-fade-up text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-6"
-            style={{ color: c.heroHeading, animationDelay: "0s", animationDuration: "0.8s" }}
+            className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-6 transition-colors duration-500"
+            style={{ color: c.heroHeading }}
           >
             Ideas.<br />
             Insights.<br />
             <span className="text-[#6366F1]">Inspiration.</span>
           </h1>
-          <p
-            className="hero-fade-up text-base md:text-lg mb-8 max-w-md opacity-90 leading-relaxed"
-            style={{ color: c.heroSub, animationDelay: "0.2s" }}
-          >
+          <p className="text-base md:text-lg mb-8 max-w-md opacity-90 leading-relaxed transition-colors duration-500" style={{ color: c.heroSub }}>
             Explore articles, guides, and stories to fuel ideas and drive success in modern engineering realms.
           </p>
 
-          <div className="hero-fade-up flex items-center gap-6 mb-8" style={{ animationDelay: "0.3s" }}>
+          <div className="flex items-center gap-6 mb-8">
             <div>
               <div className="text-2xl font-extrabold" style={{ color: c.heroHeading }}>50+</div>
               <div className="text-xs uppercase tracking-wide" style={{ color: c.heroSub }}>Articles</div>
@@ -690,23 +326,13 @@ export default function Blogs() {
             </div>
           </div>
 
-          <button
-            className="hero-fade-up btn-anim group bg-[#6366F1] hover:bg-[#4F46E5] text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 text-sm shadow-md"
-            style={{ animationDelay: "0.4s", backgroundImage: "linear-gradient(90deg,#6366F1,#4F46E5,#6366F1)" }}
-          >
-            Explore Articles <ArrowUpRight size={16} className="btn-arrow" />
+          <button className="bg-[#6366F1] hover:bg-[#4F46E5] text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 text-sm transition-all duration-200 shadow-md">
+            Explore Articles <ArrowUpRight size={16} />
           </button>
         </div>
 
-        <div ref={heroImgRef} className="relative z-10 flex-1 w-full max-w-xl">
-          <div
-            className={`float-slow aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border ${c.heroImgBorder}`}
-            style={{
-              transform: `translate(${heroImgOffset.x}px, ${heroImgOffset.y}px)`,
-              transition: "transform 0.2s ease-out, box-shadow 0.4s ease",
-              boxShadow: "0 30px 60px -20px rgba(99,102,241,0.35)",
-            }}
-          >
+        <div className="relative z-10 flex-1 w-full max-w-xl">
+          <div className={`aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border ${c.heroImgBorder} transition-colors duration-500`}>
             <img
               src="https://images.unsplash.com/photo-1499955085172-a104c9463ece?q=80&w=800"
               alt="Modern Office Setup"
@@ -715,15 +341,14 @@ export default function Blogs() {
           </div>
 
           <div
-            className="pop-on-load hidden lg:block absolute z-20 w-64 -left-10 bottom-8 rounded-2xl shadow-2xl p-5"
+            className="hidden lg:block absolute z-20 w-64 -left-10 bottom-8 rounded-2xl shadow-2xl p-5 transition-all duration-500"
             style={{
               background: isDark ? "#0b1329" : "#ffffff",
               border: isDark ? "1px solid rgba(99,102,241,0.4)" : "1px solid #E7E5E4",
-              animationDelay: "0.6s",
             }}
           >
             <div className="flex items-start gap-3 pb-3 mb-3 border-b" style={{ borderColor: isDark ? "rgba(168,162,158,0.15)" : "#E7E5E4" }}>
-              <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-[#6366F1] dot-pulse" style={{ background: "rgba(99,102,241,0.12)" }}>
+              <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-[#6366F1]" style={{ background: "rgba(99,102,241,0.12)" }}>
                 <BookOpen size={16} />
               </div>
               <div>
@@ -759,45 +384,42 @@ export default function Blogs() {
           2. FEATURED ARTICLE SECTION
          ========================================== */}
       <section className="max-w-6xl mx-auto px-6 py-20">
-        <Reveal direction="up">
-          <span className="text-xs font-bold tracking-widest block mb-3 text-[#6366F1]">FEATURED ARTICLE</span>
-        </Reveal>
+        <span className="text-xs font-bold tracking-widest block mb-3 text-[#6366F1]">FEATURED ARTICLE</span>
 
         <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-14 mt-4">
-          <Reveal direction="left" className="flex-1 max-w-lg">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-5 leading-tight" style={{ color: c.text }}>
+          <div className="flex-1 max-w-lg">
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-5 leading-tight transition-colors duration-500" style={{ color: c.text }}>
               The Future of Digital Innovation
             </h2>
-            <p className="text-base leading-relaxed mb-8" style={{ color: c.muted }}>
+            <p className="text-base leading-relaxed mb-8 transition-colors duration-500" style={{ color: c.muted }}>
               How businesses are leveraging next-gen cloud structures, robust automation patterns, and modular software designs to create deep operational impact and build lasting customer pipelines.
             </p>
             <a
               href="#read"
-              className="btn-anim group inline-flex items-center gap-2 font-bold text-sm bg-[#6366F1] hover:bg-[#4F46E5] text-white px-6 py-3 rounded-xl shadow-md"
-              style={{ backgroundImage: "linear-gradient(90deg,#6366F1,#4F46E5,#6366F1)" }}
+              className="inline-flex items-center gap-2 font-bold text-sm bg-[#6366F1] hover:bg-[#4F46E5] text-white px-6 py-3 rounded-xl transition-all duration-200 shadow-md"
             >
-              Read More <ArrowUpRight size={16} className="btn-arrow" />
+              Read More <ArrowUpRight size={16} />
             </a>
-          </Reveal>
+          </div>
 
-          <Reveal direction="right" delay={0.1} className="flex-1 relative w-full">
+          <div className="flex-1 relative w-full">
             <div
-              className="card-hover-glow w-full aspect-[16/10] rounded-2xl overflow-hidden p-0 shadow-lg border"
+              className="w-full aspect-[16/10] rounded-2xl overflow-hidden p-0 shadow-lg border transition-colors duration-500"
               style={{ background: c.cardBg, borderColor: c.cardBorder }}
             >
               <img
                 src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800"
                 alt="Architecture Setup"
-                className="img-zoom w-full h-full object-cover"
+                className="w-full h-full object-cover"
               />
             </div>
             <div
-              className="absolute -left-5 top-1/2 -translate-y-1/2 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg border dot-pulse"
+              className="absolute -left-5 top-1/2 -translate-y-1/2 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg border transition-colors duration-500"
               style={{ background: c.cardBg, borderColor: "#6366F1" }}
             >
               <CheckCircle size={20} className="text-[#6366F1]" />
             </div>
-          </Reveal>
+          </div>
         </div>
       </section>
 
@@ -806,7 +428,7 @@ export default function Blogs() {
          ========================================== */}
       <div className="max-w-6xl mx-auto px-6">
         <div
-          className="w-full h-px"
+          className="w-full h-px transition-all duration-500"
           style={{
             background: isDark
               ? "linear-gradient(90deg, transparent 0%, rgba(99,102,241,0.7) 25%, rgba(99,102,241,0.9) 50%, rgba(99,102,241,0.7) 75%, transparent 100%)"
@@ -815,55 +437,52 @@ export default function Blogs() {
           }}
         />
       </div>
-      <section className="max-w-6xl mx-auto px-6 py-12">
-        <Reveal direction="up">
-          <div className="flex items-center justify-between mb-10">
-            <div>
-              <span className="text-xs font-bold tracking-widest block mb-2 text-[#6366F1]">LATEST ARTICLES</span>
-              <h2 className="text-2xl md:text-3xl font-bold" style={{ color: c.text }}>Fresh Reads</h2>
-            </div>
-            <button
-              className="btn-anim group px-5 py-2.5 rounded-xl font-semibold text-xs flex items-center gap-2 border"
-              style={{ color: c.text, borderColor: c.line }}
-            >
-              View All Articles <ArrowUpRight size={14} className="btn-arrow" />
-            </button>
+      <section className="max-w-6xl mx-auto px-6 py-12 transition-colors duration-500">
+        <div className="flex items-center justify-between mb-10">
+          <div>
+            <span className="text-xs font-bold tracking-widest block mb-2 text-[#6366F1]">LATEST ARTICLES</span>
+            <h2 className="text-2xl md:text-3xl font-bold transition-colors duration-500" style={{ color: c.text }}>Fresh Reads</h2>
           </div>
-        </Reveal>
+          <button
+            className="px-5 py-2.5 rounded-xl font-semibold text-xs flex items-center gap-2 border transition-colors duration-300"
+            style={{ color: c.text, borderColor: c.line }}
+          >
+            View All Articles <ArrowUpRight size={14} />
+          </button>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {LATEST_POSTS.map((post, idx) => (
-            <Reveal key={post.id} direction="up" delay={idx * 0.12}>
-              <article
-                className="card-hover-glow rounded-2xl overflow-hidden flex flex-col h-full shadow-lg border"
-                style={{ background: c.cardBg, borderColor: c.cardBorder }}
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden">
-                  <img src={post.img} alt={post.title} className="img-zoom w-full h-full object-cover" />
+          {LATEST_POSTS.map((post) => (
+            <article
+              key={post.id}
+              className="rounded-2xl overflow-hidden flex flex-col h-full shadow-lg border transition-colors duration-500"
+              style={{ background: c.cardBg, borderColor: c.cardBorder }}
+            >
+              <div className="w-full aspect-[16/10] overflow-hidden">
+                <img src={post.img} alt={post.title} className="w-full h-full object-cover transition-transform duration-300 hover:scale-105" />
+              </div>
+              <div className="p-6 flex flex-col flex-1 justify-between">
+                <div>
+                  <span className="text-xs font-bold tracking-wider uppercase block mb-3 text-[#6366F1]">
+                    {post.category}
+                  </span>
+                  <h3 className="text-lg font-bold tracking-tight mb-4 leading-snug transition-colors duration-500" style={{ color: c.text }}>
+                    {post.title}
+                  </h3>
                 </div>
-                <div className="p-6 flex flex-col flex-1 justify-between">
-                  <div>
-                    <span className="text-xs font-bold tracking-wider uppercase block mb-3 text-[#6366F1]">
-                      {post.category}
-                    </span>
-                    <h3 className="text-lg font-bold tracking-tight mb-4 leading-snug" style={{ color: c.text }}>
-                      {post.title}
-                    </h3>
-                  </div>
 
-                  <div
-                    className="flex items-center justify-between pt-4 border-t text-xs"
-                    style={{ borderColor: c.line, color: c.muted }}
-                  >
-                    <div className="flex items-center gap-4">
-                      <span className="flex items-center gap-1"><Calendar size={13} /> {post.date}</span>
-                      <span className="flex items-center gap-1"><Clock size={13} /> {post.readTime}</span>
-                    </div>
-                    <ArrowUpRight size={16} className="text-[#6366F1] btn-arrow" />
+                <div
+                  className="flex items-center justify-between pt-4 border-t text-xs transition-colors duration-500"
+                  style={{ borderColor: c.line, color: c.muted }}
+                >
+                  <div className="flex items-center gap-4">
+                    <span className="flex items-center gap-1"><Calendar size={13} /> {post.date}</span>
+                    <span className="flex items-center gap-1"><Clock size={13} /> {post.readTime}</span>
                   </div>
+                  <ArrowUpRight size={16} className="text-[#6366F1]" />
                 </div>
-              </article>
-            </Reveal>
+              </div>
+            </article>
           ))}
         </div>
       </section>
@@ -872,42 +491,37 @@ export default function Blogs() {
           4. NEWSLETTER SUBSCRIPTION BANNER
          ========================================== */}
       <section className="max-w-6xl mx-auto px-6 py-12">
-        <Reveal direction="center">
-          <div
-            className={`w-full rounded-2xl p-8 md:p-12 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-xl border ${c.newsletterBorder}`}
-            style={{ background: c.newsletterBg }}
-          >
-            <div className="flex items-start gap-4">
-              <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 border dot-pulse"
-                style={{ background: "rgba(99,102,241,0.1)", borderColor: "rgba(99,102,241,0.2)" }}
-              >
-                <Mail size={22} className="text-[#6366F1]" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold mb-2" style={{ color: c.text }}>Stay Inspired</h3>
-                <p className="text-sm max-w-md" style={{ color: c.muted }}>
-                  Subscribe to our newsletter and get the latest insights and updates delivered to your inbox.
-                </p>
-              </div>
+        <div
+          className={`w-full rounded-2xl p-8 md:p-12 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-xl border ${c.newsletterBorder} transition-colors duration-500`}
+          style={{ background: c.newsletterBg }}
+        >
+          <div className="flex items-start gap-4">
+            <div
+              className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 border transition-colors duration-500"
+              style={{ background: "rgba(99,102,241,0.1)", borderColor: "rgba(99,102,241,0.2)" }}
+            >
+              <Mail size={22} className="text-[#6366F1]" />
             </div>
-
-            <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:max-w-md">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className={`w-full px-4 py-3 border ${c.inputBorder} rounded-xl text-sm ${c.inputText} ${c.placeholder} outline-none focus:border-[#6366F1] transition-colors duration-300`}
-                style={{ background: c.inputBg }}
-              />
-              <button
-                className="btn-anim bg-[#6366F1] hover:bg-[#4F46E5] text-white w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm whitespace-nowrap"
-                style={{ backgroundImage: "linear-gradient(90deg,#6366F1,#4F46E5,#6366F1)" }}
-              >
-                Subscribe
-              </button>
+            <div>
+              <h3 className="text-xl font-bold mb-2 transition-colors duration-500" style={{ color: c.text }}>Stay Inspired</h3>
+              <p className="text-sm max-w-md transition-colors duration-500" style={{ color: c.muted }}>
+                Subscribe to our newsletter and get the latest insights and updates delivered to your inbox.
+              </p>
             </div>
           </div>
-        </Reveal>
+
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:max-w-md">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className={`w-full px-4 py-3 border ${c.inputBorder} rounded-xl text-sm ${c.inputText} ${c.placeholder} outline-none focus:border-[#6366F1] transition-colors duration-300`}
+              style={{ background: c.inputBg }}
+            />
+            <button className="bg-[#6366F1] hover:bg-[#4F46E5] text-white w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm whitespace-nowrap">
+              Subscribe
+            </button>
+          </div>
+        </div>
       </section>
 
       {/* ==========================================
@@ -915,7 +529,7 @@ export default function Blogs() {
          ========================================== */}
       <div className="max-w-6xl mx-auto px-6">
         <div
-          className="w-full h-px"
+          className="w-full h-px transition-all duration-500"
           style={{
             background: isDark
               ? "linear-gradient(90deg, transparent 0%, rgba(99,102,241,0.7) 25%, rgba(99,102,241,0.9) 50%, rgba(99,102,241,0.7) 75%, transparent 100%)"
@@ -924,53 +538,36 @@ export default function Blogs() {
           }}
         />
       </div>
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <Reveal direction="up">
-          <span className="text-xs font-bold tracking-widest text-center block mb-10 text-[#6366F1]">BROWSE BY CATEGORY</span>
-        </Reveal>
+      <section className="max-w-6xl mx-auto px-6 py-16 transition-colors duration-500">
+        <span className="text-xs font-bold tracking-widest text-center block mb-10 text-[#6366F1]">BROWSE BY CATEGORY</span>
 
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-6">
           {CATEGORIES.map((cat, idx) => {
             const IconComponent = cat.icon;
             return (
-              <Reveal key={idx} direction="up" delay={idx * 0.08}>
+              <div
+                key={idx}
+                className="flex flex-col items-center text-center p-6 rounded-xl shadow-md border transition-colors duration-500"
+                style={{ background: c.cardBg, borderColor: c.cardBorder }}
+              >
                 <div
-                  className="cat-card card-hover-glow flex flex-col items-center text-center p-6 rounded-xl shadow-md border"
-                  style={{ background: c.cardBg, borderColor: c.cardBorder }}
+                  className="w-12 h-12 rounded-full flex items-center justify-center mb-4 transition-colors duration-500"
+                  style={{
+                    background: c.iconCircleBg,
+                    color: c.iconCircleIcon,
+                    border: isDark ? "1px solid rgba(99,102,241,0.4)" : "none",
+                    boxShadow: isDark ? "0 0 14px rgba(99,102,241,0.25)" : "none",
+                  }}
                 >
-                  <div
-                    className="cat-icon-circle w-12 h-12 rounded-full flex items-center justify-center mb-4"
-                    style={{
-                      background: c.iconCircleBg,
-                      color: c.iconCircleIcon,
-                      border: "none",
-                      boxShadow: "0 6px 18px -4px rgba(99,102,241,0.55)",
-                    }}
-                  >
-                    <IconComponent size={20} />
-                  </div>
-                  <span className="text-sm font-bold block mb-1" style={{ color: c.text }}>{cat.name}</span>
-                  <span className="text-xs" style={{ color: c.muted }}>{cat.count}</span>
+                  <IconComponent size={20} />
                 </div>
-              </Reveal>
+                <span className="text-sm font-bold block mb-1 transition-colors duration-500" style={{ color: c.text }}>{cat.name}</span>
+                <span className="text-xs transition-colors duration-500" style={{ color: c.muted }}>{cat.count}</span>
+              </div>
             );
           })}
         </div>
       </section>
-
-      {/* Back to top */}
-      <button
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className="back-to-top-btn fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-[#6366F1] text-white flex items-center justify-center shadow-xl"
-        style={{
-          opacity: showBackToTop ? 1 : 0,
-          pointerEvents: showBackToTop ? "auto" : "none",
-          transform: showBackToTop ? "translateY(0)" : "translateY(20px)",
-        }}
-        aria-label="Back to top"
-      >
-        <ArrowUp size={18} />
-      </button>
     </div>
   );
 }

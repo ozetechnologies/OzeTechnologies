@@ -480,6 +480,11 @@ export default function LandingPage() {
         .bc-hero-stat-item:first-child { padding-left: 0; }
         .bc-hero-stat-divider { width: 1px; height: 30px; background: var(--bc-line); }
         .bc-hero-stat-icon { width: 34px; height: 34px; border-radius: 10px; background: color-mix(in srgb, var(--bc-cyan) 14%, transparent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        @media (max-width: 640px) {
+          .bc-hero-stats-row { flex-direction: column; align-items: flex-start; gap: 14px; }
+          .bc-hero-stat-item { padding: 0; width: 100%; }
+          .bc-hero-stat-divider { display: none; }
+        }
         .bc-navbar-wrap { display: flex; justify-content: center; padding: 16px 20px 0; }
         .bc-navbar-row { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 920px; }
         .bc-navbar-pill { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; background: #18152A; border: 1px solid rgba(255,255,255,0.06); border-radius: 999px; padding: 10px 12px 10px 10px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.25); }
@@ -542,18 +547,20 @@ export default function LandingPage() {
       `}</style>
 
       <div className={`bc-loader-screen ${!loading ? "bc-loader-hidden" : ""}`} aria-hidden={!loading}>
-        <div className="bc-loader-mark">
-          <div className="bc-loader-diamonds">
-            <div className="bc-loader-diamond bc-loader-diamond-dark" />
-            <div className="bc-loader-diamond bc-loader-diamond-accent" />
-            <div className="bc-loader-diamond bc-loader-diamond-accent" />
-            <div className="bc-loader-diamond bc-loader-diamond-dark" />
+        <div className="bc-loader-center">
+          <div className="bc-loader-mark">
+            <div className="bc-loader-diamonds">
+              <div className="bc-loader-diamond bc-loader-diamond-dark" />
+              <div className="bc-loader-diamond bc-loader-diamond-accent" />
+              <div className="bc-loader-diamond bc-loader-diamond-accent" />
+              <div className="bc-loader-diamond bc-loader-diamond-dark" />
+            </div>
           </div>
+          <div className="bc-loader-word">
+            <span className="bc-display font-bold text-lg" style={{ color: "var(--bc-text)" }}>Bluecode</span>
+          </div>
+          <div className="bc-loader-label bc-mono">Loading</div>
         </div>
-        <div className="bc-loader-word">
-          <span className="bc-display font-bold text-lg" style={{ color: "var(--bc-text)" }}>Bluecode</span>
-        </div>
-        <div className="bc-loader-label bc-mono">Loading</div>
       </div>
 
       <div className="bc-scroll-progress" style={{ width: `${scrollProgress * 100}%` }} />
@@ -750,7 +757,7 @@ export default function LandingPage() {
 
             <div className={`bc-hero-stats-row bc-reveal ${!loading ? "bc-in-view" : ""}`} style={{ animationDelay: "0.5s" }}>
               {heroStats.map((s, i) => (
-                <div key={i} className="flex items-center">
+                <div key={i} className="flex items-center w-full sm:w-auto">
                   {i > 0 && <div className="bc-hero-stat-divider" />}
                   <div className="bc-hero-stat-item">
                     <div className="bc-hero-stat-icon">
