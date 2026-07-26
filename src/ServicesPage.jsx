@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import teamPhoto from "./assets/team-meeting.jpg"; // apna actual image path/naam yahan daalein
 import {
@@ -47,12 +47,58 @@ import {
   Circle,
 } from "lucide-react";
 
+/* ---------------------------------------------------------------------
+   useReveal — small IntersectionObserver hook used for "scroll into
+   view" section animations (fade + move, alternating direction).
+--------------------------------------------------------------------- */
+function useReveal(options) {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -60px 0px", ...options }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  return [ref, inView];
+}
+
 export default function ServicesPage() {
   const [theme, setTheme] = useState("light");
   const [loading, setLoading] = useState(true);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
+
+  // ---- animation-related state ----
+  const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const [cursorHover, setCursorHover] = useState(false);
+  const [heroParallax, setHeroParallax] = useState({ x: 0, y: 0 });
+
+  const cursorBRef = useRef(null);
+  const cursorRingRef = useRef(null);
+  const cursorGlowRef = useRef(null);
+
+  // scroll-reveal refs for each major section (alternating directions)
+  const [svcRef, svcInView] = useReveal();
+  const [processRef, processInView] = useReveal();
+  const [showcaseRef, showcaseInView] = useReveal();
+  const [whyRef, whyInView] = useReveal();
+  const [industriesRef, industriesInView] = useReveal();
+  const [faqRef, faqInView] = useReveal();
+  const [ctaRef, ctaInView] = useReveal();
+  const [footerRef, footerInView] = useReveal();
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1000);
@@ -73,7 +119,95 @@ export default function ServicesPage() {
     };
   }, [mobileMenuOpen]);
 
+  // scroll progress bar + navbar blur + back-to-top visibility
+  useEffect(() => {
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        const doc = document.documentElement;
+        const scrollTop = window.scrollY;
+        const height = doc.scrollHeight - doc.clientHeight;
+        setScrolled(scrollTop > 10);
+        setShowBackToTop(scrollTop > 300);
+        setScrollProgress(height > 0 ? (scrollTop / height) * 100 : 0);
+        ticking = false;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // custom cursor (desktop / fine-pointer only)
+  useEffect(() => {
+    const badge = cursorBRef.current;
+    const ring = cursorRingRef.current;
+    if (!badge || !ring) return;
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+
+    const moveCursor = (e) => {
+      badge.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+      ring.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+    };
+    const handleOver = (e) => {
+      if (e.target.closest && e.target.closest("a, button, .bc-cursor-hover")) setCursorHover(true);
+    };
+    const handleOut = (e) => {
+      if (e.target.closest && e.target.closest("a, button, .bc-cursor-hover")) setCursorHover(false);
+    };
+    window.addEventListener("mousemove", moveCursor);
+    document.addEventListener("mouseover", handleOver);
+    document.addEventListener("mouseout", handleOut);
+    return () => {
+      window.removeEventListener("mousemove", moveCursor);
+      document.removeEventListener("mouseover", handleOver);
+      document.removeEventListener("mouseout", handleOut);
+    };
+  }, []);
+
+  // big soft glow blob that trails the cursor with easing (desktop / fine-pointer only)
+  useEffect(() => {
+    const glow = cursorGlowRef.current;
+    if (!glow) return;
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+
+    const target = { x: window.innerWidth / 2, y: window.innerHeight / 3 };
+    const current = { ...target };
+    let raf;
+
+    const onMove = (e) => {
+      target.x = e.clientX;
+      target.y = e.clientY;
+    };
+    const tick = () => {
+      current.x += (target.x - current.x) * 0.07;
+      current.y += (target.y - current.y) * 0.07;
+      glow.style.transform = `translate(${current.x}px, ${current.y}px) translate(-50%, -50%)`;
+      raf = requestAnimationFrame(tick);
+    };
+    window.addEventListener("mousemove", onMove);
+    raf = requestAnimationFrame(tick);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
   const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
+
+  // subtle 3-5px mouse parallax helpers
+  const makeParallaxHandlers = (setter, strength = 6) => ({
+    onMouseMove: (e) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const relX = (e.clientX - rect.left) / rect.width - 0.5;
+      const relY = (e.clientY - rect.top) / rect.height - 0.5;
+      setter({ x: relX * strength, y: relY * strength });
+    },
+    onMouseLeave: () => setter({ x: 0, y: 0 }),
+  });
+  const heroParallaxHandlers = makeParallaxHandlers(setHeroParallax, 8);
 
   const navItems = [
     { label: "Home", href: "/", isRoute: true },
@@ -184,57 +318,6 @@ export default function ServicesPage() {
     </div>
   );
 
-  const CodeMock = () => (
-    <div className="bc-mock bc-mock-code">
-      <div className="bc-mock-topbar">
-        <span className="bc-mock-dot" style={{ background: "#f2795a" }} />
-        <span className="bc-mock-dot" style={{ background: "#f2a93b" }} />
-        <span className="bc-mock-dot" style={{ background: "#34d399" }} />
-      </div>
-      <div className="bc-mock-body bc-mono">
-        <div className="bc-code-line"><span className="bc-code-kw">const</span> <span className="bc-code-var">build</span> = () =&gt; {"{"}</div>
-        <div className="bc-code-line bc-code-indent"><span className="bc-code-kw">return</span> <span className="bc-code-str">'shipped'</span>;</div>
-        <div className="bc-code-line">{"}"}</div>
-        <div className="bc-code-line bc-code-comment">// tests: 128 passed</div>
-      </div>
-    </div>
-  );
-
-  const MobileMock = () => (
-    <div className="bc-mock bc-mock-mobile">
-      <div className="bc-mock-mobile-notch" />
-      <div className="bc-mock-mobile-header" />
-      <div className="bc-mock-mobile-rows">
-        <span className="bc-mock-mobile-row" />
-        <span className="bc-mock-mobile-row" style={{ width: "70%" }} />
-        <span className="bc-mock-mobile-row" style={{ width: "85%" }} />
-      </div>
-    </div>
-  );
-
-  const KanbanMock = () => (
-    <div className="bc-mock bc-mock-kanban">
-      {[1, 2, 3].map((col) => (
-        <div key={col} className="bc-mock-kanban-col">
-          {Array.from({ length: col === 2 ? 3 : 2 }).map((_, i) => (
-            <span key={i} className="bc-mock-kanban-card" />
-          ))}
-        </div>
-      ))}
-    </div>
-  );
-
-  const TeamMock = () => (
-    <div className="bc-mock bc-mock-team">
-      {["AK", "SR", "TJ"].map((t, i) => (
-        <div key={i} className="bc-mock-team-row">
-          <span className="bc-mock-team-avatar">{t}</span>
-          <span className="bc-mock-team-bar" style={{ width: `${50 + i * 15}%` }} />
-        </div>
-      ))}
-    </div>
-  );
-
   const TerminalMock = () => (
     <div className="bc-mock bc-mock-terminal">
       <div className="bc-mock-topbar bc-mock-topbar-dark">
@@ -270,45 +353,137 @@ export default function ServicesPage() {
           --bc-shadow: 0 1px 2px rgba(0,0,0,0.2), 0 8px 24px -12px rgba(0,0,0,0.45);
           --bc-shadow-lg: 0 4px 6px rgba(0,0,0,0.2), 0 20px 45px -16px rgba(0,0,0,0.55);
         }
+        html { scroll-behavior: smooth; }
         .bc-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
         .bc-display { font-family: 'Space Grotesk', 'Inter', sans-serif; }
         .bc-body { font-family: 'Inter', sans-serif; }
 
-        .bc-loader-screen { position: fixed; inset: 0; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; background: var(--bc-base); transition: opacity 0.5s ease, visibility 0.5s ease; }
+        .bc-loader-screen { position: fixed; inset: 0; z-index: 999; background: var(--bc-base); transition: opacity 0.5s ease, visibility 0.5s ease; }
         .bc-loader-screen.bc-loader-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .bc-loader-mark { position: relative; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; }
-        .bc-loader-ring { position: absolute; inset: 0; border-radius: 999px; border: 2.5px solid var(--bc-line); border-top-color: var(--bc-cyan); animation: bc-spin 0.9s linear infinite; }
-        .bc-loader-square { width: 16px; height: 16px; border: 2.5px solid var(--bc-cyan); border-radius: 3px; animation: bc-loader-pulse 1.4s ease-in-out infinite; }
-        @keyframes bc-spin { to { transform: rotate(360deg); } }
-        @keyframes bc-loader-pulse { 0%, 100% { transform: scale(0.85); opacity: 0.6; } 50% { transform: scale(1.05); opacity: 1; } }
-        .bc-loader-label { font-size: 0.68rem; letter-spacing: 0.32em; text-transform: uppercase; color: var(--bc-muted); }
-        .bc-page-content { opacity: 0; transform: translateY(6px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .bc-loader-brand { position: absolute; top: 28px; left: 28px; display: flex; flex-direction: column; align-items: flex-start; }
+        .bc-loader-logo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; width: 40px; height: 40px; margin-bottom: 10px; }
+        .bc-loader-sq { width: 18px; height: 18px; border-radius: 6px; animation: bc-loader-sq-pulse 1.2s ease-in-out infinite; }
+        .bc-loader-sq-a { background: var(--bc-cyan); }
+        .bc-loader-sq-b { background: #1E1B4B; }
+        .bc-loader-sq:nth-child(1) { animation-delay: 0s; }
+        .bc-loader-sq:nth-child(2) { animation-delay: 0.15s; }
+        .bc-loader-sq:nth-child(3) { animation-delay: 0.3s; }
+        .bc-loader-sq:nth-child(4) { animation-delay: 0.45s; }
+        @keyframes bc-loader-sq-pulse { 0%, 100% { opacity: 0.35; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1); } }
+        .bc-loader-name { font-weight: 700; font-size: 1.05rem; color: var(--bc-text); line-height: 1.2; }
+        .bc-loader-label { font-size: 0.68rem; letter-spacing: 0.32em; text-transform: uppercase; color: var(--bc-muted); margin-top: 2px; }
+        .bc-page-content { position: relative; z-index: 1; opacity: 0; transform: translateY(6px); transition: opacity 0.6s ease, transform 0.6s ease; }
         .bc-page-content.bc-page-visible { opacity: 1; transform: translateY(0); }
 
         .bc-grid-bg { background: transparent; }
         .bc-eyebrow { letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.72rem; color: var(--bc-amber); font-weight: 700; }
-        .bc-btn-primary { background: var(--bc-cyan); color: var(--bc-btn-primary-text); box-shadow: 0 8px 20px -8px color-mix(in srgb, var(--bc-cyan) 55%, transparent); transition: filter 0.2s ease, transform 0.2s ease; }
-        .bc-btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
-        .bc-btn-ghost { border: 1px solid var(--bc-line); color: var(--bc-text); background: var(--bc-panel); transition: border-color 0.2s ease, background 0.2s ease; }
-        .bc-btn-ghost:hover { border-color: var(--bc-cyan); background: rgba(99,102,241,0.08); }
+
+        /* ---------- BUTTONS (hover scale + shadow + gradient shift, click scale) ---------- */
+        .bc-btn-primary {
+          background: linear-gradient(90deg, var(--bc-cyan), color-mix(in srgb, var(--bc-cyan) 55%, #38bdf8), var(--bc-cyan));
+          background-size: 220% 100%; background-position: 0% 0%;
+          color: var(--bc-btn-primary-text);
+          box-shadow: 0 8px 20px -8px color-mix(in srgb, var(--bc-cyan) 55%, transparent);
+          transition: filter 0.2s ease, transform 0.2s ease, background-position 0.6s ease, box-shadow 0.3s ease;
+        }
+        .bc-btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px) scale(1.05); background-position: 100% 0%; box-shadow: 0 14px 30px -8px color-mix(in srgb, var(--bc-cyan) 65%, transparent); }
+        .bc-btn-primary:active { transform: scale(0.96); }
+        .bc-btn-ghost { border: 1px solid var(--bc-line); color: var(--bc-text); background: var(--bc-panel); transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; }
+        .bc-btn-ghost:hover { border-color: var(--bc-cyan); background: rgba(99,102,241,0.08); transform: translateY(-1px) scale(1.03); box-shadow: var(--bc-shadow-lg); }
+        .bc-btn-ghost:active { transform: scale(0.96); }
+        .bc-btn-arrow { display: inline-block; transition: transform 0.25s ease; }
+        .group:hover .bc-btn-arrow { transform: translateX(4px); }
         .bc-underline-fade { width: 220px; max-width: 60%; height: 2px; background: linear-gradient(90deg, var(--bc-cyan), transparent); }
         .bc-pill-badge { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--bc-line); background: var(--bc-panel); border-radius: 999px; padding: 7px 14px 7px 10px; font-size: 0.78rem; font-weight: 600; box-shadow: var(--bc-shadow); }
+
+        /* ---------- BACKGROUND: mesh gradient + noise ---------- */
+        .bc-bg-mesh {
+          position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.55;
+          background:
+            radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--bc-cyan) 18%, transparent), transparent 45%),
+            radial-gradient(circle at 80% 25%, color-mix(in srgb, var(--bc-amber) 12%, transparent), transparent 42%),
+            radial-gradient(circle at 50% 85%, color-mix(in srgb, var(--bc-cyan) 14%, transparent), transparent 45%);
+          background-size: 180% 180%;
+          animation: bc-mesh-drift 26s ease-in-out infinite;
+        }
+        @keyframes bc-mesh-drift {
+          0%, 100% { background-position: 0% 0%, 100% 0%, 50% 100%; }
+          50% { background-position: 30% 40%, 60% 60%, 70% 30%; }
+        }
+        .bc-bg-noise {
+          position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.03; mix-blend-mode: overlay;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+        .bc-cursor-glow {
+          position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none;
+          width: 620px; height: 620px; border-radius: 999px;
+          background: radial-gradient(circle, color-mix(in srgb, var(--bc-cyan) 42%, transparent) 0%, color-mix(in srgb, var(--bc-cyan) 16%, transparent) 40%, transparent 72%);
+          filter: blur(10px);
+          opacity: 0.8;
+          mix-blend-mode: normal;
+          will-change: transform;
+        }
+        [data-theme="dark"] .bc-cursor-glow { opacity: 0.55; }
+        @media (pointer: coarse) { .bc-cursor-glow { display: none; } }
+
+        /* ---------- SCROLL PROGRESS + BACK TO TOP + CUSTOM CURSOR ---------- */
+        .bc-scroll-progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--bc-cyan); z-index: 200; transition: width 0.12s linear; box-shadow: 0 0 8px color-mix(in srgb, var(--bc-cyan) 60%, transparent); }
+        .bc-back-to-top {
+          position: fixed; right: 22px; bottom: 22px; z-index: 150; width: 46px; height: 46px; border-radius: 999px;
+          background: var(--bc-cyan); color: var(--bc-btn-primary-text); display: flex; align-items: center; justify-content: center;
+          box-shadow: var(--bc-shadow-lg); opacity: 0; transform: translateY(14px) scale(0.85); pointer-events: none;
+          transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .bc-back-to-top-visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+        .bc-back-to-top:hover { transform: translateY(-3px) scale(1.06); }
+        .bc-cursor-ring {
+          width: 34px; height: 34px; border-radius: 999px; border: 1.5px solid var(--bc-cyan); position: fixed; top: 0; left: 0; z-index: 9998;
+          pointer-events: none; opacity: 0.45; transition: transform 0.18s ease-out, width 0.25s ease, height 0.25s ease, opacity 0.25s ease, background 0.25s ease;
+        }
+        .bc-cursor-ring-hover { width: 58px; height: 58px; opacity: 0.9; background: color-mix(in srgb, var(--bc-cyan) 12%, transparent); }
+        .bc-cursor-b { position: fixed; top: 0; left: 0; z-index: 9999; pointer-events: none; }
+        .bc-cursor-b-inner {
+          display: flex; align-items: center; justify-content: center;
+          width: 26px; height: 26px; border-radius: 8px;
+          background: var(--bc-cyan); color: #ffffff;
+          font-weight: 700; font-size: 0.82rem; line-height: 1;
+          box-shadow: 0 6px 16px -6px color-mix(in srgb, var(--bc-cyan) 65%, transparent), 0 1px 2px rgba(0,0,0,0.15);
+          transform: translate(-50%, -50%) rotate(0deg) scale(1);
+          transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), border-radius 0.3s ease, width 0.3s ease, height 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        }
+        .bc-cursor-b-inner-hover {
+          width: 40px; height: 40px; border-radius: 999px;
+          transform: translate(-50%, -50%) rotate(-18deg) scale(1.15);
+          box-shadow: 0 10px 26px -8px color-mix(in srgb, var(--bc-cyan) 70%, transparent), 0 2px 4px rgba(0,0,0,0.2);
+        }
+        @media (pointer: coarse) { .bc-cursor-b, .bc-cursor-ring, .bc-scroll-progress { display: none; } }
+        @media (pointer: fine) { body { cursor: none; } }
+
+        /* ---------- SCROLL-REVEAL (whole page section animations) ---------- */
+        .bc-reveal { opacity: 0; transition: opacity 0.8s ease, transform 0.8s ease; }
+        .bc-reveal-center { transform: translateY(40px); }
+        .bc-reveal-left { transform: translate(-40px, 24px); }
+        .bc-reveal-right { transform: translate(40px, 24px); }
+        .bc-reveal-in { opacity: 1; transform: translate(0, 0); }
 
         /* ---------- NAVBAR (shared) ---------- */
         .bc-navbar-wrap { display: flex; justify-content: center; padding: 16px 20px 0; }
         .bc-navbar-row { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 820px; }
-        .bc-navbar-pill { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; background: #0b1220; border: 1px solid rgba(255,255,255,0.06); border-radius: 999px; padding: 10px 12px 10px 10px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.25); }
+        .bc-navbar-pill { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; background: #0b1220; border: 1px solid rgba(255,255,255,0.06); border-radius: 999px; padding: 10px 12px 10px 10px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.25); transition: background 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease; }
+        .bc-navbar-pill.bc-navbar-scrolled { background: rgba(11,18,32,0.72); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 16px 40px -14px rgba(0,0,0,0.55), 0 2px 10px rgba(0,0,0,0.3); }
         @media (min-width: 768px) { .bc-navbar-pill { padding: 6px 8px 6px 6px; gap: 6px; } }
         .bc-navbar-brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; }
         .bc-navbar-logo { width: 38px; height: 38px; flex-shrink: 0; border-radius: 999px; background: var(--bc-cyan); color: #ffffff; font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; }
         .bc-navbar-name { color: #ffffff; font-weight: 700; font-size: 1rem; white-space: nowrap; }
         .bc-navbar-links { display: none; }
         @media (min-width: 768px) { .bc-navbar-links { display: flex; align-items: center; gap: 26px; padding: 0 10px; flex: 1; min-width: 0; justify-content: center; } }
-        .bc-navbar-link { color: rgba(241,245,249,0.68); font-size: 0.82rem; white-space: nowrap; text-decoration: none; transition: color 0.2s ease; flex-shrink: 0; }
+        .bc-navbar-link { color: rgba(241,245,249,0.68); font-size: 0.82rem; white-space: nowrap; text-decoration: none; transition: color 0.2s ease; flex-shrink: 0; position: relative; }
         .bc-navbar-link:hover { color: #ffffff; }
         button.bc-navbar-link { background: none; border: none; padding: 0; font-family: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
         @media (min-width: 768px) { .bc-navbar-link { font-size: 0.88rem; } }
         .bc-navbar-link-active { color: #ffffff; }
+        .bc-navbar-link-active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: var(--bc-cyan); border-radius: 2px; transform-origin: left; animation: bc-underline-grow 0.5s ease forwards; }
+        @keyframes bc-underline-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
         .bc-nav-dropdown-wrap { position: relative; flex-shrink: 0; }
         .bc-nav-dropdown-chevron { transition: transform 0.2s ease; }
         .bc-nav-dropdown-chevron-open, .bc-nav-dropdown-wrap:hover .bc-nav-dropdown-chevron { transform: rotate(180deg); }
@@ -320,9 +495,9 @@ export default function ServicesPage() {
         .bc-nav-dropdown-item-desc { color: rgba(241,245,249,0.5); font-size: 0.74rem; }
         .bc-navbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-left: auto; }
         .bc-navbar-theme-btn { width: 36px; height: 36px; border-radius: 999px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: #f1f5f9; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s ease, transform 0.2s ease; }
-        .bc-navbar-theme-btn:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+        .bc-navbar-theme-btn:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px) rotate(-15deg); }
         .bc-navbar-cta { display: none; }
-        @media (min-width: 768px) { .bc-navbar-cta { display: inline-flex; align-items: center; gap: 6px; background: #ffffff; color: #0b1220; border-radius: 999px; padding: 9px 18px; font-weight: 600; font-size: 0.82rem; white-space: nowrap; text-decoration: none; flex-shrink: 0; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.15); transition: transform 0.2s ease, filter 0.2s ease; } .bc-navbar-cta:hover { transform: translateY(-1px); filter: brightness(0.95); } }
+        @media (min-width: 768px) { .bc-navbar-cta { display: inline-flex; align-items: center; gap: 6px; background: #ffffff; color: #0b1220; border-radius: 999px; padding: 9px 18px; font-weight: 600; font-size: 0.82rem; white-space: nowrap; text-decoration: none; flex-shrink: 0; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.15); transition: transform 0.2s ease, filter 0.2s ease; } .bc-navbar-cta:hover { transform: translateY(-1px) scale(1.04); filter: brightness(0.95); } .bc-navbar-cta:active { transform: scale(0.96); } }
         .bc-navbar-hamburger { display: flex; width: 36px; height: 36px; border-radius: 999px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: #f1f5f9; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer; }
         @media (min-width: 768px) { .bc-navbar-hamburger { display: none; } }
         .bc-mobile-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 90; opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease; }
@@ -345,11 +520,25 @@ export default function ServicesPage() {
         .bc-hero-avatar-count { background: var(--bc-panel); color: var(--bc-text); border: 1px solid var(--bc-line); font-size: 0.6rem; }
         .bc-hero-stars { color: var(--bc-amber); display: flex; gap: 1px; }
 
-        /* ---------- HERO PHOTO (replaces old laptop/phone mockup scene) ---------- */
-        .bc-hero-photo { position: relative; width: 100%; max-width: 560px; margin: 0 auto; }
-        .bc-hero-photo-frame { border-radius: 20px; overflow: hidden; box-shadow: var(--bc-shadow-lg); border: 1px solid var(--bc-line); aspect-ratio: 3 / 2.6; }
+        /* hero text reveal: heading (0.8s), paragraph (0.2s delay), buttons (0.4s delay) */
+        .bc-hero-anim { opacity: 0; transform: translateY(24px); }
+        .bc-page-visible .bc-hero-anim-heading { animation: bc-fade-up 0.8s ease forwards; }
+        .bc-page-visible .bc-hero-anim-para { animation: bc-fade-up 0.8s ease 0.2s forwards; }
+        .bc-page-visible .bc-hero-anim-buttons { animation: bc-fade-up 0.8s ease 0.4s forwards; }
+        .bc-page-visible .bc-hero-anim-social { animation: bc-fade-up 0.8s ease 0.55s forwards; }
+        @keyframes bc-fade-up { to { opacity: 1; transform: translateY(0); } }
+
+        /* ---------- HERO PHOTO: slow float + parallax + shadow transition ---------- */
+        .bc-hero-photo { position: relative; width: 100%; max-width: 560px; margin: 0 auto; animation: bc-float 9s ease-in-out infinite; }
+        @keyframes bc-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+        .bc-hero-photo-frame { border-radius: 20px; overflow: hidden; box-shadow: var(--bc-shadow-lg); border: 1px solid var(--bc-line); aspect-ratio: 3 / 2.6; transition: box-shadow 0.4s ease, transform 0.15s ease-out; }
+        .bc-hero-photo-frame:hover { box-shadow: 0 34px 64px -18px color-mix(in srgb, var(--bc-cyan) 40%, transparent), var(--bc-shadow-lg); }
         .bc-hero-photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .bc-hero-photo-badge { position: absolute; z-index: 4; background: var(--bc-panel); border: 1px solid var(--bc-line); border-radius: 14px; padding: 10px 14px 10px 10px; display: flex; align-items: center; gap: 9px; box-shadow: var(--bc-shadow-lg); }
+        .bc-hero-photo-badge { position: absolute; z-index: 4; background: var(--bc-panel); border: 1px solid var(--bc-line); border-radius: 14px; padding: 10px 14px 10px 10px; display: flex; align-items: center; gap: 9px; box-shadow: var(--bc-shadow-lg); opacity: 0; transform: scale(0.6); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .bc-hero-photo-badge:hover { transform: translateY(-4px) scale(1.04) !important; box-shadow: 0 16px 32px -10px color-mix(in srgb, var(--bc-cyan) 45%, transparent), var(--bc-shadow-lg); }
+        .bc-page-visible .bc-hero-photo-badge-code { animation: bc-badge-pop 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.9s forwards; }
+        .bc-page-visible .bc-hero-photo-badge-ship { animation: bc-badge-pop 0.6s cubic-bezier(0.34,1.56,0.64,1) 1.1s forwards; }
+        @keyframes bc-badge-pop { to { opacity: 1; transform: scale(1); } }
         .bc-scene-badge-icon { width: 30px; height: 30px; border-radius: 9px; background: color-mix(in srgb, var(--bc-cyan) 14%, transparent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .bc-hero-photo-badge-code { left: -4%; top: 8%; }
         .bc-hero-photo-badge-ship { right: -4%; bottom: 8%; }
@@ -400,81 +589,99 @@ export default function ServicesPage() {
         .bc-term-line { font-size: 0.72rem; color: #e7edf5; margin-bottom: 6px; }
         .bc-term-muted { color: rgba(231,237,245,0.45); }
 
-        /* ---------- LOGO STRIP ---------- */
-        .bc-logo-strip-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 34px 48px; }
-        .bc-logo-strip-item { font-family: 'Space Grotesk', 'Inter', sans-serif; font-weight: 600; font-size: 1rem; color: var(--bc-muted); opacity: 0.8; letter-spacing: 0.01em; }
+        .bc-showcase-visual { position: relative; width: 100%; max-width: 480px; margin: 0 auto; animation: bc-showcase-float 8s ease-in-out infinite; }
+        @keyframes bc-showcase-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .bc-showcase-tag { display: inline-flex; align-items: center; background: var(--bc-cyan); color: var(--bc-btn-primary-text); font-size: 0.7rem; font-weight: 700; padding: 6px 13px; border-radius: 999px; margin-bottom: 12px; box-shadow: var(--bc-shadow); }
+        .bc-showcase-main .bc-mock { aspect-ratio: 4/3; transition: box-shadow 0.4s ease; }
+        .bc-showcase-visual:hover .bc-mock { box-shadow: 0 30px 60px -18px color-mix(in srgb, var(--bc-cyan) 38%, transparent), var(--bc-shadow-lg); }
+        .bc-showcase-badge { position: absolute; z-index: 4; background: var(--bc-panel); border: 1px solid var(--bc-line); border-radius: 14px; padding: 10px 14px 10px 10px; display: flex; align-items: center; gap: 9px; box-shadow: var(--bc-shadow-lg); transition: transform 0.3s ease, box-shadow 0.3s ease; opacity: 0; transform: scale(0.6); }
+        .bc-showcase-badge:hover { transform: translateY(-4px) scale(1.04) !important; box-shadow: 0 16px 32px -10px color-mix(in srgb, var(--bc-cyan) 45%, transparent), var(--bc-shadow-lg); }
+        .bc-page-visible .bc-showcase-badge-left { animation: bc-badge-pop 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.3s forwards; }
+        .bc-page-visible .bc-showcase-badge-right { animation: bc-badge-pop 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.5s forwards; }
+        .bc-showcase-badge-left { left: -6%; bottom: 10%; }
+        .bc-showcase-badge-right { right: -6%; top: 10%; }
+        @media (max-width: 640px) { .bc-showcase-badge { display: none; } }
+
+        /* ---------- LOGO STRIP → INFINITE MARQUEE ---------- */
+        .bc-marquee { overflow: hidden; position: relative; -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent); mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent); }
+        .bc-marquee-track { display: flex; gap: 56px; width: max-content; animation: bc-marquee-scroll 30s linear infinite; }
+        .bc-marquee:hover .bc-marquee-track { animation-play-state: paused; }
+        @keyframes bc-marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .bc-logo-strip-item { font-family: 'Space Grotesk', 'Inter', sans-serif; font-weight: 600; font-size: 1rem; color: var(--bc-muted); opacity: 0.8; letter-spacing: 0.01em; white-space: nowrap; transition: opacity 0.2s ease, color 0.2s ease; }
+        .bc-logo-strip-item:hover { opacity: 1; color: var(--bc-cyan); }
 
         /* ---------- SERVICE CARDS ---------- */
-        .bc-svc-card { background: var(--bc-panel); border: 1px solid var(--bc-line); border-radius: 16px; padding: 26px; box-shadow: var(--bc-shadow); transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
-        .bc-svc-card:hover { transform: translateY(-4px); box-shadow: var(--bc-shadow-lg); }
-        .bc-svc-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+        .bc-svc-card { background: var(--bc-panel); border: 1px solid var(--bc-line); border-radius: 16px; padding: 26px; box-shadow: var(--bc-shadow); transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease; }
+        .bc-svc-card:hover { transform: translateY(-10px); border-color: var(--bc-cyan); box-shadow: 0 24px 50px -16px color-mix(in srgb, var(--bc-cyan) 35%, transparent), var(--bc-shadow-lg); filter: brightness(1.02); }
+        .bc-svc-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; transition: transform 0.35s ease; }
+        .bc-svc-card:hover .bc-svc-icon { transform: rotate(10deg) scale(1.08); }
 
-        /* ---------- HOW IT WORKS (dark band) ---------- */
+        /* ---------- HOW IT WORKS / TIMELINE (dark band) ---------- */
         .bc-process-band { background: #0b1220; border-radius: 22px; padding: 44px 28px 50px; position: relative; overflow: hidden; }
         [data-theme="dark"] .bc-process-band { background: var(--bc-panel-2); border: 1px solid var(--bc-line); }
         .bc-process-grid { display: grid; grid-template-columns: 1fr; gap: 34px; position: relative; }
         @media (min-width: 900px) { .bc-process-grid { grid-template-columns: repeat(4, 1fr); } }
-        .bc-process-line { position: absolute; top: 26px; left: 12%; right: 12%; height: 0; border-top: 2px dashed rgba(129,140,248,0.4); display: none; }
+        .bc-process-line { position: absolute; top: 26px; left: 12%; right: 12%; height: 0; border-top: 2px dashed rgba(129,140,248,0.25); display: none; }
+        .bc-process-line-fill { position: absolute; top: -2px; left: 0; height: 2px; width: 0%; background: var(--bc-cyan); border-radius: 2px; transition: width 1.4s ease; }
+        .bc-process-line-in .bc-process-line-fill { width: 100%; }
         @media (min-width: 900px) { .bc-process-line { display: block; } }
         .bc-process-step { text-align: center; position: relative; z-index: 1; }
         .bc-process-num { width: 52px; height: 52px; border-radius: 999px; background: #0b1220; border: 2px solid var(--bc-cyan); color: var(--bc-cyan); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
         [data-theme="dark"] .bc-process-num { background: var(--bc-panel-2); }
-
-        /* ---------- SHOWCASE ---------- */
-        .bc-showcase-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
-        @media (min-width: 768px) { .bc-showcase-grid { grid-template-columns: 1.4fr 1fr; } }
-        .bc-showcase-main { position: relative; }
-        .bc-showcase-main .bc-mock { aspect-ratio: 4/3; }
-        .bc-showcase-tag { position: absolute; top: 12px; left: 12px; z-index: 3; background: var(--bc-cyan); color: var(--bc-btn-primary-text); font-size: 0.66rem; font-weight: 700; padding: 5px 11px; border-radius: 999px; }
-        .bc-showcase-thumbs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-        .bc-showcase-thumbs .bc-mock { aspect-ratio: 1/1; }
+        .bc-process-num-pulse { animation: bc-dot-pulse 0.9s ease-out 1; }
+        @keyframes bc-dot-pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--bc-cyan) 55%, transparent); } 100% { box-shadow: 0 0 0 14px color-mix(in srgb, var(--bc-cyan) 0%, transparent); } }
 
         /* ---------- WHY CHOOSE ROW ---------- */
         .bc-why-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
         @media (min-width: 768px) { .bc-why-row { grid-template-columns: repeat(5, 1fr); } }
         .bc-why-item { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
-        .bc-why-icon { width: 42px; height: 42px; border-radius: 999px; display: flex; align-items: center; justify-content: center; }
+        .bc-why-icon { width: 42px; height: 42px; border-radius: 999px; display: flex; align-items: center; justify-content: center; transition: transform 0.35s ease, box-shadow 0.35s ease; }
+        .bc-why-item:hover .bc-why-icon { transform: rotate(-12deg) scale(1.12); box-shadow: 0 10px 22px -8px color-mix(in srgb, var(--bc-cyan) 55%, transparent); }
 
         /* ---------- INDUSTRIES ROW ---------- */
         .bc-industries-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px 56px; }
         .bc-industry-item { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-        .bc-industry-icon-circle { width: 54px; height: 54px; border-radius: 999px; background: var(--bc-panel); border: 1px solid var(--bc-line); display: flex; align-items: center; justify-content: center; box-shadow: var(--bc-shadow); }
+        .bc-industry-icon-circle { width: 54px; height: 54px; border-radius: 999px; background: var(--bc-panel); border: 1px solid var(--bc-line); display: flex; align-items: center; justify-content: center; box-shadow: var(--bc-shadow); transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease; }
+        .bc-industry-item:hover .bc-industry-icon-circle { transform: scale(1.15); border-color: var(--bc-cyan); background: color-mix(in srgb, var(--bc-cyan) 12%, var(--bc-panel)); box-shadow: 0 12px 26px -10px color-mix(in srgb, var(--bc-cyan) 55%, transparent); }
 
         /* ---------- FAQ ---------- */
         .bc-faq-item { border: 1px solid var(--bc-line); border-radius: 14px; background: var(--bc-panel); overflow: hidden; transition: border-color 0.2s ease; }
         .bc-faq-item + .bc-faq-item { margin-top: 12px; }
         .bc-faq-item.bc-faq-open { border-color: var(--bc-cyan); }
         .bc-faq-question { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 20px; background: none; border: none; cursor: pointer; text-align: left; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.95rem; color: var(--bc-text); }
-        .bc-faq-icon-badge { width: 28px; height: 28px; border-radius: 999px; background: var(--bc-panel-2); border: 1px solid var(--bc-line); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s ease, border-color 0.2s ease; }
-        .bc-faq-open .bc-faq-icon-badge { background: color-mix(in srgb, var(--bc-cyan) 16%, transparent); border-color: var(--bc-cyan); }
-        .bc-faq-answer-wrap { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; }
-        .bc-faq-open .bc-faq-answer-wrap { max-height: 240px; }
+        .bc-faq-icon-badge { width: 28px; height: 28px; border-radius: 999px; background: var(--bc-panel-2); border: 1px solid var(--bc-line); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s ease, border-color 0.2s ease, transform 0.3s ease; }
+        .bc-faq-open .bc-faq-icon-badge { background: color-mix(in srgb, var(--bc-cyan) 16%, transparent); border-color: var(--bc-cyan); transform: rotate(180deg); }
+        .bc-faq-answer-wrap { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.35s ease, opacity 0.3s ease; }
+        .bc-faq-open .bc-faq-answer-wrap { max-height: 240px; opacity: 1; }
         .bc-faq-answer { padding: 0 20px 18px; font-size: 0.88rem; color: var(--bc-muted); line-height: 1.6; }
 
-        /* ---------- CTA BANNER ---------- */
-        .bc-cta-banner { background: #0b1220; border-radius: 20px; color: #f1f5f9; overflow: hidden; }
-        [data-theme="dark"] .bc-cta-banner { background: var(--bc-panel-2); border: 1px solid var(--bc-line); }
+        /* ---------- CTA BANNER: subtle animated gradient ---------- */
+        .bc-cta-banner { background: linear-gradient(120deg, #0b1220, #131b30, #0b1220); background-size: 220% 220%; animation: bc-cta-gradient 20s ease infinite; border-radius: 20px; color: #f1f5f9; overflow: hidden; }
+        [data-theme="dark"] .bc-cta-banner { background: linear-gradient(120deg, var(--bc-panel-2), var(--bc-panel), var(--bc-panel-2)); background-size: 220% 220%; animation: bc-cta-gradient 20s ease infinite; border: 1px solid var(--bc-line); }
+        @keyframes bc-cta-gradient { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
         .bc-cta-inner { display: grid; grid-template-columns: 1fr; }
         @media (min-width: 850px) { .bc-cta-inner { grid-template-columns: 0.85fr 1.15fr; } }
         .bc-cta-image { position: relative; min-height: 200px; padding: 22px; display: flex; }
         .bc-cta-image .bc-mock-terminal { width: 100%; }
-        .bc-cta-btn { background: #ffffff; color: #0b1220; border-radius: 999px; font-weight: 600; padding: 12px 24px; white-space: nowrap; transition: transform 0.2s ease, filter 0.2s ease; display: inline-flex; align-items: center; gap: 8px; }
-        .bc-cta-btn:hover { transform: translateY(-1px); filter: brightness(0.96); }
-        .bc-cta-btn-outline { border: 1px solid rgba(241,245,249,0.3); color: #f1f5f9; border-radius: 999px; font-weight: 600; padding: 12px 24px; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; transition: border-color 0.2s ease, background 0.2s ease; }
-        .bc-cta-btn-outline:hover { border-color: rgba(241,245,249,0.6); background: rgba(255,255,255,0.06); }
+        .bc-cta-btn { background: linear-gradient(90deg, #ffffff, #eef1ff, #ffffff); background-size: 220% 100%; background-position: 0% 0%; color: #0b1220; border-radius: 999px; font-weight: 600; padding: 12px 24px; white-space: nowrap; transition: transform 0.2s ease, filter 0.2s ease, background-position 0.6s ease; display: inline-flex; align-items: center; gap: 8px; }
+        .bc-cta-btn:hover { transform: translateY(-1px) scale(1.04); filter: brightness(0.97); background-position: 100% 0%; }
+        .bc-cta-btn:active { transform: scale(0.96); }
+        .bc-cta-btn-outline { border: 1px solid rgba(241,245,249,0.3); color: #f1f5f9; border-radius: 999px; font-weight: 600; padding: 12px 24px; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease; }
+        .bc-cta-btn-outline:hover { border-color: rgba(241,245,249,0.6); background: rgba(255,255,255,0.06); transform: translateY(-1px) scale(1.03); }
+        .bc-cta-btn-outline:active { transform: scale(0.96); }
 
         /* ---------- FOOTER (shared) ---------- */
         .bc-footer-card { position: relative; overflow: hidden; border-radius: 24px; background: var(--bc-panel); border: 1px solid var(--bc-line); box-shadow: var(--bc-shadow-lg); }
         .bc-footer-underline { width: 40px; height: 3px; border-radius: 2px; background: var(--bc-cyan); margin: 14px 0 18px; }
-        .bc-footer-social { width: 40px; height: 40px; border-radius: 10px; background: var(--bc-panel-2); border: 1px solid var(--bc-line); display: flex; align-items: center; justify-content: center; transition: border-color 0.2s ease, transform 0.2s ease; }
-        .bc-footer-social:hover { border-color: var(--bc-cyan); transform: translateY(-2px); }
+        .bc-footer-social { width: 40px; height: 40px; border-radius: 10px; background: var(--bc-panel-2); border: 1px solid var(--bc-line); display: flex; align-items: center; justify-content: center; transition: border-color 0.2s ease, transform 0.25s ease, box-shadow 0.25s ease; }
+        .bc-footer-social:hover { border-color: var(--bc-cyan); transform: translateY(-2px) rotate(10deg) scale(1.1); box-shadow: 0 10px 22px -8px color-mix(in srgb, var(--bc-cyan) 55%, transparent); }
         .bc-footer-col-divider { display: none; }
         @media (min-width: 768px) { .bc-footer-col-divider { display: block; width: 1px; background: var(--bc-line); align-self: stretch; } }
         .bc-footer-heading-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
         .bc-footer-heading-badge { width: 34px; height: 34px; border-radius: 9px; background: color-mix(in srgb, var(--bc-cyan) 14%, transparent); border: 1px solid color-mix(in srgb, var(--bc-cyan) 35%, transparent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .bc-footer-heading { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.78rem; letter-spacing: 0.1em; font-weight: 700; color: var(--bc-cyan); }
-        .bc-footer-item { display: flex; align-items: center; gap: 6px; color: var(--bc-muted); transition: color 0.2s ease; text-decoration: none; }
-        .bc-footer-item:hover { color: var(--bc-text); }
+        .bc-footer-item { display: flex; align-items: center; gap: 6px; color: var(--bc-muted); transition: color 0.2s ease, transform 0.2s ease; text-decoration: none; }
+        .bc-footer-item:hover { color: var(--bc-text); transform: translateX(3px); }
         .bc-footer-item + .bc-footer-item { margin-top: 14px; }
         .bc-footer-contact-item { display: flex; align-items: center; gap: 10px; color: var(--bc-text); font-weight: 500; }
         .bc-footer-contact-item + .bc-footer-contact-item { margin-top: 16px; }
@@ -482,20 +689,39 @@ export default function ServicesPage() {
         .bc-footer-bottom-badge { width: 26px; height: 26px; border-radius: 999px; background: color-mix(in srgb, var(--bc-cyan) 14%, transparent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
       `}</style>
 
+      {/* decorative background layers */}
+      <div className="bc-bg-mesh" aria-hidden="true" />
+      <div className="bc-bg-noise" aria-hidden="true" />
+      <div ref={cursorGlowRef} className="bc-cursor-glow" aria-hidden="true" />
+
+      {/* scroll progress bar */}
+      <div className="bc-scroll-progress" style={{ width: `${scrollProgress}%` }} />
+
+      {/* custom cursor: trailing glow ring + rotating "B" badge */}
+      <div ref={cursorRingRef} className={`bc-cursor-ring ${cursorHover ? "bc-cursor-ring-hover" : ""}`} />
+      <div ref={cursorBRef} className="bc-cursor-b">
+        <span className={`bc-cursor-b-inner bc-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>B</span>
+      </div>
+
       {/* LOADING SCREEN */}
       <div className={`bc-loader-screen ${!loading ? "bc-loader-hidden" : ""}`} aria-hidden={!loading}>
-        <div className="bc-loader-mark">
-          <div className="bc-loader-ring" />
-          <div className="bc-loader-square" />
+        <div className="bc-loader-brand">
+          <div className="bc-loader-logo-grid">
+            <span className="bc-loader-sq bc-loader-sq-a" />
+            <span className="bc-loader-sq bc-loader-sq-b" />
+            <span className="bc-loader-sq bc-loader-sq-b" />
+            <span className="bc-loader-sq bc-loader-sq-a" />
+          </div>
+          <div className="bc-loader-name bc-display">Bluecode</div>
+          <div className="bc-loader-label bc-mono">Loading</div>
         </div>
-        <div className="bc-loader-label bc-mono">Loading</div>
       </div>
 
       <div className={`bc-page-content ${!loading ? "bc-page-visible" : ""}`}>
         {/* NAV */}
         <div className="bc-navbar-wrap sticky top-0 z-50">
           <div className="bc-navbar-row">
-            <div className="bc-navbar-pill">
+            <div className={`bc-navbar-pill ${scrolled ? "bc-navbar-scrolled" : ""}`}>
               <Link to="/" className="bc-navbar-brand">
                 <span className="bc-navbar-logo bc-display">B</span>
                 <span className="bc-navbar-name bc-display">Bluecode</span>
@@ -619,27 +845,27 @@ export default function ServicesPage() {
                   <Sparkles size={13} color="var(--bc-cyan)" />
                   Fixed-Scope Software Studio
                 </div>
-                <h1 className="bc-display font-bold text-4xl md:text-5xl leading-tight mb-5">
+                <h1 className="bc-display font-bold text-4xl md:text-5xl leading-tight mb-5 bc-hero-anim bc-hero-anim-heading">
                   One Team.
                   <br />
                   Your Entire
                   <br />
                   <span style={{ color: "var(--bc-cyan)" }}>Product Roadmap.</span>
                 </h1>
-                <p className="bc-body text-base md:text-lg mb-8 max-w-md" style={{ color: "var(--bc-muted)" }}>
+                <p className="bc-body text-base md:text-lg mb-8 max-w-md bc-hero-anim bc-hero-anim-para" style={{ color: "var(--bc-muted)" }}>
                   Design, build, ship, and support — every service your product
                   needs, handled by engineers you can actually reach.
                 </p>
-                <div className="flex flex-wrap gap-4 mb-9">
-                  <a href="/#contact" className="bc-btn-primary bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
-                    Get a quote <ArrowRight size={18} />
+                <div className="flex flex-wrap gap-4 mb-9 bc-hero-anim bc-hero-anim-buttons">
+                  <a href="/#contact" className="group bc-btn-primary bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
+                    Get a quote <ArrowRight size={18} className="bc-btn-arrow" />
                   </a>
-                  <a href="#service-list" className="bc-btn-ghost bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
-                    Browse services <ArrowUpRight size={18} />
+                  <a href="#service-list" className="group bc-btn-ghost bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
+                    Browse services <ArrowUpRight size={18} className="bc-btn-arrow" />
                   </a>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 bc-hero-anim bc-hero-anim-social">
                   <div className="bc-hero-avatars">
                     {avatarInitials.map((a, i) => (
                       <span key={i} className="bc-hero-avatar" style={{ background: a.bg }}>
@@ -662,9 +888,12 @@ export default function ServicesPage() {
                 </div>
               </div>
 
-              {/* Replaced the old laptop/phone mockup scene with a real team photo */}
-              <div className="bc-hero-photo">
-                <div className="bc-hero-photo-frame">
+              {/* hero photo with float + mouse parallax + shadow transition */}
+              <div className="bc-hero-photo" {...heroParallaxHandlers}>
+                <div
+                  className="bc-hero-photo-frame bc-cursor-hover"
+                  style={{ transform: `translate(${heroParallax.x}px, ${heroParallax.y}px)` }}
+                >
                   <img src={teamPhoto} alt="Bluecode team collaborating on a project" />
                 </div>
                 <div className="bc-hero-photo-badge bc-hero-photo-badge-code">
@@ -683,17 +912,22 @@ export default function ServicesPage() {
             <div className="bc-mono text-[0.68rem] tracking-widest uppercase mb-6 text-center" style={{ color: "var(--bc-muted)" }}>
               Trusted by growing teams at
             </div>
-            <div className="bc-logo-strip-row">
-              {clientLogos.map((name, i) => (
-                <span key={i} className="bc-logo-strip-item">{name}</span>
-              ))}
+            <div className="bc-marquee">
+              <div className="bc-marquee-track">
+                {clientLogos.concat(clientLogos).map((name, i) => (
+                  <span key={i} className="bc-logo-strip-item">{name}</span>
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
         {/* SERVICE CARDS */}
         <section id="service-list" className="max-w-7xl mx-auto px-6 py-16 md:py-20">
-          <div className="text-center max-w-2xl mx-auto mb-12">
+          <div
+            ref={svcRef}
+            className={`bc-reveal bc-reveal-center ${svcInView ? "bc-reveal-in" : ""} text-center max-w-2xl mx-auto mb-12`}
+          >
             <div className="bc-eyebrow mb-3">Our Services</div>
             <h2 className="bc-display font-bold text-3xl md:text-4xl mb-4">
               Everything You Need to <span style={{ color: "var(--bc-cyan)" }}>Ship & Scale</span>
@@ -704,23 +938,30 @@ export default function ServicesPage() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {services.map((s, i) => (
-              <div key={i} className="bc-svc-card">
+              <div
+                key={i}
+                className={`bc-svc-card bc-reveal bc-reveal-center ${svcInView ? "bc-reveal-in" : ""}`}
+                style={{ transitionDelay: `${i * 90}ms` }}
+              >
                 <div className="bc-svc-icon" style={{ background: `${s.color}1a`, border: `1px solid ${s.color}55` }}>
                   <s.Icon size={22} color={s.color} strokeWidth={1.75} />
                 </div>
                 <h3 className="bc-display font-bold text-lg mb-2">{s.title}</h3>
                 <p className="bc-body text-sm mb-4" style={{ color: "var(--bc-muted)" }}>{s.desc}</p>
-                <a href="/#contact" className="bc-body font-semibold text-sm flex items-center gap-1.5" style={{ color: s.color }}>
-                  Discuss this service <ArrowRight size={14} />
+                <a href="/#contact" className="group bc-body font-semibold text-sm flex items-center gap-1.5" style={{ color: s.color }}>
+                  Discuss this service <ArrowRight size={14} className="bc-btn-arrow" />
                 </a>
               </div>
             ))}
           </div>
         </section>
 
-        {/* HOW IT WORKS */}
+        {/* HOW IT WORKS / TIMELINE */}
         <section className="max-w-7xl mx-auto px-6 pb-16 md:pb-20">
-          <div className="bc-process-band">
+          <div
+            ref={processRef}
+            className={`bc-process-band bc-reveal bc-reveal-left ${processInView ? "bc-reveal-in" : ""} ${processInView ? "bc-process-line-in" : ""}`}
+          >
             <div className="text-center mb-12">
               <div className="bc-mono bc-eyebrow mb-3" style={{ color: "var(--bc-cyan)" }}>How We Work</div>
               <h2 className="bc-display font-bold text-2xl md:text-3xl" style={{ color: "#f1f5f9" }}>
@@ -728,10 +969,14 @@ export default function ServicesPage() {
               </h2>
             </div>
             <div className="bc-process-grid">
-              <div className="bc-process-line" />
+              <div className="bc-process-line">
+                <div className="bc-process-line-fill" />
+              </div>
               {process.map((p, i) => (
                 <div key={i} className="bc-process-step">
-                  <div className="bc-process-num">{p.step}</div>
+                  <div className={`bc-process-num ${processInView ? "bc-process-num-pulse" : ""}`} style={{ animationDelay: `${0.3 + i * 0.25}s` }}>
+                    {p.step}
+                  </div>
                   <h3 className="bc-display font-bold text-base mb-2" style={{ color: "#f1f5f9" }}>{p.title}</h3>
                   <p className="bc-body text-sm" style={{ color: "rgba(241,245,249,0.6)" }}>{p.desc}</p>
                 </div>
@@ -742,7 +987,10 @@ export default function ServicesPage() {
 
         {/* SHOWCASE */}
         <section style={{ background: "var(--bc-band)" }}>
-          <div className="max-w-7xl mx-auto px-6 py-16 md:py-20 grid md:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
+          <div
+            ref={showcaseRef}
+            className={`bc-reveal bc-reveal-right ${showcaseInView ? "bc-reveal-in" : ""} max-w-7xl mx-auto px-6 py-16 md:py-20 grid md:grid-cols-[0.9fr_1.1fr] gap-12 items-center`}
+          >
             <div>
               <div className="bc-eyebrow mb-3">Recent Work</div>
               <h2 className="bc-display font-bold text-3xl md:text-4xl mb-4">
@@ -752,20 +1000,22 @@ export default function ServicesPage() {
                 See what shipping with Bluecode looks like — dashboards, portals, and
                 mobile apps built for daily, production use.
               </p>
-              <a href="/#projects" className="bc-btn-ghost bc-body font-semibold px-6 py-3 rounded inline-flex items-center gap-2">
-                View all projects <ArrowUpRight size={18} />
+              <a href="/#projects" className="group bc-btn-ghost bc-body font-semibold px-6 py-3 rounded inline-flex items-center gap-2">
+                View all projects <ArrowUpRight size={18} className="bc-btn-arrow" />
               </a>
             </div>
-            <div className="bc-showcase-grid">
+            <div className="bc-showcase-visual">
+              <span className="bc-showcase-tag">Latest Build</span>
               <div className="bc-showcase-main">
-                <span className="bc-showcase-tag">Latest Build</span>
                 <DashboardMock compact={false} />
               </div>
-              <div className="bc-showcase-thumbs">
-                <CodeMock />
-                <MobileMock />
-                <KanbanMock />
-                <TeamMock />
+              <div className="bc-showcase-badge bc-showcase-badge-left bc-cursor-hover">
+                <span className="bc-scene-badge-icon"><CheckCircle2 size={16} color="var(--bc-cyan)" /></span>
+                <span className="bc-body font-semibold text-xs leading-tight">128 Tests<br />All Passing</span>
+              </div>
+              <div className="bc-showcase-badge bc-showcase-badge-right bc-cursor-hover">
+                <span className="bc-scene-badge-icon"><Rocket size={16} color="var(--bc-cyan)" /></span>
+                <span className="bc-body font-semibold text-xs leading-tight">Deployed<br />12.4s Build</span>
               </div>
             </div>
           </div>
@@ -773,13 +1023,20 @@ export default function ServicesPage() {
 
         {/* WHY CHOOSE */}
         <section className="max-w-7xl mx-auto px-6 py-16 md:py-20">
-          <div className="text-center max-w-xl mx-auto mb-12">
+          <div
+            ref={whyRef}
+            className={`bc-reveal bc-reveal-center ${whyInView ? "bc-reveal-in" : ""} text-center max-w-xl mx-auto mb-12`}
+          >
             <div className="bc-eyebrow mb-3">Why Bluecode</div>
             <h2 className="bc-display font-bold text-3xl md:text-4xl">A studio built to be easy to work with</h2>
           </div>
           <div className="bc-why-row">
             {whyChoose.map((w, i) => (
-              <div key={i} className="bc-why-item">
+              <div
+                key={i}
+                className={`bc-why-item bc-reveal bc-reveal-center ${whyInView ? "bc-reveal-in" : ""}`}
+                style={{ transitionDelay: `${i * 110}ms` }}
+              >
                 <div className="bc-why-icon" style={{ background: `${w.color}1a`, border: `1px solid ${w.color}55` }}>
                   <w.Icon size={19} color={w.color} strokeWidth={1.75} />
                 </div>
@@ -792,7 +1049,10 @@ export default function ServicesPage() {
 
         {/* INDUSTRIES */}
         <section style={{ background: "var(--bc-band)" }}>
-          <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
+          <div
+            ref={industriesRef}
+            className={`bc-reveal bc-reveal-left ${industriesInView ? "bc-reveal-in" : ""} max-w-7xl mx-auto px-6 py-16 md:py-20`}
+          >
             <div className="text-center mb-12">
               <div className="bc-eyebrow mb-3">Industries We Serve</div>
               <h2 className="bc-display font-bold text-3xl md:text-4xl">Built for Every Kind of Business</h2>
@@ -811,7 +1071,10 @@ export default function ServicesPage() {
         </section>
 
         {/* FAQ */}
-        <section className="max-w-3xl mx-auto px-6 py-16 md:py-20">
+        <section
+          ref={faqRef}
+          className={`bc-reveal bc-reveal-center ${faqInView ? "bc-reveal-in" : ""} max-w-3xl mx-auto px-6 py-16 md:py-20`}
+        >
           <div className="text-center mb-12">
             <div className="bc-eyebrow mb-3">Common Questions</div>
             <h2 className="bc-display font-bold text-3xl md:text-4xl">FAQs</h2>
@@ -840,7 +1103,10 @@ export default function ServicesPage() {
         </section>
 
         {/* CTA */}
-        <section className="max-w-7xl mx-auto px-6 pb-20 md:pb-24">
+        <section
+          ref={ctaRef}
+          className={`bc-reveal bc-reveal-right ${ctaInView ? "bc-reveal-in" : ""} max-w-7xl mx-auto px-6 pb-20 md:pb-24`}
+        >
           <div className="bc-cta-banner">
             <div className="bc-cta-inner">
               <div className="bc-cta-image">
@@ -856,8 +1122,8 @@ export default function ServicesPage() {
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                  <a href="/#contact" className="bc-cta-btn">
-                    Start a Project <ArrowRight size={16} />
+                  <a href="/#contact" className="group bc-cta-btn">
+                    Start a Project <ArrowRight size={16} className="bc-btn-arrow" />
                   </a>
                   <a href="/#contact" className="bc-cta-btn-outline">
                     Book a Call
@@ -870,7 +1136,10 @@ export default function ServicesPage() {
 
         {/* FOOTER */}
         <footer style={{ background: "var(--bc-band)" }}>
-          <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
+          <div
+            ref={footerRef}
+            className={`bc-reveal bc-reveal-center ${footerInView ? "bc-reveal-in" : ""} max-w-7xl mx-auto px-6 py-16 md:py-20`}
+          >
             <div className="bc-footer-card p-8 md:p-12">
               <div className="grid md:grid-cols-[1.2fr_auto_1fr_auto_1fr_auto_1fr] gap-x-8 gap-y-12">
                 <div>
@@ -970,6 +1239,15 @@ export default function ServicesPage() {
           </div>
         </footer>
       </div>
+
+      {/* back to top */}
+      <button
+        className={`bc-back-to-top ${showBackToTop ? "bc-back-to-top-visible" : ""}`}
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        aria-label="Back to top"
+      >
+        <ChevronDown size={20} style={{ transform: "rotate(180deg)" }} />
+      </button>
     </div>
   );
 }
