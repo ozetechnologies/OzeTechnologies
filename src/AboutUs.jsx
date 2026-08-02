@@ -373,9 +373,12 @@ export default function AboutUs() {
         .bc-body { font-family: 'Inter', sans-serif; position: relative; }
         .bc-custom-cursor-active, .bc-custom-cursor-active a, .bc-custom-cursor-active button { cursor: none; }
 
-        .bc-loader-screen { position: fixed; inset: 0; z-index: 999; overflow: hidden; background: var(--bc-base); transition: opacity 0.5s ease, visibility 0.5s ease; }
+        .bc-loader-screen { position: fixed; inset: 0; z-index: 999; overflow: hidden; background: var(--bc-base); transition: opacity 0.5s ease, visibility 0.5s ease; display: flex; align-items: center; justify-content: center; }
         .bc-loader-screen.bc-loader-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .bc-loader-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; width: max-content; }
+        .bc-loader-center { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; width: max-content; }
+        @media (max-width: 768px) {
+  .bc-loader-center { transform: translate(-140px, -140px); }
+}
         .bc-loader-mark { width: 84px; height: 84px; display: flex; align-items: center; justify-content: center; }
         .bc-loader-mark img { width: 100%; height: 100%; object-fit: contain; }
         .bc-loader-label { font-size: 0.68rem; letter-spacing: 0.32em; text-transform: uppercase; color: var(--bc-muted); }

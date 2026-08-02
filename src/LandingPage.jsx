@@ -33,6 +33,7 @@ import {
   ShoppingCart,
   Truck,
   GraduationCap,
+  BarChart3,
   Home as HomeIcon,
   Menu,
   X,
@@ -232,28 +233,16 @@ export default function LandingPage() {
 
   const navItems = [
     { label: "Home", href: "/", isRoute: true },
-    {
-      label: "Products",
-      href: "#products",
-      dropdown: [
-        { label: "IT Development", desc: "Software, web & mobile builds", href: "#products" },
-        { label: "Specialized Solutions", desc: "AI, fintech & platform work", href: "#products" },
-        { label: "View all products", href: "#products" },
-      ],
-    },
-    {
-      label: "Projects",
-      href: "#projects",
-      dropdown: [
-        { label: "Fintech", href: "#projects" },
-        { label: "Healthcare", href: "#projects" },
-        { label: "E-commerce", href: "#projects" },
-        { label: "View all projects", href: "#projects" },
-      ],
-    },
     { label: "Services", href: "/services", isRoute: true },
-    { label: "Blogs", href: "/blogs", isRoute: true },
-   { label: "About Us", href: "/about", isRoute: true },
+    { label: "Products", href: "#products" },
+    { label: "Portfolio", href: "/portfolio", isRoute: true },
+    {
+      label: "About Us",
+      dropdown: [
+        { label: "Our History", desc: "How Bluecode got started", href: "/about" },
+        { label: "Blogs", desc: "Insights from our studio", href: "/blogs" },
+      ],
+    },
     { label: "Contact", href: "/contact", isRoute: true },
   ];
 
@@ -266,9 +255,11 @@ export default function LandingPage() {
     { icon: ShieldCheck, title: "QA & Testing", desc: "Manual and automated test coverage built in from sprint one, not bolted on at the end." },
   ];
 
-  const productTabs = [
+const productTabs = [
     {
       label: "IT Development",
+      icon: Code2,
+      color: "#8b7ff0",
       items: [
         "Custom Software Development","Web Application Development","Mobile App Development","UI/UX Design",
         "Cloud & DevOps","QA & Testing","Blockchain Development","Game Development","IoT & Embedded Solutions","API Integration Services",
@@ -276,13 +267,41 @@ export default function LandingPage() {
     },
     {
       label: "Specialized Solutions",
+      icon: Cpu,
+      color: "#f2795a",
       items: [
         "AI Chatbot Development","AI & LLM Integrations","Trading Products","Fin Tech Solutions","LMS Development",
         "CMS Development","Gold & Commodities Platforms","Healthcare Solutions","Custom AI Automation","Data & Analytics Platforms",
       ],
     },
+    {
+      label: "Web Development",
+      icon: Globe2,
+      color: "#38bdf8",
+      items: [
+        "Frontend Development","Backend Development","Full-Stack Web Apps","Progressive Web Apps (PWA)",
+        "E-Commerce Websites","CMS-Based Websites","Web Portals & Dashboards","Landing Page Development","Website Maintenance","Website Performance Optimization",
+      ],
+    },
+    {
+      label: "Android Development",
+      icon: Smartphone,
+      color: "#34d399",
+      items: [
+        "Native Android Apps","Kotlin App Development","Android UI/UX Design","Google Play Deployment",
+        "Android App Maintenance","Wearable App Development","Android Enterprise Apps","In-App Purchases Integration","Push Notification Systems","Android App Testing",
+      ],
+    },
+    {
+      label: "Data Analytics",
+      icon: BarChart3,
+      color: "#f2a93b",
+      items: [
+        "Business Intelligence Dashboards","Data Visualization","Big Data Solutions","Predictive Analytics",
+        "Data Warehousing","ETL Pipeline Development","Real-Time Data Processing","Data Cleaning & Integration","Machine Learning Models","Custom Reporting Tools",
+      ],
+    },
   ];
-
   const stats = [
     { value: "120+", label: "Projects delivered" },
     { value: "8", label: "Years in business" },
@@ -343,10 +362,12 @@ export default function LandingPage() {
         .bc-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
         .bc-display { font-family: 'Space Grotesk', 'Inter', sans-serif; }
         .bc-body { font-family: 'Inter', sans-serif; }
-        .bc-loader-screen { position: fixed; inset: 0; z-index: 999; overflow: hidden; background: var(--bc-base); transition: opacity 0.5s ease, visibility 0.5s ease; }
+        .bc-loader-screen { position: fixed; inset: 0; z-index: 999; overflow: hidden; background: var(--bc-base); transition: opacity 0.5s ease, visibility 0.5s ease; display: flex; align-items: center; justify-content: center; }
         .bc-loader-screen.bc-loader-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .bc-loader-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; width: max-content; }
-        .bc-loader-mark { position: relative; width: 64px; height: 64px; display: flex; align-items: center; justify-content: center; }
+       .bc-loader-center { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; width: max-content; }
+       @media (max-width: 768px) {
+  .bc-loader-center { transform: translate(-150px, -200px); }
+}
         .bc-loader-diamonds { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; width: 46px; height: 46px; animation: bc-diamond-spin 1.6s linear infinite; }
         .bc-loader-diamond { width: 100%; height: 100%; border-radius: 4px; }
         .bc-loader-diamond-dark { background: #1E1B4B; }
@@ -361,11 +382,11 @@ export default function LandingPage() {
         .bc-back-to-top { position: fixed; bottom: 28px; right: 28px; width: 46px; height: 46px; border-radius: 999px; background: var(--bc-cyan); color: var(--bc-btn-primary-text); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 900; box-shadow: var(--bc-shadow-lg); opacity: 0; visibility: hidden; transform: translateY(12px) scale(0.9); transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease; }
         .bc-back-to-top.bc-back-to-top-visible { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
         .bc-back-to-top:hover { transform: translateY(-3px) scale(1.08); }
-        .bc-cursor-glow { position: fixed; top: 0; left: 0; width: 640px; height: 640px; margin: -320px 0 0 -320px; pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.6s ease; will-change: transform; }
-        .bc-cursor-glow-layer { position: absolute; inset: 0; border-radius: 50%; filter: blur(60px); mix-blend-mode: screen; }
+      .bc-cursor-glow { position: fixed; top: 0; left: 0; width: 160px; height: 160px; margin: -80px 0 0 -80px; pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.6s ease; will-change: transform; }
+       .bc-cursor-glow-layer { position: absolute; inset: 0; border-radius: 50%; filter: blur(60px); mix-blend-mode: screen; }
         [data-theme="dark"] .bc-cursor-glow-layer { mix-blend-mode: screen; }
         [data-theme="light"] .bc-cursor-glow-layer { mix-blend-mode: multiply; filter: blur(70px); }
-        .bc-cursor-glow-core { background: radial-gradient(circle at 42% 45%, color-mix(in srgb, var(--bc-cyan) 55%, transparent) 0%, transparent 60%); }
+       .bc-cursor-glow-core { background: radial-gradient(circle at 42% 45%, color-mix(in srgb, var(--bc-cyan) 55%, transparent) 0%, transparent 60%); }
         .bc-cursor-glow-warm { background: radial-gradient(circle at 62% 55%, color-mix(in srgb, var(--bc-amber) 40%, transparent) 0%, transparent 55%); }
         .bc-cursor-glow-soft { background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--bc-cyan) 20%, transparent) 0%, transparent 70%); filter: blur(90px); }
         @media (hover: none), (pointer: coarse) { .bc-cursor-glow { display: none; } }
@@ -404,10 +425,12 @@ export default function LandingPage() {
         .bc-node { animation: bc-pulse-node 3s ease-in-out infinite; }
         .bc-marquee-track { display: flex; width: max-content; animation: bc-marquee 22s linear infinite; }
         @keyframes bc-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        .bc-logo-strip { background: var(--bc-panel-2); border: 1px solid var(--bc-line); border-radius: 14px; }
-        .bc-logo-item { color: var(--bc-muted); opacity: 0.75; transition: opacity 0.2s ease, color 0.2s ease; letter-spacing: 0.04em; }
+        .bc-logo-strip { background: #000000; border: 1px solid var(--bc-line); border-radius: 14px; }
+        .bc-logo-item { color: #ffffff; opacity: 0.85; transition: opacity 0.2s ease, color 0.2s ease; letter-spacing: 0.04em; }
         .bc-logo-item:hover { opacity: 1; color: var(--bc-text); }
         .bc-hero-media { position: relative; border-radius: 20px; overflow: hidden; box-shadow: var(--bc-shadow-lg); border: 1px solid var(--bc-line); aspect-ratio: 4 / 3.1; background: var(--bc-panel-2); animation: bc-float 9s ease-in-out infinite; }
+        .bc-flow-card { position: relative; z-index: 1; animation: bc-float 9s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .bc-flow-card { animation: none; } }
         @keyframes bc-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
         @media (prefers-reduced-motion: reduce) { .bc-hero-media { animation: none; } }
         .bc-hero-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -418,7 +441,7 @@ export default function LandingPage() {
         .bc-check-dot { width: 22px; height: 22px; border-radius: 999px; background: var(--bc-cyan); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         @media (prefers-reduced-motion: reduce) { .bc-flow-line, .bc-node, .bc-marquee-track { animation: none !important; } }
         .bc-tab-row { display: flex; gap: 40px; border-bottom: 1px solid var(--bc-line); }
-        .bc-tab-btn { background: none; border: none; cursor: pointer; padding: 14px 2px; font-weight: 600; font-size: 0.95rem; color: var(--bc-muted); position: relative; transition: color 0.2s ease; }
+        .bc-tab-btn { background: none; border: none; cursor: pointer; padding: 14px 2px; font-weight: 700; font-size: 0.95rem; color: var(--bc-muted); position: relative; transition: color 0.2s ease; }
         .bc-tab-btn.bc-tab-active { color: var(--bc-text); }
         .bc-tab-btn.bc-tab-active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--bc-cyan); }
         .bc-product-item { font-family: 'Space Grotesk', 'Inter', sans-serif; font-weight: 600; font-size: 1.05rem; line-height: 1.35; color: var(--bc-text); }
@@ -526,7 +549,7 @@ export default function LandingPage() {
         .bc-mobile-link { color: #F5F5F4; font-size: 1rem; font-weight: 600; text-decoration: none; padding: 14px 4px; border-bottom: 1px solid rgba(255,255,255,0.08); display: block; }
         .bc-mobile-sublink { color: rgba(241,245,249,0.68); font-size: 0.88rem; text-decoration: none; padding: 10px 4px 10px 14px; display: block; }
         .bc-mobile-cta { margin-top: auto; display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--bc-cyan, #6366F1); color: #ffffff; border-radius: 999px; padding: 12px 20px; font-weight: 600; text-decoration: none; }
-        .bc-footer-card { position: relative; overflow: hidden; border-radius: 24px; background: var(--bc-panel); border: 1px solid var(--bc-line); box-shadow: var(--bc-shadow-lg); }
+        .bc-footer-card { position: relative; overflow: hidden; border-radius: 0; background: var(--bc-panel); border: 1px solid var(--bc-line); box-shadow: var(--bc-shadow-lg); }
         .bc-footer-decor-dots { position: absolute; bottom: 24px; right: 24px; width: 120px; height: 90px; background-image: radial-gradient(var(--bc-cyan) 1px, transparent 1px); background-size: 10px 10px; opacity: 0.25; pointer-events: none; }
         .bc-footer-decor-wave { position: absolute; top: 0; right: 0; width: 45%; max-width: 420px; height: auto; opacity: 0.35; pointer-events: none; }
         .bc-footer-underline { width: 40px; height: 3px; border-radius: 2px; background: var(--bc-cyan); margin: 14px 0 18px; }
@@ -612,17 +635,29 @@ export default function LandingPage() {
                       />
                     </button>
                     <div className={`bc-nav-dropdown-panel ${openDropdown === item.label ? "bc-nav-dropdown-open" : ""}`}>
-                      {item.dropdown.map((sub, j) => (
-                        <a
-                          key={j}
-                          href={sub.href}
-                          className="bc-nav-dropdown-item"
-                          onClick={() => setOpenDropdown(null)}
-                        >
-                          <span className="bc-nav-dropdown-item-label">{sub.label}</span>
-                          {sub.desc && <span className="bc-nav-dropdown-item-desc">{sub.desc}</span>}
-                        </a>
-                      ))}
+                      {item.dropdown.map((sub, j) =>
+                        sub.href.startsWith("/") ? (
+                          <Link
+                            key={j}
+                            to={sub.href}
+                            className="bc-nav-dropdown-item"
+                            onClick={() => setOpenDropdown(null)}
+                          >
+                            <span className="bc-nav-dropdown-item-label">{sub.label}</span>
+                            {sub.desc && <span className="bc-nav-dropdown-item-desc">{sub.desc}</span>}
+                          </Link>
+                        ) : (
+                          <a
+                            key={j}
+                            href={sub.href}
+                            className="bc-nav-dropdown-item"
+                            onClick={() => setOpenDropdown(null)}
+                          >
+                            <span className="bc-nav-dropdown-item-label">{sub.label}</span>
+                            {sub.desc && <span className="bc-nav-dropdown-item-desc">{sub.desc}</span>}
+                          </a>
+                        )
+                      )}
                     </div>
                   </div>
                 ) : item.isRoute ? (
@@ -656,9 +691,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <a href="#contact" className="bc-navbar-cta bc-body">
-            Consultancy
-          </a>
+          
         </div>
       </div>
 
@@ -688,7 +721,7 @@ export default function LandingPage() {
                 >
                   {item.label}
                 </Link>
-              ) : (
+              ) : item.href ? (
                 <a
                   href={item.href}
                   className="bc-mobile-link"
@@ -696,28 +729,37 @@ export default function LandingPage() {
                 >
                   {item.label}
                 </a>
+              ) : (
+                <span className="bc-mobile-link" style={{ opacity: 0.6, cursor: "default" }}>
+                  {item.label}
+                </span>
               )}
               {item.dropdown &&
-                item.dropdown.map((sub, j) => (
-                  <a
-                    key={j}
-                    href={sub.href}
-                    className="bc-mobile-sublink"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {sub.label}
-                  </a>
-                ))}
+                item.dropdown.map((sub, j) =>
+                  sub.href.startsWith("/") ? (
+                    <Link
+                      key={j}
+                      to={sub.href}
+                      className="bc-mobile-sublink"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {sub.label}
+                    </Link>
+                  ) : (
+                    <a
+                      key={j}
+                      href={sub.href}
+                      className="bc-mobile-sublink"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {sub.label}
+                    </a>
+                  )
+                )}
             </div>
           ))}
         </div>
-        <a
-          href="#contact"
-          className="bc-mobile-cta"
-          onClick={() => setMobileMenuOpen(false)}
-        >
-          Consultancy
-        </a>
+       
       </div>
 
       <section id="home" className="bc-grid-bg relative overflow-hidden">
@@ -728,10 +770,7 @@ export default function LandingPage() {
         </svg>
         <div className="max-w-7xl mx-auto px-6 pt-20 md:pt-28 pb-14 md:pb-24 grid md:grid-cols-2 gap-14 items-center">
           <div>
-            <div className={`mb-6 bc-reveal ${!loading ? "bc-in-view" : ""}`} style={{ animationDelay: "0.1s" }}>
-              <div className="bc-hero-badge-line1">Your Business</div>
-              <div className="bc-hero-badge-line2">AI Powered IT Partner</div>
-            </div>
+            
             <h1
               className={`bc-display font-bold text-4xl md:text-5xl leading-tight mb-6 bc-reveal ${!loading ? "bc-in-view" : ""}`}
               style={{ animationDelay: "0.2s" }}
@@ -748,7 +787,7 @@ export default function LandingPage() {
             </p>
             <div className={`flex flex-wrap gap-4 bc-reveal ${!loading ? "bc-in-view" : ""}`} style={{ animationDelay: "0.4s" }}>
               <a href="#contact" className="bc-btn-primary bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
-                Start a project <ArrowRight size={18} />
+               Consultancy <ArrowRight size={18} />
               </a>
               <a href="#projects" className="bc-btn-ghost bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
                 See our work <ArrowUpRight size={18} />
@@ -781,39 +820,82 @@ export default function LandingPage() {
               style={{ animationDelay: "0.3s" }}
             >
               <div ref={parallaxRef} className="bc-hero-blob" />
-              <div className="bc-hero-media" style={{ position: "relative", zIndex: 1 }}>
-                <div className="bc-hero-media-dots" />
-                <img
-                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop"
-                  alt="Bluecode engineering team at work"
-                  referrerPolicy="no-referrer"
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.src =
-                      "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1200&auto=format&fit=crop";
-                  }}
-                />
-              </div>
+              <div className="bc-diagram-panel bc-corner bc-flow-card p-6 md:p-7" style={{ position: "relative", zIndex: 1 }}>
+  <div className="flex items-center justify-between mb-5">
+    <div className="flex items-center gap-2">
+      <span style={{ width: 9, height: 9, borderRadius: 999, background: "#8b7ff0", display: "inline-block" }} />
+      <span style={{ width: 9, height: 9, borderRadius: 999, background: "#f2795a", display: "inline-block" }} />
+      <span style={{ width: 9, height: 9, borderRadius: 999, background: "#f2a93b", display: "inline-block" }} />
+      <span className="bc-body font-semibold text-sm ml-1">Delivery Engine</span>
+    </div>
+    <div className="flex items-center gap-1.5">
+      <span style={{ width: 7, height: 7, borderRadius: 999, background: "#f2795a", display: "inline-block" }} />
+      <span className="bc-mono text-xs font-semibold" style={{ color: "#f2795a" }}>LIVE</span>
+    </div>
+  </div>
+
+  <div className="bc-mono text-xs tracking-widest uppercase mb-1" style={{ color: "var(--bc-muted)" }}>
+    Peak Delivery Score
+  </div>
+  <div className="flex items-baseline gap-2 mb-4">
+    <span className="bc-display font-bold text-4xl" style={{ color: "var(--bc-cyan)" }}>
+      <CountUpValue value="98%" trigger={!loading} duration={1400} />
+    </span>
+    <span className="bc-body text-sm" style={{ color: "var(--bc-muted)" }}>
+      ↗ across 4 delivery stages
+    </span>
+  </div>
+
+  <svg viewBox="0 0 380 170" className="w-full h-auto">
+    <g className="bc-flow-line" stroke="var(--bc-line)" strokeWidth="1" fill="none">
+      <line x1="24" y1="55" x2="170" y2="30" />
+      <line x1="24" y1="55" x2="170" y2="85" />
+      <line x1="24" y1="55" x2="170" y2="140" />
+      <line x1="24" y1="115" x2="170" y2="30" />
+      <line x1="24" y1="115" x2="170" y2="85" />
+      <line x1="24" y1="115" x2="170" y2="140" />
+    </g>
+    <g className="bc-flow-line" stroke="var(--bc-line)" strokeWidth="1" fill="none">
+      <line x1="170" y1="30" x2="300" y2="15" />
+      <line x1="170" y1="30" x2="300" y2="58" />
+      <line x1="170" y1="30" x2="300" y2="101" />
+      <line x1="170" y1="30" x2="300" y2="144" />
+      <line x1="170" y1="85" x2="300" y2="15" />
+      <line x1="170" y1="85" x2="300" y2="58" />
+      <line x1="170" y1="85" x2="300" y2="101" />
+      <line x1="170" y1="85" x2="300" y2="144" />
+      <line x1="170" y1="140" x2="300" y2="15" />
+      <line x1="170" y1="140" x2="300" y2="58" />
+      <line x1="170" y1="140" x2="300" y2="101" />
+      <line x1="170" y1="140" x2="300" y2="144" />
+    </g>
+
+    <circle cx="24" cy="55" r="6" fill="var(--bc-muted)" className="bc-node-rect" />
+    <circle cx="24" cy="115" r="6" fill="var(--bc-muted)" className="bc-node-rect" />
+
+    <circle cx="170" cy="30" r="7" fill="var(--bc-cyan)" className="bc-node-rect bc-node" />
+    <circle cx="170" cy="85" r="7" fill="var(--bc-cyan)" className="bc-node-rect bc-node" style={{ animationDelay: "0.4s" }} />
+    <circle cx="170" cy="140" r="7" fill="var(--bc-cyan)" className="bc-node-rect bc-node" style={{ animationDelay: "0.8s" }} />
+
+    <circle cx="300" cy="15" r="6" fill="#8b7ff0" className="bc-node-rect bc-node" />
+    <circle cx="300" cy="58" r="6" fill="#34d399" className="bc-node-rect bc-node" style={{ animationDelay: "0.3s" }} />
+    <circle cx="300" cy="101" r="6" fill="#f2795a" className="bc-node-rect bc-node" style={{ animationDelay: "0.6s" }} />
+    <circle cx="300" cy="144" r="6" fill="#f2a93b" className="bc-node-rect bc-node" style={{ animationDelay: "0.9s" }} />
+
+    <text x="310" y="19" className="bc-mono" fontSize="10" fontWeight="700" fill="#8b7ff0">DESIGN 96%</text>
+    <text x="310" y="62" className="bc-mono" fontSize="10" fontWeight="700" fill="#34d399">BUILD 98%</text>
+    <text x="310" y="105" className="bc-mono" fontSize="10" fontWeight="700" fill="#f2795a">TEST 95%</text>
+    <text x="310" y="148" className="bc-mono" fontSize="10" fontWeight="700" fill="#f2a93b">DEPLOY 99%</text>
+  </svg>
+</div>
             </div>
-            <div className={`bc-float-card bc-reveal-scale ${!loading ? "bc-in-view" : ""}`} style={{ animationDelay: "0.6s" }}>
-              {heroChecks.map((c, i) => (
-                <div key={i} className="bc-float-row">
-                  <div className="bc-float-row-icon">
-                    <c.Icon size={17} color="var(--bc-cyan)" />
-                  </div>
-                  <div>
-                    <div className="bc-body font-semibold text-sm leading-tight">{c.title}</div>
-                    <div className="bc-body text-xs mt-0.5" style={{ color: "var(--bc-muted)" }}>{c.desc}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            
           </div>
         </div>
 
         <div className="max-w-7xl mx-auto px-6 pb-16 md:pb-20">
           <div className="bc-logo-strip px-6 md:px-10 py-6 md:py-7 overflow-hidden">
-            <div className="bc-mono text-[0.68rem] tracking-widest uppercase mb-4 text-center md:text-left" style={{ color: "var(--bc-muted)" }}>
+            <div className="bc-mono text-[0.68rem] tracking-widest uppercase mb-4 text-center md:text-left" style={{ color: "#ffffff", opacity: 0.7 }}>
               Trusted by engineering teams at
             </div>
             <div className="bc-marquee-track">
@@ -840,50 +922,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section id="products" ref={productsRef} className={`max-w-7xl mx-auto px-6 py-20 md:py-24 bc-reveal ${productsInView ? "bc-in-view" : ""}`}>
-        <div className="bc-mono bc-eyebrow mb-3">What we build</div>
-        <h2 className="bc-display font-bold text-3xl md:text-4xl mb-4">
-          Our Core <span style={{ color: "var(--bc-cyan)" }}>Products</span>
-        </h2>
-        <p className="bc-body max-w-2xl mb-8" style={{ color: "var(--bc-muted)" }}>
-          Bluecode builds custom software and specialized digital products, standing
-          among the teams businesses trust to power their next platform.
-        </p>
-
-        <div className="bc-tab-row mb-10">
-          {productTabs.map((tab, i) => (
-            <button
-              key={i}
-              onClick={() => setActiveProductTab(i)}
-              className={`bc-tab-btn ${activeProductTab === i ? "bc-tab-active" : ""}`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
-          {productTabs[activeProductTab].items.map((item, i) => (
-            <div
-              key={i}
-              className={`bc-product-item bc-reveal ${productsInView ? "bc-in-view" : ""}`}
-              style={{ animationDelay: `${0.1 + (i % 6) * 0.06}s` }}
-            >
-              {item}
-            </div>
-          ))}
-        </div>
-
-        <div className="bc-cta-banner mt-14 p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <p className="bc-display font-semibold text-xl md:text-2xl leading-snug max-w-xl">
-            Choose from our core products{" "}
-            <span className="bc-cta-highlight">to build the right solution for your business.</span>
-          </p>
-          <a href="#contact" className="bc-cta-btn flex-shrink-0">
-            Talk to Our Experts
-          </a>
-        </div>
-      </section>
 
       <section id="about" ref={industriesRef} className="overflow-hidden" style={{ background: "var(--bc-band)" }}>
         <div className={`max-w-7xl mx-auto px-6 py-20 md:py-24 grid md:grid-cols-2 gap-14 items-center bc-reveal ${industriesInView ? "bc-in-view" : ""}`}>
@@ -973,19 +1011,53 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section id="projects" ref={stackRef} className="py-14 overflow-hidden">
-        <div className={`max-w-7xl mx-auto px-6 mb-6 bc-reveal ${stackInView ? "bc-in-view" : ""}`}>
-          <div className="bc-mono bc-eyebrow mb-2">Tooling</div>
-          <h2 className="bc-display font-bold text-2xl md:text-3xl">Our stack</h2>
+      <section id="products" ref={productsRef} className={`max-w-7xl mx-auto px-6 py-20 md:py-24 bc-reveal ${productsInView ? "bc-in-view" : ""}`}>
+        <div className="bc-mono bc-eyebrow mb-3">What we build</div>
+       <h2 className="bc-display font-bold text-3xl md:text-4xl mb-4">
+          Our <span style={{ color: "var(--bc-cyan)" }}>Products</span>
+        </h2>
+        <p className="bc-body max-w-2xl mb-8" style={{ color: "var(--bc-muted)" }}>
+          Bluecode builds custom software and specialized digital products, standing
+          among the teams businesses trust to power their next platform.
+        </p>
+
+        <div className="bc-tab-row mb-10">
+          {productTabs.map((tab, i) => (
+           <button
+              key={i}
+              onClick={() => setActiveProductTab(i)}
+              className={`bc-tab-btn ${activeProductTab === i ? "..." : ""}`}
+              style={{ display: "flex", alignItems: "center", gap: "6px" }}
+            >
+             <tab.icon size={16} color={tab.color} />
+              {tab.label}
+            </button>
+          ))}
         </div>
-        <div className="bc-marquee-track">
-          {[...stack, ...stack].map((t, i) => (
-            <div key={i} className="bc-mono text-sm px-6 py-3 mx-2 rounded whitespace-nowrap" style={{ border: "1px solid var(--bc-line)", color: "var(--bc-text)" }}>
-              {t}
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
+          {productTabs[activeProductTab].items.map((item, i) => (
+            <div
+              key={i}
+              className={`bc-product-item bc-reveal ${productsInView ? "bc-in-view" : ""}`}
+              style={{ animationDelay: `${0.1 + (i % 6) * 0.06}s` }}
+            >
+              {item}
             </div>
           ))}
         </div>
+
+        <div className="bc-cta-banner mt-14 p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <p className="bc-display font-semibold text-xl md:text-2xl leading-snug max-w-xl">
+            Choose from our core products{" "}
+            <span className="bc-cta-highlight">to build the right solution for your business.</span>
+          </p>
+          <a href="#contact" className="bc-cta-btn flex-shrink-0">
+            Talk to Our Experts
+          </a>
+        </div>
       </section>
+     
 
       <section id="blogs" ref={testimonialsRef} style={{ background: "var(--bc-band)" }}>
         <div className={`max-w-7xl mx-auto px-6 py-20 md:py-24 bc-reveal ${testimonialsInView ? "bc-in-view" : ""}`}>
@@ -1131,9 +1203,9 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <footer ref={footerRef} style={{ background: "var(--bc-band)" }}>
-        <div className={`max-w-7xl mx-auto px-6 py-16 md:py-20 bc-reveal ${footerInView ? "bc-in-view" : ""}`}>
-          <div className="bc-footer-card p-8 md:p-12">
+      <footer ref={footerRef}>
+        <div className={`w-full bc-reveal ${footerInView ? "bc-in-view" : ""}`}>
+          <div className="bc-footer-card py-16 md:py-20 px-8 md:px-12">
             <div className="bc-footer-decor-dots" />
             <svg className="bc-footer-decor-wave" viewBox="0 0 300 160" fill="none">
               <path d="M0 40 C 60 10, 100 70, 160 40 S 260 -10, 300 30" stroke="var(--bc-cyan)" strokeWidth="1" />
