@@ -1,5 +1,6 @@
 import teamMeetingImg from "./assets/team-meeting.jpg";
 import loadingGif from "./assets/loading.gif";
+import processFlowImg from "./assets/process-flow.png";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -256,32 +257,20 @@ export default function AboutUs() {
 
   const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
 
-  const navItems = [
-    { label: "Home", href: "/", isRoute: true },
-    {
-      label: "Products",
-      href: "/#products",
-      dropdown: [
-        { label: "IT Development", desc: "Software, web & mobile builds", href: "/#products" },
-        { label: "Specialized Solutions", desc: "AI, fintech & platform work", href: "/#products" },
-        { label: "View all products", href: "/#products" },
-      ],
-    },
-    {
-      label: "Projects",
-      href: "/#projects",
-      dropdown: [
-        { label: "Fintech", href: "/#projects" },
-        { label: "Healthcare", href: "/#projects" },
-        { label: "E-commerce", href: "/#projects" },
-        { label: "View all projects", href: "/#projects" },
-      ],
-    },
-    { label: "Services", href: "/services", isRoute: true },
-    { label: "About Us", href: "/about", isRoute: true },
-    { label: "Contact", href: "/#contact" },
-  ];
-
+const navItems = [
+  { label: "Home", href: "/", isRoute: true },
+  { label: "Services", href: "/services", isRoute: true },
+  { label: "Products", href: "/products", isRoute: true },
+  { label: "Portfolio", href: "/portfolio", isRoute: true },
+  {
+    label: "About Us",
+    dropdown: [
+      { label: "Our History", desc: "How Bluecode got started", href: "/our-history" },
+      { label: "Blogs", desc: "Insights from our studio", href: "/blogs" },
+    ],
+  },
+  { label: "Contact", href: "/contact", isRoute: true },
+];
   const stats = [
     { value: "40+", label: "Projects Delivered", color: "#6366F1" },
     { value: "99%", label: "Client Satisfaction", color: "#38bdf8" },
@@ -565,7 +554,8 @@ export default function AboutUs() {
         }
         .bc-process-connector-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: linear-gradient(90deg, var(--bc-cyan), #8b7ff0); transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
         .bc-process-connector-fill.bc-in-view { width: 100%; }
-        .bc-process-step { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 14px; }
+        .bc-process-step { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 14px; border: 1px solid var(--bc-line); border-radius: 16px; padding: 24px 20px; background: var(--bc-panel); transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+.bc-process-step:hover { transform: translateY(-6px); box-shadow: var(--bc-shadow); border-color: var(--bc-cyan); }
         .bc-process-step:hover .bc-icon-box-soft { transform: scale(1.12) rotate(-8deg); box-shadow: 0 0 26px -4px color-mix(in srgb, var(--bc-cyan) 65%, transparent); }
         .bc-process-step.bc-in-view .bc-icon-box-soft::after { content: ''; position: absolute; inset: -6px; border-radius: 16px; border: 2px solid var(--bc-cyan); animation: bc-dot-pulse 1s ease-out 0.4s 1; opacity: 0; }
         @keyframes bc-dot-pulse { 0% { transform: scale(0.7); opacity: 0.9; } 100% { transform: scale(1.35); opacity: 0; } }
@@ -913,29 +903,19 @@ export default function AboutUs() {
           </div>
         </section>
 
-        {/* SECTION 5: PROCESS / TIMELINE */}
         <section className="py-16 px-6 max-w-7xl mx-auto">
-          <div className="flex flex-col items-center text-center gap-3 mb-14 max-w-xl mx-auto">
-            <Reveal as="span" direction="up" className="bc-eyebrow">Our Process</Reveal>
-            <Reveal as="h2" delay={70} direction="up" className="bc-display text-3xl md:text-4xl font-bold">A Simple, Effective Approach</Reveal>
-            <Reveal as="p" delay={140} direction="up" className="text-sm opacity-75 leading-relaxed">
-              We follow a proven process to deliver solutions that create real impact.
-            </Reveal>
-          </div>
+  <div className="flex flex-col items-center text-center gap-3 mb-14 max-w-xl mx-auto">
+    <Reveal as="span" direction="up" className="bc-eyebrow">Our Process</Reveal>
+    <Reveal as="h2" delay={70} direction="up" className="bc-display text-3xl md:text-4xl font-bold">A Simple, Effective Approach</Reveal>
+    <Reveal as="p" delay={140} direction="up" className="text-sm opacity-75 leading-relaxed">
+      We follow a proven process to deliver solutions that create real impact.
+    </Reveal>
+  </div>
 
-          <div className="bc-process-grid">
-            <ProcessConnector />
-            {processSteps.map((step, idx) => (
-              <Reveal key={idx} delay={idx * 110} direction="up" className="bc-process-step">
-                <div className="bc-icon-box-soft text-white" style={{ backgroundColor: step.color, boxShadow: `0 8px 20px -6px ${step.color}80` }}>
-                  <step.Icon size={20} />
-                </div>
-                <h3 className="bc-display text-lg font-bold">{step.title}</h3>
-                <p className="text-sm opacity-75 leading-relaxed">{step.desc}</p>
-              </Reveal>
-            ))}
-          </div>
-        </section>
+  <Reveal direction="up" delay={100} className="w-full overflow-x-auto">
+    <img src={processFlowImg} alt="Our process flow" className="w-full h-auto min-w-[900px] md:min-w-0" />
+  </Reveal>
+</section>
 
         {/* SECTION 6: BOTTOM CTA BANNER */}
         <section className="py-12 md:py-20 px-6 max-w-7xl mx-auto">

@@ -41,7 +41,7 @@ const CATEGORIES = [
 ];
 
 export default function Blogs() {
-  const [theme, setTheme] = useState("dark");
+ const [theme, setTheme] = useState("light");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -110,30 +110,20 @@ export default function Blogs() {
     iconCircleIcon: "#A5B4FC",
   };
 
-  const navItems = [
-    { label: "Home", href: "/", isRoute: true },
-    {
-      label: "Products",
-      dropdown: [
-        { label: "IT Development", href: "#products" },
-        { label: "Specialized Solutions", href: "#products" },
-        { label: "View all products", href: "#products" }
-      ]
-    },
-    {
-      label: "Projects",
-      dropdown: [
-        { label: "Fintech", href: "#projects" },
-        { label: "Healthcare", href: "#projects" },
-        { label: "E-commerce", href: "#projects" },
-        { label: "View all projects", href: "#projects" }
-      ]
-    },
-    { label: "Services", href: "/services", isRoute: true },
-    { label: "Blogs", href: "/blogs", isRoute: true },
-    { label: "About Us", href: "/about", isRoute: true },
-    { label: "Contact", href: "/contact", isRoute: true },
-  ];
+ const navItems = [
+  { label: "Home", href: "/", isRoute: true },
+  { label: "Services", href: "/services", isRoute: true },
+  { label: "Products", href: "/products", isRoute: true },
+  { label: "Portfolio", href: "/portfolio", isRoute: true },
+  {
+    label: "About Us",
+    dropdown: [
+      { label: "Our History", desc: "How Bluecode got started", href: "/our-history", isRoute: true },
+      { label: "Blogs", desc: "Insights from our studio", href: "/blogs", isRoute: true },
+    ],
+  },
+  { label: "Contact", href: "/contact", isRoute: true },
+];
 
   return (
     <div

@@ -209,31 +209,20 @@ export default function ServicesPage() {
   });
   const heroParallaxHandlers = makeParallaxHandlers(setHeroParallax, 8);
 
-  const navItems = [
-    { label: "Home", href: "/", isRoute: true },
-    {
-      label: "Products",
-      href: "/#products",
-      dropdown: [
-        { label: "IT Development", desc: "Software, web & mobile builds", href: "/#products" },
-        { label: "Specialized Solutions", desc: "AI, fintech & platform work", href: "/#products" },
-        { label: "View all products", href: "/#products" },
-      ],
-    },
-    {
-      label: "Projects",
-      href: "/#projects",
-      dropdown: [
-        { label: "Fintech", href: "/#projects" },
-        { label: "Healthcare", href: "/#projects" },
-        { label: "E-commerce", href: "/#projects" },
-        { label: "View all projects", href: "/#projects" },
-      ],
-    },
-    { label: "Services", href: "/services", isRoute: true },
-    { label: "About Us", href: "/#about" },
-    { label: "Contact", href: "/#contact" },
-  ];
+ const navItems = [
+  { label: "Home", href: "/", isRoute: true },
+  { label: "Services", href: "/services", isRoute: true },
+  { label: "Products", href: "/products", isRoute: true },
+  { label: "Portfolio", href: "/portfolio", isRoute: true },
+  {
+    label: "About Us",
+    dropdown: [
+      { label: "Our History", desc: "How Bluecode got started", href: "/our-history" },
+      { label: "Blogs", desc: "Insights from our studio", href: "/blogs" },
+    ],
+  },
+  { label: "Contact", href: "/contact", isRoute: true },
+];
 
   const services = [
     { Icon: Code2, title: "Custom Software", desc: "Line-of-business systems built around how your team actually works.", color: "#6366F1" },
@@ -470,51 +459,43 @@ export default function ServicesPage() {
         .bc-reveal-in { opacity: 1; transform: translate(0, 0); }
 
         /* ---------- NAVBAR (shared) ---------- */
-        .bc-navbar-wrap { display: flex; justify-content: center; padding: 16px 20px 0; }
-        .bc-navbar-row { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 820px; }
-        .bc-navbar-pill { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; background: #0b1220; border: 1px solid rgba(255,255,255,0.06); border-radius: 999px; padding: 10px 12px 10px 10px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.25); transition: background 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease; }
-        .bc-navbar-pill.bc-navbar-scrolled { background: rgba(11,18,32,0.72); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 16px 40px -14px rgba(0,0,0,0.55), 0 2px 10px rgba(0,0,0,0.3); }
-        @media (min-width: 768px) { .bc-navbar-pill { padding: 6px 8px 6px 6px; gap: 6px; } }
-        .bc-navbar-brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; }
-        .bc-navbar-logo { width: 38px; height: 38px; flex-shrink: 0; border-radius: 999px; background: var(--bc-cyan); color: #ffffff; font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; }
-        .bc-navbar-name { color: #ffffff; font-weight: 700; font-size: 1rem; white-space: nowrap; }
-        .bc-navbar-links { display: none; }
-        @media (min-width: 768px) { .bc-navbar-links { display: flex; align-items: center; gap: 26px; padding: 0 10px; flex: 1; min-width: 0; justify-content: center; } }
-        .bc-navbar-link { color: rgba(241,245,249,0.68); font-size: 0.82rem; white-space: nowrap; text-decoration: none; transition: color 0.2s ease; flex-shrink: 0; position: relative; }
-        .bc-navbar-link:hover { color: #ffffff; }
-        button.bc-navbar-link { background: none; border: none; padding: 0; font-family: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
-        @media (min-width: 768px) { .bc-navbar-link { font-size: 0.88rem; } }
-        .bc-navbar-link-active { color: #ffffff; }
-        .bc-navbar-link-active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: var(--bc-cyan); border-radius: 2px; transform-origin: left; animation: bc-underline-grow 0.5s ease forwards; }
-        @keyframes bc-underline-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-        .bc-nav-dropdown-wrap { position: relative; flex-shrink: 0; }
-        .bc-nav-dropdown-chevron { transition: transform 0.2s ease; }
-        .bc-nav-dropdown-chevron-open, .bc-nav-dropdown-wrap:hover .bc-nav-dropdown-chevron { transform: rotate(180deg); }
-        .bc-nav-dropdown-panel { position: absolute; top: calc(100% + 16px); left: 50%; transform: translateX(-50%) translateY(6px); min-width: 220px; background: #0b1220; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 8px; box-shadow: 0 20px 45px -16px rgba(0,0,0,0.55), 0 4px 12px rgba(0,0,0,0.3); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease; z-index: 70; }
-        .bc-nav-dropdown-wrap:hover .bc-nav-dropdown-panel, .bc-nav-dropdown-panel.bc-nav-dropdown-open { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); pointer-events: auto; }
-        .bc-nav-dropdown-item { display: flex; flex-direction: column; gap: 2px; padding: 9px 12px; border-radius: 9px; text-decoration: none; transition: background 0.15s ease; }
-        .bc-nav-dropdown-item:hover { background: rgba(255,255,255,0.07); }
-        .bc-nav-dropdown-item-label { color: #f1f5f9; font-size: 0.86rem; font-weight: 600; }
-        .bc-nav-dropdown-item-desc { color: rgba(241,245,249,0.5); font-size: 0.74rem; }
-        .bc-navbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-left: auto; }
-        .bc-navbar-theme-btn { width: 36px; height: 36px; border-radius: 999px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: #f1f5f9; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s ease, transform 0.2s ease; }
-        .bc-navbar-theme-btn:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px) rotate(-15deg); }
-        .bc-navbar-cta { display: none; }
-        @media (min-width: 768px) { .bc-navbar-cta { display: inline-flex; align-items: center; gap: 6px; background: #ffffff; color: #0b1220; border-radius: 999px; padding: 9px 18px; font-weight: 600; font-size: 0.82rem; white-space: nowrap; text-decoration: none; flex-shrink: 0; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.15); transition: transform 0.2s ease, filter 0.2s ease; } .bc-navbar-cta:hover { transform: translateY(-1px) scale(1.04); filter: brightness(0.95); } .bc-navbar-cta:active { transform: scale(0.96); } }
-        .bc-navbar-hamburger { display: flex; width: 36px; height: 36px; border-radius: 999px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: #f1f5f9; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer; }
-        @media (min-width: 768px) { .bc-navbar-hamburger { display: none; } }
-        .bc-mobile-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 90; opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease; }
-        .bc-mobile-overlay.bc-mobile-open { opacity: 1; visibility: visible; }
-        .bc-mobile-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 80%; max-width: 300px; background: #0b1220; z-index: 95; padding: 26px 22px; transform: translateX(100%); transition: transform 0.3s ease; overflow-y: auto; display: flex; flex-direction: column; }
-        .bc-mobile-panel.bc-mobile-open { transform: translateX(0); }
-        @media (min-width: 768px) { .bc-mobile-overlay, .bc-mobile-panel { display: none; } }
-        .bc-mobile-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
-        .bc-mobile-close { width: 34px; height: 34px; border-radius: 999px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: #f1f5f9; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
-        .bc-mobile-link { color: #f1f5f9; font-size: 1rem; font-weight: 600; text-decoration: none; padding: 14px 4px; border-bottom: 1px solid rgba(255,255,255,0.08); display: block; }
-        .bc-mobile-sublink { color: rgba(241,245,249,0.68); font-size: 0.88rem; text-decoration: none; padding: 10px 4px 10px 14px; display: block; }
-        .bc-mobile-cta { margin-top: auto; display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--bc-cyan, #6366F1); color: #ffffff; border-radius: 999px; padding: 12px 20px; font-weight: 600; text-decoration: none; }
-
-        /* ---------- HERO ---------- */
+       .bc-navbar-wrap { display: flex; justify-content: center; padding: 16px 20px 0; }
+.bc-navbar-row { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 920px; }
+.bc-navbar-pill { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; background: #18152A; border: 1px solid rgba(255,255,255,0.06); border-radius: 999px; padding: 10px 12px 10px 10px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.25); }
+@media (min-width: 1024px) { .bc-navbar-pill { padding: 6px 8px 6px 6px; gap: 6px; } }
+.bc-navbar-brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; }
+.bc-navbar-logo { width: 38px; height: 38px; flex-shrink: 0; border-radius: 999px; background: var(--bc-cyan); color: #1E1B4B; font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; }
+.bc-navbar-name { color: #ffffff; font-weight: 700; font-size: 1rem; white-space: nowrap; }
+.bc-navbar-links { display: none; }
+@media (min-width: 1024px) { .bc-navbar-links { display: flex; align-items: center; gap: 18px; padding: 0 8px; flex: 1; min-width: 0; justify-content: center; } }
+.bc-navbar-link { position: relative; color: rgba(241,245,249,0.68); font-size: 0.82rem; white-space: nowrap; text-decoration: none; transition: color 0.3s ease; flex-shrink: 0; }
+button.bc-navbar-link { background: none; border: none; padding: 0; font-family: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+.bc-navbar-link:hover { color: #ffffff; }
+.bc-navbar-link-active { color: #ffffff; }
+.bc-nav-dropdown-wrap { position: relative; flex-shrink: 0; }
+.bc-nav-dropdown-chevron { transition: transform 0.2s ease; }
+.bc-nav-dropdown-chevron-open, .bc-nav-dropdown-wrap:hover .bc-nav-dropdown-chevron { transform: rotate(180deg); }
+.bc-nav-dropdown-panel { position: absolute; top: calc(100% + 16px); left: 50%; transform: translateX(-50%) translateY(6px); min-width: 220px; background: #18152A; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 8px; box-shadow: 0 20px 45px -16px rgba(0,0,0,0.55), 0 4px 12px rgba(0,0,0,0.3); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease; z-index: 70; }
+.bc-nav-dropdown-wrap:hover .bc-nav-dropdown-panel, .bc-nav-dropdown-panel.bc-nav-dropdown-open { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+.bc-nav-dropdown-wrap::after { content: ""; position: absolute; top: 100%; left: -20px; right: -20px; height: 20px; }
+.bc-nav-dropdown-item { display: flex; flex-direction: column; gap: 2px; padding: 9px 12px; border-radius: 9px; text-decoration: none; transition: background 0.15s ease; }
+.bc-nav-dropdown-item:hover { background: rgba(255,255,255,0.07); }
+.bc-nav-dropdown-item-label { color: #F5F5F4; font-size: 0.86rem; font-weight: 600; }
+.bc-nav-dropdown-item-desc { color: rgba(241,245,249,0.5); font-size: 0.74rem; }
+.bc-navbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-left: auto; }
+.bc-navbar-theme-btn { width: 36px; height: 36px; border-radius: 999px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: #F5F5F4; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s ease, transform 0.2s ease; }
+.bc-navbar-theme-btn:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+.bc-navbar-hamburger { display: flex; width: 36px; height: 36px; border-radius: 999px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: #F5F5F4; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer; }
+@media (min-width: 1024px) { .bc-navbar-hamburger { display: none; } }
+.bc-mobile-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 90; opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease; }
+.bc-mobile-overlay.bc-mobile-open { opacity: 1; visibility: visible; }
+.bc-mobile-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 80%; max-width: 300px; background: #18152A; z-index: 95; padding: 26px 22px; transform: translateX(100%); transition: transform 0.3s ease; overflow-y: auto; display: flex; flex-direction: column; }
+.bc-mobile-panel.bc-mobile-open { transform: translateX(0); }
+@media (min-width: 1024px) { .bc-mobile-overlay, .bc-mobile-panel { display: none; } }
+.bc-mobile-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+.bc-mobile-close { width: 34px; height: 34px; border-radius: 999px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: #F5F5F4; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+.bc-mobile-link { color: #F5F5F4; font-size: 1rem; font-weight: 600; text-decoration: none; padding: 14px 4px; border-bottom: 1px solid rgba(255,255,255,0.08); display: block; }
+.bc-mobile-sublink { color: rgba(241,245,249,0.68); font-size: 0.88rem; text-decoration: none; padding: 10px 4px 10px 14px; display: block; }        /* ---------- HERO ---------- */
         .bc-hero-grid { display: grid; grid-template-columns: 1fr; gap: 48px; align-items: center; }
         @media (min-width: 992px) { .bc-hero-grid { grid-template-columns: 1fr 1fr; gap: 40px; } }
         .bc-hero-avatars { display: flex; align-items: center; }
@@ -722,123 +703,96 @@ export default function ServicesPage() {
 
       <div className={`bc-page-content ${!loading ? "bc-page-visible" : ""}`}>
         {/* NAV */}
-        <div className="bc-navbar-wrap sticky top-0 z-50">
-          <div className="bc-navbar-row">
-            <div className={`bc-navbar-pill ${scrolled ? "bc-navbar-scrolled" : ""}`}>
-              <Link to="/" className="bc-navbar-brand">
-                <span className="bc-navbar-logo bc-display">B</span>
-                <span className="bc-navbar-name bc-display">Bluecode</span>
-              </Link>
+   <div className="bc-navbar-wrap sticky top-0 z-50">
+  <div className="bc-navbar-row">
+    <div className="bc-navbar-pill">
+      <Link to="/" className="bc-navbar-brand">
+        <span className="bc-navbar-logo bc-display">B</span>
+        <span className="bc-navbar-name bc-display">Bluecode</span>
+      </Link>
 
-              <nav className="bc-navbar-links bc-body">
-                {navItems.map((item, i) =>
-                  item.dropdown ? (
-                    <div
-                      key={i}
-                      className="bc-nav-dropdown-wrap"
-                      onMouseEnter={() => setOpenDropdown(item.label)}
-                      onMouseLeave={() => setOpenDropdown(null)}
-                    >
-                      <button
-                        type="button"
-                        className="bc-navbar-link"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setOpenDropdown((cur) => (cur === item.label ? null : item.label));
-                        }}
-                        aria-expanded={openDropdown === item.label}
-                      >
-                        {item.label}
-                        <ChevronDown
-                          size={13}
-                          className={`bc-nav-dropdown-chevron ${openDropdown === item.label ? "bc-nav-dropdown-chevron-open" : ""}`}
-                        />
-                      </button>
-                      <div className={`bc-nav-dropdown-panel ${openDropdown === item.label ? "bc-nav-dropdown-open" : ""}`}>
-                        {item.dropdown.map((sub, j) => (
-                          <a key={j} href={sub.href} className="bc-nav-dropdown-item" onClick={() => setOpenDropdown(null)}>
-                            <span className="bc-nav-dropdown-item-label">{sub.label}</span>
-                            {sub.desc && <span className="bc-nav-dropdown-item-desc">{sub.desc}</span>}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  ) : item.isRoute ? (
-                    <Link
-                      key={i}
-                      to={item.href}
-                      className={`bc-navbar-link ${item.label === "Services" ? "bc-navbar-link-active" : ""}`}
-                    >
-                      {item.label}
-                    </Link>
-                  ) : (
-                    <a
-                      key={i}
-                      href={item.href}
-                      className={`bc-navbar-link ${item.label === "Services" ? "bc-navbar-link-active" : ""}`}
-                    >
-                      {item.label}
-                    </a>
-                  )
-                )}
-              </nav>
-
-              <div className="bc-navbar-right">
-                <button
-                  onClick={toggleTheme}
-                  className="bc-navbar-theme-btn"
-                  aria-label="Toggle dark/light theme"
-                  title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
-                >
-                  {theme === "light" ? <Moon size={15} /> : <Sun size={15} />}
-                </button>
-                <button className="bc-navbar-hamburger" aria-label="Open menu" onClick={() => setMobileMenuOpen(true)}>
-                  <Menu size={17} />
-                </button>
+      <nav className="bc-navbar-links bc-body">
+        {navItems.map((item, i) =>
+          item.dropdown ? (
+            <div
+              key={i}
+              className="bc-nav-dropdown-wrap"
+              onMouseEnter={() => setOpenDropdown(item.label)}
+              onMouseLeave={() => setOpenDropdown(null)}
+            >
+              <button
+                type="button"
+                className="bc-navbar-link"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenDropdown((cur) => (cur === item.label ? null : item.label));
+                }}
+                aria-expanded={openDropdown === item.label}
+              >
+                {item.label}
+                <ChevronDown
+                  size={13}
+                  className={`bc-nav-dropdown-chevron ${openDropdown === item.label ? "bc-nav-dropdown-chevron-open" : ""}`}
+                />
+              </button>
+              <div className={`bc-nav-dropdown-panel ${openDropdown === item.label ? "bc-nav-dropdown-open" : ""}`}>
+                {item.dropdown.map((sub, j) => (
+                  <Link key={j} to={sub.href} className="bc-nav-dropdown-item" onClick={() => setOpenDropdown(null)}>
+                    <span className="bc-nav-dropdown-item-label">{sub.label}</span>
+                    {sub.desc && <span className="bc-nav-dropdown-item-desc">{sub.desc}</span>}
+                  </Link>
+                ))}
               </div>
             </div>
+          ) : (
+            <Link key={i} to={item.href} className="bc-navbar-link">
+              {item.label}
+            </Link>
+          )
+        )}
+      </nav>
 
-            <a href="/#contact" className="bc-navbar-cta bc-body">
-              Consultancy
-            </a>
-          </div>
-        </div>
+      <div className="bc-navbar-right">
+        <button onClick={toggleTheme} className="bc-navbar-theme-btn" aria-label="Toggle theme">
+          {theme === "light" ? <Moon size={15} /> : <Sun size={15} />}
+        </button>
+        <button className="bc-navbar-hamburger" aria-label="Open menu" onClick={() => setMobileMenuOpen(true)}>
+          <Menu size={17} />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
-        {/* MOBILE MENU */}
-        <div className={`bc-mobile-overlay ${mobileMenuOpen ? "bc-mobile-open" : ""}`} onClick={() => setMobileMenuOpen(false)} />
-        <div className={`bc-mobile-panel ${mobileMenuOpen ? "bc-mobile-open" : ""}`}>
-          <div className="bc-mobile-panel-header">
-            <span className="bc-navbar-name bc-display">Bluecode</span>
-            <button className="bc-mobile-close" aria-label="Close menu" onClick={() => setMobileMenuOpen(false)}>
-              <X size={17} />
-            </button>
-          </div>
-          <div>
-            {navItems.map((item, i) => (
-              <div key={i}>
-                {item.isRoute ? (
-                  <Link to={item.href} className="bc-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-                    {item.label}
-                  </Link>
-                ) : (
-                  <a href={item.href} className="bc-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-                    {item.label}
-                  </a>
-                )}
-                {item.dropdown &&
-                  item.dropdown.map((sub, j) => (
-                    <a key={j} href={sub.href} className="bc-mobile-sublink" onClick={() => setMobileMenuOpen(false)}>
-                      {sub.label}
-                    </a>
-                  ))}
-              </div>
+<div className={`bc-mobile-overlay ${mobileMenuOpen ? "bc-mobile-open" : ""}`} onClick={() => setMobileMenuOpen(false)} />
+<div className={`bc-mobile-panel ${mobileMenuOpen ? "bc-mobile-open" : ""}`}>
+  <div className="bc-mobile-panel-header">
+    <span className="bc-navbar-name bc-display">Bluecode</span>
+    <button className="bc-mobile-close" onClick={() => setMobileMenuOpen(false)}>
+      <X size={17} />
+    </button>
+  </div>
+  <div>
+    {navItems.map((item, i) => (
+      <div key={i}>
+        {item.dropdown ? (
+          <>
+            <span className="bc-mobile-link" style={{ opacity: 0.6, cursor: "default" }}>{item.label}</span>
+            {item.dropdown.map((sub, j) => (
+              <Link key={j} to={sub.href} className="bc-mobile-sublink" onClick={() => setMobileMenuOpen(false)}>
+                {sub.label}
+              </Link>
             ))}
-          </div>
-          <a href="/#contact" className="bc-mobile-cta" onClick={() => setMobileMenuOpen(false)}>
-            Consultancy
-          </a>
-        </div>
-
+          </>
+        ) : (
+          <Link to={item.href} className="bc-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+            {item.label}
+          </Link>
+        )}
+      </div>
+    ))}
+  </div>
+</div>
         {/* HERO */}
         <section className="bc-grid-bg">
           <div className="max-w-7xl mx-auto px-6 pt-16 pb-20 md:pt-20 md:pb-24">

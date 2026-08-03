@@ -234,12 +234,12 @@ export default function LandingPage() {
   const navItems = [
     { label: "Home", href: "/", isRoute: true },
     { label: "Services", href: "/services", isRoute: true },
-    { label: "Products", href: "#products" },
+   { label: "Products", href: "/products", isRoute: true },
     { label: "Portfolio", href: "/portfolio", isRoute: true },
     {
       label: "About Us",
       dropdown: [
-        { label: "Our History", desc: "How Bluecode got started", href: "/about" },
+       { label: "Our History", desc: "How Bluecode got started", href: "/our-history", isRoute: true },
         { label: "Blogs", desc: "Insights from our studio", href: "/blogs" },
       ],
     },
@@ -527,6 +527,7 @@ const productTabs = [
         .bc-nav-dropdown-chevron { transition: transform 0.2s ease; }
         .bc-nav-dropdown-chevron-open, .bc-nav-dropdown-wrap:hover .bc-nav-dropdown-chevron { transform: rotate(180deg); }
         .bc-nav-dropdown-panel { position: absolute; top: calc(100% + 16px); left: 50%; transform: translateX(-50%) translateY(6px); min-width: 220px; background: #18152A; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 8px; box-shadow: 0 20px 45px -16px rgba(0,0,0,0.55), 0 4px 12px rgba(0,0,0,0.3); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease; z-index: 70; }
+        .bc-nav-dropdown-wrap::after { content: ""; position: absolute; top: 100%; left: -20px; right: -20px; height: 20px; }
         .bc-nav-dropdown-wrap:hover .bc-nav-dropdown-panel, .bc-nav-dropdown-panel.bc-nav-dropdown-open { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); pointer-events: auto; }
         .bc-nav-dropdown-item { display: flex; flex-direction: column; gap: 2px; padding: 9px 12px; border-radius: 9px; text-decoration: none; transition: background 0.15s ease; }
         .bc-nav-dropdown-item:hover { background: rgba(255,255,255,0.07); }
@@ -786,9 +787,9 @@ const productTabs = [
               web platforms, and mobile apps that stay reliable long after launch.
             </p>
             <div className={`flex flex-wrap gap-4 bc-reveal ${!loading ? "bc-in-view" : ""}`} style={{ animationDelay: "0.4s" }}>
-              <a href="#contact" className="bc-btn-primary bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
+              <Link to="/contact" className="bc-btn-primary bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
                Consultancy <ArrowRight size={18} />
-              </a>
+              </Link>
               <a href="#projects" className="bc-btn-ghost bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
                 See our work <ArrowUpRight size={18} />
               </a>
@@ -1052,9 +1053,9 @@ const productTabs = [
             Choose from our core products{" "}
             <span className="bc-cta-highlight">to build the right solution for your business.</span>
           </p>
-          <a href="#contact" className="bc-cta-btn flex-shrink-0">
+          <Link to="/contact" className="bc-cta-btn flex-shrink-0">
             Talk to Our Experts
-          </a>
+          </Link>
         </div>
       </section>
      

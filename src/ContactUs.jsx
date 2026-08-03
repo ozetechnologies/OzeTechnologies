@@ -1,6 +1,7 @@
 // ==========================================
 // 1. IMPORTS & SETUP
 // ==========================================
+import Navbar from "./Navbar";
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
@@ -15,6 +16,18 @@ import {
   Users,
   ArrowUp,
 } from "lucide-react";
+ import contactHeroImg from "./assets/contact-hero.jpg";
+
+// List of countries for the dropdown
+const COUNTRIES = [
+  "Pakistan", "United States", "United Kingdom", "Canada", "Australia",
+  "United Arab Emirates", "Saudi Arabia", "Qatar", "Germany", "France",
+  "Italy", "Spain", "Netherlands", "Sweden", "Norway", "Switzerland",
+  "China", "Japan", "South Korea", "India", "Bangladesh", "Sri Lanka",
+  "Singapore", "Malaysia", "Indonesia", "Turkey", "Egypt", "South Africa",
+  "Nigeria", "Kenya", "Brazil", "Mexico", "Argentina", "New Zealand",
+  "Ireland", "Belgium", "Austria", "Poland", "Russia", "Other",
+];
 
 // Reusable scroll-reveal hook (IntersectionObserver-based fade/slide-in)
 function useReveal() {
@@ -42,7 +55,7 @@ function useReveal() {
 // 2. MAIN COMPONENT FUNCTION
 // ==========================================
 export default function ContactUs() {
-  const [darkMode, setDarkMode] = useState(true); // Default mode: Dark
+  const [darkMode, setDarkMode] = useState(false); // Default mode: Light
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1200
@@ -50,6 +63,8 @@ export default function ContactUs() {
   const [formData, setFormData] = useState({
     fullName: "",
     emailAddress: "",
+    phoneNumber: "",
+    country: "",
     subject: "",
     message: "",
   });
@@ -145,10 +160,37 @@ export default function ContactUs() {
     setFormData({ ...formData, [name]: value });
   };
 
+  // ---- Submit handler: builds a mailto: link so the user's default
+  // email client opens with the form data pre-filled, then "sends" it ----
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Message sent successfully!");
-    setFormData({ fullName: "", emailAddress: "", subject: "", message: "" });
+
+    const { fullName, emailAddress, phoneNumber, country, subject, message } = formData;
+
+    const recipient = "hello@bluecode.com";
+    const mailSubject = subject && subject.trim() !== "" ? subject : "New Consultancy Inquiry";
+    const mailBody =
+      `Name: ${fullName}\n` +
+      `Email: ${emailAddress}\n` +
+      `Phone: ${phoneNumber}\n` +
+      `Country: ${country}\n\n` +
+      `Message:\n${message}`;
+
+    const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(
+      mailSubject
+    )}&body=${encodeURIComponent(mailBody)}`;
+
+    // Opens the user's default email app with everything pre-filled
+    window.location.href = mailtoLink;
+
+    setFormData({
+      fullName: "",
+      emailAddress: "",
+      phoneNumber: "",
+      country: "",
+      subject: "",
+      message: "",
+    });
   };
 
   // Dynamic Theme Palette based on State
@@ -176,10 +218,24 @@ export default function ContactUs() {
     { label: "Products", to: null, dropdown: true },
     { label: "Projects", to: null, dropdown: true },
     { label: "Services", to: "/services" },
-    { label: "Blogs", to: "/" },
+    { label: "Blogs", to: "/blogs" },
     { label: "About Us", to: "/about" },
     { label: "Contact", to: "/contact", active: true },
   ];
+
+  const inputStyle = {
+    padding: "14px 16px",
+    border: `1px solid ${theme.inputBorder}`,
+    borderRadius: "8px",
+    width: "100%",
+    fontSize: "15px",
+    backgroundColor: theme.inputBg,
+    color: theme.inputText,
+    outline: "none",
+    boxSizing: "border-box",
+    transition: "all 0.3s ease",
+    fontFamily: "'Inter', sans-serif",
+  };
 
   return (
     <div
@@ -226,11 +282,11 @@ export default function ContactUs() {
         .bc-back-to-top.bc-back-to-top-visible { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
         .bc-back-to-top:hover { transform: translateY(-3px) scale(1.08); }
 
-        .bc-cursor-glow { position: fixed; top: 0; left: 0; width: 640px; height: 640px; margin: -320px 0 0 -320px; pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.6s ease; will-change: transform; }
+.bc-cursor-glow { position: fixed; top: 0; left: 0; width: 270px; height: 270px; margin: -160px 0 0 -160px; pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.6s ease; will-change: transform; }
         .bc-cursor-glow-layer { position: absolute; inset: 0; border-radius: 50%; filter: blur(60px); mix-blend-mode: screen; }
-        .bc-cursor-glow-core { background: radial-gradient(circle at 42% 45%, rgba(99,102,241,0.5) 0%, transparent 60%); }
+        .bc-cursor-glow-core { background: radial-gradient(circle at 60% 45%, rgba(99,102,241,0.5) 0%, transparent 60%); }
         .bc-cursor-glow-warm { background: radial-gradient(circle at 62% 55%, rgba(194,65,12,0.35) 0%, transparent 55%); }
-        .bc-cursor-glow-soft { background: radial-gradient(circle at 50% 50%, rgba(99,102,241,0.18) 0%, transparent 70%); filter: blur(90px); }
+        .bc-cursor-glow-soft { background: radial-gradient(circle at 60% 50%, rgba(99,102,241,0.18) 0%, transparent 70%); filter: blur(90px); }
         @media (hover: none), (pointer: coarse) { .bc-cursor-glow { display: none; } }
       `}</style>
 
@@ -251,313 +307,95 @@ export default function ContactUs() {
       {/* -------------------------------------------------------------
           NAVBAR: Floating Capsule Design (Responsive)
           ------------------------------------------------------------- */}
+      <Navbar theme={darkMode ? "dark" : "light"} toggleTheme={() => setDarkMode(!darkMode)} active="contact" />
+
+{/* --- SECTION 1: HERO --- */}
+<section
+  style={{
+    backgroundColor: theme.pageBg,
+    padding: isMobile ? "130px 6% 50px" : "150px 8% 70px",
+    boxSizing: "border-box",
+    transition: "all 0.3s ease",
+  }}
+>
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+      gap: isMobile ? "36px" : "48px",
+      alignItems: "center",
+      maxWidth: "1240px",
+      margin: "0 auto",
+    }}
+  >
+    <div className={`bc-reveal ${pageLoaded ? "bc-in-view" : ""}`}>
       <div
         style={{
-          position: "fixed",
-          top: isMobile ? "16px" : "24px",
-          left: "0",
-          right: "0",
-          zIndex: 1000,
-          display: "flex",
-          justifyContent: "center",
-          padding: isMobile ? "0 16px" : "0 24px",
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "8px",
+          border: `1px solid ${theme.navBorder}`,
+          backgroundColor: theme.cardBg,
+          borderRadius: "9999px",
+          padding: "8px 18px 8px 14px",
+          fontSize: "14px",
+          fontWeight: "600",
+          marginBottom: "24px",
         }}
       >
-        <nav
-          style={{
-            backdropFilter: "blur(12px)",
-            backgroundColor: theme.navBg,
-            border: `1px solid ${theme.navBorder}`,
-            borderRadius: isMobile && mobileMenuOpen ? "24px" : "9999px",
-            display: "flex",
-            flexDirection: "column",
-            padding: isMobile ? "10px 18px" : "12px 32px",
-            width: "100%",
-            maxWidth: "1140px",
-            boxShadow: "0 10px 30px -10px rgba(0,0,0,0.3)",
-            transition: "all 0.3s ease",
-          }}
-        >
-          {/* Top Row: Logo + (Desktop Links) + Controls */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              width: "100%",
-            }}
-          >
-            {/* Logo */}
-            <Link
-              to="/"
-              style={{
-                color: theme.navLogo,
-                textDecoration: "none",
-                fontSize: isMobile ? "17px" : "20px",
-                fontWeight: "bold",
-                display: "flex",
-                alignItems: "center",
-                whiteSpace: "nowrap",
-              }}
-            >
-              <span
-                style={{
-                  backgroundColor: "#6366F1",
-                  color: "white",
-                  width: "32px",
-                  height: "32px",
-                  borderRadius: "50%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontWeight: "bold",
-                  marginRight: "10px",
-                  fontSize: "16px",
-                  flexShrink: 0,
-                }}
-              >
-                B
-              </span>
-              BLUECODE<span style={{ color: "#6366F1" }}>.</span>
-            </Link>
-
-            {/* Center Links - Desktop / Tablet only */}
-            {!isMobile && (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: isTablet ? "14px" : "28px",
-                  flexWrap: "wrap",
-                  justifyContent: "center",
-                }}
-              >
-                {navLinks.map((link) =>
-                  link.dropdown ? (
-                    <div
-                      key={link.label}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                        color: theme.navText,
-                        cursor: "pointer",
-                        fontSize: "14px",
-                        fontWeight: "500",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {link.label} <ChevronDown size={14} />
-                    </div>
-                  ) : (
-                    <Link
-                      key={link.label}
-                      to={link.to}
-                      style={{
-                        color: link.active ? "#6366F1" : theme.navText,
-                        textDecoration: "none",
-                        fontSize: "14px",
-                        fontWeight: link.active ? "600" : "500",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {link.label}
-                    </Link>
-                  )
-                )}
-              </div>
-            )}
-
-            {/* Right Action & Theme Toggle Controls */}
-            <div style={{ display: "flex", alignItems: "center", gap: isMobile ? "10px" : "16px" }}>
-              <button
-                onClick={() => setDarkMode(!darkMode)}
-                type="button"
-                style={{
-                  background: darkMode ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.05)",
-                  border: "none",
-                  borderRadius: "50%",
-                  width: "36px",
-                  height: "36px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  color: darkMode ? "#E7E5E4" : "#1C1917",
-                  fontSize: "18px",
-                  transition: "all 0.2s ease",
-                  flexShrink: 0,
-                }}
-                title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-              >
-                {darkMode ? "☀️" : "🌙"}
-              </button>
-
-              {!isMobile && (
-                <button
-                  style={{
-                    backgroundColor: theme.navBtnBg,
-                    color: theme.navBtnText,
-                    border: "none",
-                    borderRadius: "9999px",
-                    padding: isTablet ? "10px 16px" : "10px 22px",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                    transition: "all 0.3s ease",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  Consultancy
-                </button>
-              )}
-
-              {/* Hamburger toggle - Mobile only */}
-              {isMobile && (
-                <button
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  type="button"
-                  style={{
-                    background: "rgba(99, 102, 241, 0.15)",
-                    border: "none",
-                    borderRadius: "50%",
-                    width: "36px",
-                    height: "36px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                    color: "#6366F1",
-                    flexShrink: 0,
-                  }}
-                >
-                  {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Mobile Dropdown Menu */}
-          {isMobile && mobileMenuOpen && (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "4px",
-                width: "100%",
-                marginTop: "14px",
-                paddingTop: "14px",
-                borderTop: `1px solid ${theme.navBorder}`,
-              }}
-            >
-              {navLinks.map((link) =>
-                link.dropdown ? (
-                  <div
-                    key={link.label}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      color: theme.navText,
-                      cursor: "pointer",
-                      fontSize: "15px",
-                      fontWeight: "500",
-                      padding: "10px 6px",
-                    }}
-                  >
-                    {link.label} <ChevronDown size={14} />
-                  </div>
-                ) : (
-                  <Link
-                    key={link.label}
-                    to={link.to}
-                    onClick={() => setMobileMenuOpen(false)}
-                    style={{
-                      color: link.active ? "#6366F1" : theme.navText,
-                      textDecoration: "none",
-                      fontSize: "15px",
-                      fontWeight: link.active ? "600" : "500",
-                      padding: "10px 6px",
-                    }}
-                  >
-                    {link.label}
-                  </Link>
-                )
-              )}
-              <button
-                style={{
-                  backgroundColor: theme.navBtnBg,
-                  color: theme.navBtnText,
-                  border: "none",
-                  borderRadius: "9999px",
-                  padding: "12px 22px",
-                  fontSize: "14px",
-                  fontWeight: "600",
-                  cursor: "pointer",
-                  marginTop: "8px",
-                  width: "100%",
-                }}
-              >
-                Consultancy
-              </button>
-            </div>
-          )}
-        </nav>
+        <MessageSquare size={15} color="#6366F1" />
+        Get In Touch
       </div>
 
-      {/* --- SECTION 1: HERO OVERLAY --- */}
-      <section
+      <h1
         style={{
-          minHeight: isMobile ? "auto" : "380px",
-          height: isMobile ? "auto" : "55vh",
-          position: "relative",
-          backgroundImage:
-            "linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.75)), url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1600')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          display: "flex",
-          alignItems: "center",
-          color: "#ffffff",
-          padding: isMobile ? "130px 6% 50px" : "120px 8% 40px",
-          boxSizing: "border-box",
+          fontFamily: "'Space Grotesk', 'Inter', sans-serif",
+          fontSize: isMobile ? "32px" : "48px",
+          lineHeight: "1.15",
+          fontWeight: "800",
+          marginBottom: "20px",
+          wordBreak: "break-word",
         }}
       >
-        <div className={`bc-reveal ${pageLoaded ? "bc-in-view" : ""}`} style={{ maxWidth: "750px" }}>
-          <span
-            style={{
-              color: "#6366F1",
-              fontWeight: "600",
-              textTransform: "uppercase",
-              fontSize: "13px",
-              letterSpacing: "1px",
-              marginBottom: "12px",
-              display: "block",
-            }}
-          >
-            Contact Us
-          </span>
-          <h1
-            style={{
-              fontSize: isMobile ? "30px" : "46px",
-              lineHeight: "1.25",
-              fontWeight: "800",
-              marginBottom: "15px",
-              wordBreak: "break-word",
-            }}
-          >
-            Let's Build Something <span style={{ color: "#6366F1" }}>Great</span> Together.
-          </h1>
-          <p style={{ fontSize: isMobile ? "15px" : "18px", opacity: "0.9", lineHeight: "1.6" }}>
-            Have a question, a project in mind, or just want to say hello?
-            We'd love to hear from you and build impactful solutions.
-          </p>
-        </div>
-      </section>
+        Let's Build Something <span style={{ color: "#6366F1" }}>Great</span> Together.
+      </h1>
 
+      <p style={{ fontSize: isMobile ? "15px" : "17px", opacity: "0.75", lineHeight: "1.65", marginBottom: isMobile ? "24px" : "35px" }}>
+        Have a question, a project in mind, or just want to say hello?
+        We'd love to hear from you and build impactful solutions.
+      </p>
+
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: isMobile ? "20px" : "40px",
+          borderTop: `1px solid ${theme.navBorder}`,
+          paddingTop: "24px",
+        }}
+      >
+        <div>
+          <div style={{ fontSize: "26px", fontWeight: "800", color: "#6366F1" }}>24h</div>
+          <div style={{ fontSize: "13px", opacity: "0.7" }}>Response Time</div>
+        </div>
+        <div>
+          <div style={{ fontSize: "26px", fontWeight: "800", color: "#38bdf8" }}>120+</div>
+          <div style={{ fontSize: "13px", opacity: "0.7" }}>Happy Clients</div>
+        </div>
+        <div>
+          <div style={{ fontSize: "26px", fontWeight: "800", color: "#f2795a" }}>100%</div>
+          <div style={{ fontSize: "13px", opacity: "0.7" }}>Response Rate</div>
+        </div>
+      </div>
+    </div>
+
+    <div className={`bc-reveal-right ${pageLoaded ? "bc-in-view" : ""}`}>
+      <div style={{ borderRadius: "20px", overflow: "hidden", boxShadow: "0 20px 45px -16px rgba(0,0,0,0.25)" }}>
+        <img src={contactHeroImg} alt="Contact our team" style={{ width: "100%", height: "auto", display: "block" }} />
+      </div>
+    </div>
+  </div>
+</section>
       {/* --- SECTION 2: CONTENT & FORM SPLIT CARD --- */}
       <div
         style={{
@@ -670,18 +508,7 @@ export default function ContactUs() {
                 type="text"
                 name="fullName"
                 placeholder="Full Name"
-                style={{
-                  padding: "14px 16px",
-                  border: `1px solid ${theme.inputBorder}`,
-                  borderRadius: "8px",
-                  width: "100%",
-                  fontSize: "15px",
-                  backgroundColor: theme.inputBg,
-                  color: theme.inputText,
-                  outline: "none",
-                  boxSizing: "border-box",
-                  transition: "all 0.3s ease",
-                }}
+                style={inputStyle}
                 value={formData.fullName}
                 onChange={handleInputChange}
                 required
@@ -691,22 +518,54 @@ export default function ContactUs() {
                 type="email"
                 name="emailAddress"
                 placeholder="Email Address"
-                style={{
-                  padding: "14px 16px",
-                  border: `1px solid ${theme.inputBorder}`,
-                  borderRadius: "8px",
-                  width: "100%",
-                  fontSize: "15px",
-                  backgroundColor: theme.inputBg,
-                  color: theme.inputText,
-                  outline: "none",
-                  boxSizing: "border-box",
-                  transition: "all 0.3s ease",
-                }}
+                style={inputStyle}
                 value={formData.emailAddress}
                 onChange={handleInputChange}
                 required
               />
+            </div>
+
+            {/* Phone Number + Country Dropdown */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+                gap: "20px",
+                marginBottom: "20px",
+              }}
+            >
+              <input
+                className="bc-input-glow"
+                type="tel"
+                name="phoneNumber"
+                placeholder="Phone Number"
+                style={inputStyle}
+                value={formData.phoneNumber}
+                onChange={handleInputChange}
+                required
+              />
+
+              <select
+                className="bc-input-glow"
+                name="country"
+                style={{
+                  ...inputStyle,
+                  cursor: "pointer",
+                  color: formData.country ? theme.inputText : (darkMode ? "#8A8698" : "#A8A29E"),
+                }}
+                value={formData.country}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="" disabled>
+                  Select Country
+                </option>
+                {COUNTRIES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div style={{ marginBottom: "20px" }}>
@@ -715,18 +574,7 @@ export default function ContactUs() {
                 type="text"
                 name="subject"
                 placeholder="Subject"
-                style={{
-                  padding: "14px 16px",
-                  border: `1px solid ${theme.inputBorder}`,
-                  borderRadius: "8px",
-                  width: "100%",
-                  fontSize: "15px",
-                  backgroundColor: theme.inputBg,
-                  color: theme.inputText,
-                  outline: "none",
-                  boxSizing: "border-box",
-                  transition: "all 0.3s ease",
-                }}
+                style={inputStyle}
                 value={formData.subject}
                 onChange={handleInputChange}
                 required
@@ -739,18 +587,9 @@ export default function ContactUs() {
                 name="message"
                 placeholder="Your Message"
                 style={{
-                  padding: "14px 16px",
-                  border: `1px solid ${theme.inputBorder}`,
-                  borderRadius: "8px",
-                  width: "100%",
-                  fontSize: "15px",
-                  backgroundColor: theme.inputBg,
-                  color: theme.inputText,
+                  ...inputStyle,
                   height: "140px",
-                  outline: "none",
                   resize: "none",
-                  boxSizing: "border-box",
-                  transition: "all 0.3s ease",
                 }}
                 value={formData.message}
                 onChange={handleInputChange}
@@ -785,66 +624,52 @@ export default function ContactUs() {
 
         {/* --- SECTION 3: MAP BLOCK --- */}
         <div ref={mapRef} className={`bc-reveal ${mapInView ? "bc-in-view" : ""}`} style={{ maxWidth: "1140px", margin: isMobile ? "24px 16px 40px" : "40px auto 60px", padding: isMobile ? "0" : "0 20px" }}>
-          <section
-            className="bc-card-hover"
-            style={{
-              backgroundColor: "#1E1B4B",
-              padding: isMobile ? "28px 20px" : "40px",
-              borderRadius: "16px",
-              border: theme.cardBorder,
-              color: "#ffffff",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: "30px",
-              flexWrap: "wrap",
-              transition: "all 0.3s ease",
-              boxSizing: "border-box",
-            }}
-          >
-            <div style={{ flex: "1", minWidth: isMobile ? "100%" : "280px" }}>
-              <h2 style={{ fontSize: isMobile ? "24px" : "30px", fontWeight: "800", marginBottom: "15px", lineHeight: "1.2" }}>
-                Let's Connect and Create <span style={{ color: "#6366F1" }}>Impact.</span>
-              </h2>
-              <p style={{ fontSize: "15px", color: "#A8A29E", lineHeight: "1.6" }}>
-                We're always open to new ideas, strategic partnerships, and exciting digital innovations. Drop by our office or connect digitally!
-              </p>
-            </div>
+        <section
+  className="bc-card-hover"
+  style={{
+    backgroundColor: "#1E1B4B",
+    padding: isMobile ? "16px" : "24px",
+    borderRadius: "16px",
+    border: theme.cardBorder,
+    color: "#ffffff",
+    transition: "all 0.3s ease",
+    boxSizing: "border-box",
+  }}
+>
+  <div style={{ width: "100%", height: isMobile ? "320px" : "480px", borderRadius: "12px", overflow: "hidden" }}>
+    <iframe
+      title="Office Location Map"
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.086307432244!2d-122.40381628468205!3d37.77979697975878!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808f7e2aae43a5c7%3A0xe54952ddc40049!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2s!4v1710000000000!5m2!1sen!2s"
+      style={{ width: "100%", height: "100%", border: "0" }}
+      allowFullScreen=""
+      loading="lazy"
+    ></iframe>
+  </div>
 
-            <div style={{ flex: "1.5", minWidth: isMobile ? "100%" : "320px", height: isMobile ? "220px" : "260px", borderRadius: "12px", overflow: "hidden" }}>
-              <iframe
-                title="Office Location Map"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.086307432244!2d-122.40381628468205!3d37.77979697975878!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808f7e2aae43a5c7%3A0xe54952ddc40049!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2s!4v1710000000000!5m2!1sen!2s"
-                style={{ width: "100%", height: "100%", border: "0" }}
-                allowFullScreen=""
-                loading="lazy"
-              ></iframe>
-            </div>
-
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "12px",
-                color: "#A8A29E",
-                fontSize: isMobile ? "13px" : "15px",
-                marginTop: isMobile ? "20px" : "30px",
-                borderTop: "1px solid #374151",
-                paddingTop: "20px",
-                textAlign: "center",
-                flexWrap: "wrap",
-              }}
-            >
-              <span>We respond to every single message. Let's start the conversation.</span>
-              <div style={{ display: "flex", gap: "12px", color: "#6366F1" }}>
-                <MessageSquare size={16} className="bc-icon-hover" />
-                <Heart size={16} className="bc-icon-hover" />
-                <Users size={16} className="bc-icon-hover" />
-              </div>
-            </div>
-          </section>
+  <div
+    style={{
+      width: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: "12px",
+      color: "#A8A29E",
+      fontSize: isMobile ? "13px" : "15px",
+      marginTop: isMobile ? "20px" : "24px",
+      borderTop: "1px solid #374151",
+      paddingTop: "20px",
+      textAlign: "center",
+      flexWrap: "wrap",
+    }}
+  >
+    <span>We respond to every single message. Let's start the conversation.</span>
+    <div style={{ display: "flex", gap: "12px", color: "#6366F1" }}>
+      <MessageSquare size={16} className="bc-icon-hover" />
+      <Heart size={16} className="bc-icon-hover" />
+      <Users size={16} className="bc-icon-hover" />
+    </div>
+  </div>
+</section>
         </div>
       </div>
 
