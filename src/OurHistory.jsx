@@ -40,6 +40,7 @@ function useReveal() {
 
 export default function OurHistory() {
   const [theme, setTheme] = useState("light");
+const [historyExpanded, setHistoryExpanded] = useState(false); // ye naya add karein
   const [loading, setLoading] = useState(true);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -297,7 +298,7 @@ export default function OurHistory() {
         }
         .bc-cursor-glow {
           position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none;
-          width: 620px; height: 620px; border-radius: 999px;
+          width: 380px; height: 380px; border-radius: 999px;
           background: radial-gradient(circle, color-mix(in srgb, var(--bc-cyan) 42%, transparent) 0%, color-mix(in srgb, var(--bc-cyan) 16%, transparent) 40%, transparent 72%);
           filter: blur(10px);
           opacity: 0.8;
@@ -604,9 +605,44 @@ export default function OurHistory() {
                   Built on Craft, Driven by People
                 </p>
                 <p className="bc-body text-sm md:text-base max-w-md leading-relaxed" style={{ color: "var(--bc-muted)" }}>
-                  Every project we've shipped started as a small, specific problem someone
-                  needed solved properly. Here's how that grew into a studio 120+ projects deep.
-                </p>
+  Every project we've shipped started as a small, specific problem someone
+  needed solved properly. Here's how that grew into a studio 120+ projects deep.
+</p>
+
+<div
+  style={{
+    maxHeight: historyExpanded ? "300px" : "0px",
+    overflow: "hidden",
+    transition: "max-height 0.5s ease",
+  }}
+>
+  <p className="bc-body text-sm md:text-base max-w-md leading-relaxed mt-3" style={{ color: "var(--bc-muted)" }}>
+    Along the way we learned that reliability matters more than speed alone —
+    clients don't just want software delivered, they want it to still be running
+    cleanly a year later. That's why every engagement includes support well
+    past launch day. Today that philosophy shapes every team we build and every
+    line of code we ship.
+  </p>
+</div>
+
+<button
+  onClick={() => setHistoryExpanded((v) => !v)}
+  className="bc-body font-semibold text-sm mt-4 flex items-center gap-1.5 bc-cursor-hover"
+  style={{
+    color: "#fff",
+    background: "var(--bc-cyan)",
+    border: "none",
+    borderRadius: "8px",
+    padding: "10px 20px",
+    cursor: "pointer",
+  }}
+>
+  {historyExpanded ? "Read Less" : "Read More"}
+  <ChevronDown
+    size={16}
+    style={{ transform: historyExpanded ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.3s ease" }}
+  />
+</button>
               </div>
             </div>
             <div className="bc-history-hero-media bc-cursor-hover">

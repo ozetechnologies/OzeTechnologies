@@ -366,7 +366,7 @@ export default function Portfolio() {
         }
         .bc-cursor-glow {
           position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none;
-          width: 620px; height: 620px; border-radius: 999px;
+          width: 380px; height: 380px; border-radius: 999px;
           background: radial-gradient(circle, color-mix(in srgb, var(--bc-cyan) 42%, transparent) 0%, color-mix(in srgb, var(--bc-cyan) 16%, transparent) 40%, transparent 72%);
           filter: blur(10px);
           opacity: 0.8;

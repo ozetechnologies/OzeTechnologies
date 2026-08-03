@@ -790,9 +790,9 @@ const productTabs = [
               <Link to="/contact" className="bc-btn-primary bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
                Consultancy <ArrowRight size={18} />
               </Link>
-              <a href="#projects" className="bc-btn-ghost bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
-                See our work <ArrowUpRight size={18} />
-              </a>
+            <Link to="/services" className="bc-btn-ghost bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
+  See our work <ArrowUpRight size={18} />
+</Link>
             </div>
 
             <div className={`bc-hero-stats-row bc-reveal ${!loading ? "bc-in-view" : ""}`} style={{ animationDelay: "0.5s" }}>

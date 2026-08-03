@@ -13,6 +13,7 @@ import {
   ChevronDown,
   ChevronRight,
   Mail,
+  Send,
   MapPin,
   Phone,
   Link2,
@@ -408,7 +409,7 @@ export default function ServicesPage() {
         }
         .bc-cursor-glow {
           position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none;
-          width: 620px; height: 620px; border-radius: 999px;
+          width:380px; height: 380px; border-radius: 999px;
           background: radial-gradient(circle, color-mix(in srgb, var(--bc-cyan) 42%, transparent) 0%, color-mix(in srgb, var(--bc-cyan) 16%, transparent) 40%, transparent 72%);
           filter: blur(10px);
           opacity: 0.8;
@@ -655,7 +656,9 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
         .bc-cta-btn-outline:active { transform: scale(0.96); }
 
         /* ---------- FOOTER (shared) ---------- */
-        .bc-footer-card { position: relative; overflow: hidden; border-radius: 24px; background: var(--bc-panel); border: 1px solid var(--bc-line); box-shadow: var(--bc-shadow-lg); }
+       .bc-footer-card { position: relative; overflow: hidden; border-radius: 0; background: var(--bc-panel); border: 1px solid var(--bc-line); box-shadow: var(--bc-shadow-lg); }
+.bc-footer-decor-dots { position: absolute; bottom: 24px; right: 24px; width: 120px; height: 90px; background-image: radial-gradient(var(--bc-cyan) 1px, transparent 1px); background-size: 10px 10px; opacity: 0.25; pointer-events: none; }
+.bc-footer-decor-wave { position: absolute; top: 0; right: 0; width: 45%; max-width: 420px; height: auto; opacity: 0.35; pointer-events: none; }
         .bc-footer-underline { width: 40px; height: 3px; border-radius: 2px; background: var(--bc-cyan); margin: 14px 0 18px; }
         .bc-footer-social { width: 40px; height: 40px; border-radius: 10px; background: var(--bc-panel-2); border: 1px solid var(--bc-line); display: flex; align-items: center; justify-content: center; transition: border-color 0.2s ease, transform 0.25s ease, box-shadow 0.25s ease; }
         .bc-footer-social:hover { border-color: var(--bc-cyan); transform: translateY(-2px) rotate(10deg) scale(1.1); box-shadow: 0 10px 22px -8px color-mix(in srgb, var(--bc-cyan) 55%, transparent); }
@@ -1091,14 +1094,16 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
           </div>
         </section>
 
-        {/* FOOTER */}
-        <footer style={{ background: "var(--bc-band)" }}>
-          <div
-            ref={footerRef}
-            className={`bc-reveal bc-reveal-center ${footerInView ? "bc-reveal-in" : ""} max-w-7xl mx-auto px-6 py-16 md:py-20`}
-          >
-            <div className="bc-footer-card p-8 md:p-12">
-              <div className="grid md:grid-cols-[1.2fr_auto_1fr_auto_1fr_auto_1fr] gap-x-8 gap-y-12">
+       {/* FOOTER */}
+<footer ref={footerRef}>
+  <div className={`w-full bc-reveal bc-reveal-center ${footerInView ? "bc-reveal-in" : ""}`}>
+    <div className="bc-footer-card py-16 md:py-20 px-8 md:px-12">
+      <div className="bc-footer-decor-dots" />
+      <svg className="bc-footer-decor-wave" viewBox="0 0 300 160" fill="none">
+        <path d="M0 40 C 60 10, 100 70, 160 40 S 260 -10, 300 30" stroke="var(--bc-cyan)" strokeWidth="1" />
+        <path d="M0 70 C 60 40, 100 100, 160 70 S 260 20, 300 60" stroke="var(--bc-cyan)" strokeWidth="1" opacity="0.6" />
+      </svg>
+      <div className="grid md:grid-cols-[1.2fr_auto_1fr_auto_1fr_auto_1fr] gap-x-8 gap-y-12">
                 <div>
                   <div className="bc-display font-bold text-lg flex items-center gap-2">
                     <span style={{ color: "var(--bc-cyan)" }}>&#9634;</span> Bluecode
@@ -1168,7 +1173,7 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
                 <div>
                   <div className="bc-footer-heading-row">
                     <div className="bc-footer-heading-badge">
-                      <Mail size={15} color="var(--bc-cyan)" />
+                    <Send size={15} color="var(--bc-cyan)" />
                     </div>
                     <span className="bc-footer-heading">CONTACT</span>
                   </div>
