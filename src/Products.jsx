@@ -264,6 +264,14 @@ export default function Products() {
         @keyframes bc-loader-sq-pulse { 0%, 100% { opacity: 0.35; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1); } }
         .bc-loader-name { font-weight: 700; font-size: 1.05rem; color: var(--bc-text); line-height: 1.2; }
         .bc-loader-label { font-size: 0.68rem; letter-spacing: 0.32em; text-transform: uppercase; color: var(--bc-muted); margin-top: 2px; }
+        @media (max-width: 767px) {
+  .bc-loader-brand {
+    position: absolute;
+    top: 39%;
+    left: 32%;
+    transform: translate(-50%, -50%);
+  }
+}
         .bc-page-content { position: relative; z-index: 1; opacity: 0; transform: translateY(6px); transition: opacity 0.6s ease, transform 0.6s ease; }
         .bc-page-content.bc-page-visible { opacity: 1; transform: translateY(0); }
 
