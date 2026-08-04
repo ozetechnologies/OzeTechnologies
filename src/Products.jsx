@@ -54,7 +54,7 @@ function useReveal(options) {
 }
 
 export default function Products() {
-  const [theme, setTheme] = useState("light");
+ const [theme, setTheme] = useState(() => localStorage.getItem("bc-theme") || "light");
   const [loading, setLoading] = useState(true);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -172,7 +172,14 @@ export default function Products() {
     };
   }, []);
 
-  const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
+ const toggleTheme = () => {
+  setTheme((t) => {
+    const newTheme = t === "light" ? "dark" : "light";
+    localStorage.setItem("bc-theme", newTheme);
+    window.dispatchEvent(new Event("bc-theme-change"));
+    return newTheme;
+  });
+};
 
   // subtle mouse parallax helper (used on hero image)
   const makeParallaxHandlers = (setter, strength = 6) => ({
@@ -193,7 +200,7 @@ export default function Products() {
     {
       label: "About Us",
       dropdown: [
-        { label: "Our History", desc: "How Bluecode got started", href: "/our-history" },
+        { label: "Our History", desc: "How Trikonix got started", href: "/our-history" },
         { label: "Blogs", desc: "Insights from our studio", href: "/blogs" },
       ],
     },
@@ -475,7 +482,7 @@ export default function Products() {
       {/* custom cursor: trailing glow ring + rotating "B" badge */}
       <div ref={cursorRingRef} className={`bc-cursor-ring ${cursorHover ? "bc-cursor-ring-hover" : ""}`} />
       <div ref={cursorBRef} className="bc-cursor-b">
-        <span className={`bc-cursor-b-inner bc-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>B</span>
+        <span className={`bc-cursor-b-inner bc-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>T</span>
       </div>
 
       {/* LOADING SCREEN */}
@@ -487,7 +494,7 @@ export default function Products() {
             <span className="bc-loader-sq bc-loader-sq-b" />
             <span className="bc-loader-sq bc-loader-sq-a" />
           </div>
-          <div className="bc-loader-name bc-display">Bluecode</div>
+          <div className="bc-loader-name bc-display">Trikonix</div>
           <div className="bc-loader-label bc-mono">Loading</div>
         </div>
       </div>
@@ -498,8 +505,8 @@ export default function Products() {
           <div className="bc-navbar-row">
             <div className="bc-navbar-pill">
               <Link to="/" className="bc-navbar-brand">
-                <span className="bc-navbar-logo bc-display">B</span>
-                <span className="bc-navbar-name bc-display">Bluecode</span>
+                <span className="bc-navbar-logo bc-display">T</span>
+                <span className="bc-navbar-name bc-display">Trikonix</span>
               </Link>
 
               <nav className="bc-navbar-links bc-body">
@@ -559,7 +566,7 @@ export default function Products() {
         <div className={`bc-mobile-overlay ${mobileMenuOpen ? "bc-mobile-open" : ""}`} onClick={() => setMobileMenuOpen(false)} />
         <div className={`bc-mobile-panel ${mobileMenuOpen ? "bc-mobile-open" : ""}`}>
           <div className="bc-mobile-panel-header">
-            <span className="bc-navbar-name bc-display">Bluecode</span>
+            <span className="bc-navbar-name bc-display">Trikonix</span>
             <button className="bc-mobile-close" onClick={() => setMobileMenuOpen(false)}>
               <X size={17} />
             </button>
@@ -614,7 +621,7 @@ export default function Products() {
                 >
                   <img
                     src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1200&auto=format&fit=crop"
-                    alt="Bluecode engineering team at work"
+                    alt="Trikonix engineering team at work"
                   />
                 </div>
                 <div className="bc-hero-photo-badge bc-hero-photo-badge-left">
@@ -708,34 +715,7 @@ export default function Products() {
           </div>
         </section>
 
-        {/* FOOTER */}
-        <footer style={{ background: "var(--bc-band)" }}>
-          <div
-            ref={footerRef}
-            className={`bc-reveal bc-reveal-center ${footerInView ? "bc-reveal-in" : ""} max-w-7xl mx-auto px-6 py-16 md:py-20`}
-          >
-            <div className="bc-footer-card p-8 md:p-12 text-center">
-              <div className="bc-display font-bold text-lg flex items-center justify-center gap-2 mb-2">
-                <span style={{ color: "var(--bc-cyan)" }}>&#9634;</span> Bluecode
-              </div>
-              <div className="bc-footer-underline mx-auto" />
-              <div className="flex gap-3 justify-center mb-8">
-                <a href="#" className="bc-footer-social" aria-label="Website">
-                  <Globe2 size={17} color="var(--bc-cyan)" />
-                </a>
-                <a href="#" className="bc-footer-social" aria-label="LinkedIn">
-                  <Link2 size={17} color="var(--bc-cyan)" />
-                </a>
-                <a href="#" className="bc-footer-social" aria-label="Message us">
-                  <MessageCircle size={17} color="var(--bc-cyan)" />
-                </a>
-              </div>
-              <div className="bc-footer-bottom">
-                © 2026 <span style={{ color: "var(--bc-cyan)", fontWeight: 600 }}>Bluecode</span>. All rights reserved.
-              </div>
-            </div>
-          </div>
-        </footer>
+       
       </div>
 
       {/* back to top */}

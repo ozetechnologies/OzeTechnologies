@@ -7,6 +7,7 @@ import Blogs from "./Blogs";         // ⚡ Imported your new Blogs portal
 import Portfolio from "./Portfolio"; // 3. Imported your new Portfolio page
 import OurHistory from "./OurHistory"; // 5. Imported your new Our History page
 import Products from "./Products"; // 6. Imported your new Products page
+import Footer from "./Footer"; // 7. Imported the shared Footer
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/our-history" element={<OurHistory />} /> {/* 5. Added the route for /our-history */}
         <Route path="/products" element={<Products />} /> {/* 6. Added the route for /products */}
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }

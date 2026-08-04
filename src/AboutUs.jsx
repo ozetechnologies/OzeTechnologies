@@ -265,7 +265,7 @@ const navItems = [
   {
     label: "About Us",
     dropdown: [
-      { label: "Our History", desc: "How Bluecode got started", href: "/our-history" },
+      { label: "Our History", desc: "How Trikonix got started", href: "/our-history" },
       { label: "Blogs", desc: "Insights from our studio", href: "/blogs" },
     ],
   },
@@ -299,7 +299,7 @@ const navItems = [
   ];
 
   const contactCards = [
-    { Icon: Mail, label: "Email Us", value: "hello@bluecode.com" },
+    { Icon: Mail, label: "Email Us", value: "hello@Trikonix.com" },
     { Icon: Phone, label: "Call Us", value: "+92 300 1234567" },
     { Icon: MapPin, label: "Visit Us", value: "Islamabad, Pakistan" },
   ];
@@ -612,7 +612,7 @@ const navItems = [
           <div className="bc-loader-mark">
             <img src={loadingGif} alt="Loading" />
           </div>
-          <span className="bc-loader-label bc-mono">About Bluecode</span>
+          <span className="bc-loader-label bc-mono">About Trikonix</span>
         </div>
       </div>
 
@@ -654,8 +654,8 @@ const navItems = [
           <div className="bc-navbar-row">
             <div className={`bc-navbar-pill ${isScrolled ? "bc-navbar-scrolled" : ""}`}>
               <Link to="/" className="bc-navbar-brand">
-                <span className="bc-navbar-logo bc-display">B</span>
-                <span className="bc-navbar-name bc-display">Bluecode</span>
+                <span className="bc-navbar-logo bc-display">T</span>
+                <span className="bc-navbar-name bc-display">Trikonix</span>
               </Link>
               <nav className="bc-navbar-links">
                 {navItems.map((item, idx) =>
@@ -710,7 +710,7 @@ const navItems = [
         <div className={`bc-mobile-overlay ${mobileMenuOpen ? "bc-mobile-open" : ""}`} onClick={() => setMobileMenuOpen(false)} />
         <div className={`bc-mobile-panel ${mobileMenuOpen ? "bc-mobile-open" : ""}`}>
           <div className="bc-mobile-panel-header">
-            <span className="bc-navbar-name bc-display">Bluecode</span>
+            <span className="bc-navbar-name bc-display">Trikonix</span>
             <button className="bc-mobile-close" onClick={() => setMobileMenuOpen(false)}>
               <X size={18} />
             </button>
@@ -775,7 +775,7 @@ const navItems = [
               <Reveal delay={120} direction="up" className="bc-hero-image-wrapper bc-float">
                 <img
                  src={teamMeetingImg}
-                  alt="Bluecode Office Team Work"
+                  alt="Trikonix Office Team Work"
                   className="bc-hero-image"
                 />
               </Reveal>
@@ -792,7 +792,7 @@ const navItems = [
                 Empowering Teams Through Thoughtful Engineering
               </Reveal>
               <Reveal as="p" delay={140} direction="left" className="text-sm md:text-base opacity-80 leading-relaxed">
-                Bluecode is a product engineering studio focused on building intelligent software experiences for businesses and growing teams. We combine automation, workflow design, and user-centered interfaces to solve real operational challenges.
+                Trikonix is a product engineering studio focused on building intelligent software experiences for businesses and growing teams. We combine automation, workflow design, and user-centered interfaces to solve real operational challenges.
               </Reveal>
               <Reveal as="p" delay={200} direction="left" className="text-sm md:text-base opacity-80 leading-relaxed">
                 We believe technology should feel simple, reliable, and purposeful — instead of adding complexity, we build systems that quietly remove friction from everyday work.
@@ -881,7 +881,7 @@ const navItems = [
         <section className="py-16 px-6 max-w-7xl mx-auto">
           <div className="flex flex-col items-center text-center gap-3 mb-14 max-w-xl mx-auto">
             <Reveal as="span" direction="up" className="bc-eyebrow">Meet The Team</Reveal>
-            <Reveal as="h2" delay={70} direction="up" className="bc-display text-3xl md:text-4xl font-bold">The People Behind Bluecode</Reveal>
+            <Reveal as="h2" delay={70} direction="up" className="bc-display text-3xl md:text-4xl font-bold">The People Behind Trikonix</Reveal>
             <Reveal as="p" delay={140} direction="up" className="text-sm opacity-75 leading-relaxed">
               A small, senior team that stays hands-on with every project from first sprint to long-term support.
             </Reveal>

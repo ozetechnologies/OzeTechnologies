@@ -103,7 +103,7 @@ function CountUpValue({ value, trigger, duration }) {
 export default function LandingPage() {
   const [form, setForm] = useState({ name: "", email: "", brief: "" });
   const [sent, setSent] = useState(false);
-  const [theme, setTheme] = useState("light"); // "light" | "dark"
+ const [theme, setTheme] = useState(() => localStorage.getItem("bc-theme") || "light");// "light" | "dark"
   const [loading, setLoading] = useState(true);
   const [activeProductTab, setActiveProductTab] = useState(0);
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -229,7 +229,14 @@ export default function LandingPage() {
     setSent(true);
   };
 
-  const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
+const toggleTheme = () => {
+  setTheme((t) => {
+    const newTheme = t === "light" ? "dark" : "light";
+    localStorage.setItem("bc-theme", newTheme);
+    window.dispatchEvent(new Event("bc-theme-change"));
+    return newTheme;
+  });
+};
 
   const navItems = [
     { label: "Home", href: "/", isRoute: true },
@@ -239,7 +246,7 @@ export default function LandingPage() {
     {
       label: "About Us",
       dropdown: [
-       { label: "Our History", desc: "How Bluecode got started", href: "/our-history", isRoute: true },
+       { label: "Our History", desc: "How Trikonix got started", href: "/our-history", isRoute: true },
         { label: "Blogs", desc: "Insights from our studio", href: "/blogs" },
       ],
     },
@@ -423,11 +430,12 @@ const productTabs = [
         @keyframes bc-pulse-node { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
         .bc-node-rect { filter: drop-shadow(0 3px 6px rgba(15,23,42,0.10)); }
         .bc-node { animation: bc-pulse-node 3s ease-in-out infinite; }
-        .bc-marquee-track { display: flex; width: max-content; animation: bc-marquee 22s linear infinite; }
-        @keyframes bc-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        .bc-logo-strip { background: #000000; border: 1px solid var(--bc-line); border-radius: 14px; }
-        .bc-logo-item { color: #ffffff; opacity: 0.85; transition: opacity 0.2s ease, color 0.2s ease; letter-spacing: 0.04em; }
-        .bc-logo-item:hover { opacity: 1; color: var(--bc-text); }
+       .bc-marquee { overflow: hidden; position: relative; -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent); mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent); }
+.bc-marquee-track { display: flex; gap: 56px; width: max-content; animation: bc-marquee-scroll 30s linear infinite; }
+.bc-marquee:hover .bc-marquee-track { animation-play-state: paused; }
+@keyframes bc-marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.bc-logo-item { font-family: 'Space Grotesk', 'Inter', sans-serif; font-weight: 600; font-size: 1rem; color: var(--bc-muted); opacity: 0.8; letter-spacing: 0.01em; white-space: nowrap; transition: opacity 0.2s ease, color 0.2s ease; }
+.bc-logo-item:hover { opacity: 1; color: var(--bc-cyan); }
         .bc-hero-media { position: relative; border-radius: 20px; overflow: hidden; box-shadow: var(--bc-shadow-lg); border: 1px solid var(--bc-line); aspect-ratio: 4 / 3.1; background: var(--bc-panel-2); animation: bc-float 9s ease-in-out infinite; }
         .bc-flow-card { position: relative; z-index: 1; animation: bc-float 9s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .bc-flow-card { animation: none; } }
@@ -440,7 +448,9 @@ const productTabs = [
         .bc-check-row + .bc-check-row { margin-top: 14px; }
         .bc-check-dot { width: 22px; height: 22px; border-radius: 999px; background: var(--bc-cyan); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         @media (prefers-reduced-motion: reduce) { .bc-flow-line, .bc-node, .bc-marquee-track { animation: none !important; } }
-        .bc-tab-row { display: flex; gap: 40px; border-bottom: 1px solid var(--bc-line); }
+       .bc-tab-row { display: flex; gap: 40px; border-bottom: 1px solid var(--bc-line); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.bc-tab-row::-webkit-scrollbar { display: none; }
+.bc-tab-btn { flex-shrink: 0; white-space: nowrap; }
         .bc-tab-btn { background: none; border: none; cursor: pointer; padding: 14px 2px; font-weight: 700; font-size: 0.95rem; color: var(--bc-muted); position: relative; transition: color 0.2s ease; }
         .bc-tab-btn.bc-tab-active { color: var(--bc-text); }
         .bc-tab-btn.bc-tab-active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--bc-cyan); }
@@ -581,7 +591,7 @@ const productTabs = [
             </div>
           </div>
           <div className="bc-loader-word">
-            <span className="bc-display font-bold text-lg" style={{ color: "var(--bc-text)" }}>Bluecode</span>
+            <span className="bc-display font-bold text-lg" style={{ color: "var(--bc-text)" }}>Trikonix</span>
           </div>
           <div className="bc-loader-label bc-mono">Loading</div>
         </div>
@@ -607,8 +617,8 @@ const productTabs = [
         <div className="bc-navbar-row">
           <div className="bc-navbar-pill">
             <Link to="/" className="bc-navbar-brand">
-              <span className="bc-navbar-logo bc-display">B</span>
-              <span className="bc-navbar-name bc-display">Bluecode</span>
+              <span className="bc-navbar-logo bc-display">T</span>
+              <span className="bc-navbar-name bc-display">Trikonix</span>
             </Link>
 
             <nav className="bc-navbar-links bc-body">
@@ -702,7 +712,7 @@ const productTabs = [
       />
       <div className={`bc-mobile-panel ${mobileMenuOpen ? "bc-mobile-open" : ""}`}>
         <div className="bc-mobile-panel-header">
-          <span className="bc-navbar-name bc-display">Bluecode</span>
+          <span className="bc-navbar-name bc-display">Trikonix</span>
           <button
             className="bc-mobile-close"
             aria-label="Close menu"
@@ -783,7 +793,7 @@ const productTabs = [
               className={`bc-body text-base md:text-lg mb-8 bc-reveal ${!loading ? "bc-in-view" : ""}`}
               style={{ color: "var(--bc-muted)", animationDelay: "0.3s" }}
             >
-              Bluecode partners with growing businesses to build custom software,
+              Trikonix partners with growing businesses to build custom software,
               web platforms, and mobile apps that stay reliable long after launch.
             </p>
             <div className={`flex flex-wrap gap-4 bc-reveal ${!loading ? "bc-in-view" : ""}`} style={{ animationDelay: "0.4s" }}>
@@ -1013,52 +1023,35 @@ const productTabs = [
       </section>
 
       <section id="products" ref={productsRef} className={`max-w-7xl mx-auto px-6 py-20 md:py-24 bc-reveal ${productsInView ? "bc-in-view" : ""}`}>
-        <div className="bc-mono bc-eyebrow mb-3">What we build</div>
-       <h2 className="bc-display font-bold text-3xl md:text-4xl mb-4">
-          Our <span style={{ color: "var(--bc-cyan)" }}>Products</span>
-        </h2>
-        <p className="bc-body max-w-2xl mb-8" style={{ color: "var(--bc-muted)" }}>
-          Bluecode builds custom software and specialized digital products, standing
-          among the teams businesses trust to power their next platform.
-        </p>
-
-        <div className="bc-tab-row mb-10">
-          {productTabs.map((tab, i) => (
-           <button
-              key={i}
-              onClick={() => setActiveProductTab(i)}
-              className={`bc-tab-btn ${activeProductTab === i ? "..." : ""}`}
-              style={{ display: "flex", alignItems: "center", gap: "6px" }}
-            >
-             <tab.icon size={16} color={tab.color} />
-              {tab.label}
-            </button>
-          ))}
+  <div className="bc-mono bc-eyebrow mb-3">What we build</div>
+  <h2 className="bc-display font-bold text-3xl md:text-4xl mb-4">
+    Our <span style={{ color: "var(--bc-cyan)" }}>Services</span>
+  </h2>
+  <p className="bc-body max-w-2xl mb-10" style={{ color: "var(--bc-muted)" }}>
+    One team covering the full lifecycle of your product, from first sketch to long-term support.
+  </p>
+  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {services.map((s, i) => (
+      <div key={i} className="bc-card rounded-2xl p-6" style={{ animationDelay: `${i * 90}ms` }}>
+        <div
+          className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
+          style={{ background: `${["#6366F1","#38bdf8","#8b7ff0","#f2795a","#34d399","#f2a93b"][i % 6]}1a`, border: `1px solid ${["#6366F1","#38bdf8","#8b7ff0","#f2795a","#34d399","#f2a93b"][i % 6]}55` }}
+        >
+          <s.icon size={22} color={["#6366F1","#38bdf8","#8b7ff0","#f2795a","#34d399","#f2a93b"][i % 6]} strokeWidth={1.75} />
         </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
-          {productTabs[activeProductTab].items.map((item, i) => (
-            <div
-              key={i}
-              className={`bc-product-item bc-reveal ${productsInView ? "bc-in-view" : ""}`}
-              style={{ animationDelay: `${0.1 + (i % 6) * 0.06}s` }}
-            >
-              {item}
-            </div>
-          ))}
-        </div>
-
-        <div className="bc-cta-banner mt-14 p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <p className="bc-display font-semibold text-xl md:text-2xl leading-snug max-w-xl">
-            Choose from our core products{" "}
-            <span className="bc-cta-highlight">to build the right solution for your business.</span>
-          </p>
-          <Link to="/contact" className="bc-cta-btn flex-shrink-0">
-            Talk to Our Experts
-          </Link>
-        </div>
-      </section>
-     
+        <h3 className="bc-display font-bold text-lg mb-2">{s.title}</h3>
+        <p className="bc-body text-sm mb-4" style={{ color: "var(--bc-muted)" }}>{s.desc}</p>
+        <Link
+          to="/contact"
+          className="bc-body font-semibold text-sm flex items-center gap-1.5"
+          style={{ color: ["#6366F1","#38bdf8","#8b7ff0","#f2795a","#34d399","#f2a93b"][i % 6] }}
+        >
+          Discuss this service <ArrowRight size={14} />
+        </Link>
+      </div>
+    ))}
+  </div>
+</section>    
 
       <section id="blogs" ref={testimonialsRef} style={{ background: "var(--bc-band)" }}>
         <div className={`max-w-7xl mx-auto px-6 py-20 md:py-24 bc-reveal ${testimonialsInView ? "bc-in-view" : ""}`}>
@@ -1101,215 +1094,8 @@ const productTabs = [
         </div>
       </section>
 
-      <section id="contact" ref={contactRef}>
-        <div className={`max-w-7xl mx-auto px-6 py-20 md:py-24 grid md:grid-cols-2 gap-14 bc-reveal ${contactInView ? "bc-in-view" : ""}`}>
-          <div>
-            <div className="bc-mono bc-eyebrow mb-3">Get in touch</div>
-            <h2 className="bc-display font-bold text-3xl md:text-4xl mb-6">Tell us about the project</h2>
-            <p className="bc-body mb-2" style={{ color: "var(--bc-muted)" }}>
-              Send a short brief and we'll reply within one business day with next
-              steps — <span className="bc-contact-highlight">no discovery-call runaround.</span>
-            </p>
-            <div className="bc-contact-divider" />
-            <div>
-              <div className="bc-contact-info-row">
-                <div className="bc-contact-icon-circle">
-                  <Mail size={18} color="var(--bc-cyan)" />
-                </div>
-                <div>
-                  <div className="bc-body text-xs" style={{ color: "var(--bc-muted)" }}>Email</div>
-                  <div className="bc-body font-semibold text-sm">hello@bluecode.dev</div>
-                </div>
-              </div>
-              <div className="bc-contact-info-row">
-                <div className="bc-contact-icon-circle">
-                  <Phone size={18} color="var(--bc-cyan)" />
-                </div>
-                <div>
-                  <div className="bc-body text-xs" style={{ color: "var(--bc-muted)" }}>Phone</div>
-                  <div className="bc-body font-semibold text-sm">+92 300 0000000</div>
-                </div>
-              </div>
-              <div className="bc-contact-info-row">
-                <div className="bc-contact-icon-circle">
-                  <MapPin size={18} color="var(--bc-cyan)" />
-                </div>
-                <div>
-                  <div className="bc-body text-xs" style={{ color: "var(--bc-muted)" }}>Location</div>
-                  <div className="bc-body font-semibold text-sm">Islamabad, Pakistan</div>
-                </div>
-              </div>
-            </div>
-          </div>
+    
 
-          <div className="bc-contact-form-card">
-            {sent ? (
-              <div className="bc-body text-sm">
-                <p className="font-semibold mb-1" style={{ color: "var(--bc-cyan)" }}>Message sent.</p>
-                <p style={{ color: "var(--bc-muted)" }}>We'll get back to you within one business day.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div>
-                  <label className="bc-body font-semibold text-sm block mb-2">Name</label>
-                  <div className="bc-input-wrap">
-                    <input
-                      required
-                      value={form.name}
-                      onChange={(e) => setForm({ ...form, name: e.target.value })}
-                      className="bc-contact-input bc-body"
-                      placeholder="Your name"
-                    />
-                    <User size={16} className="bc-input-icon" />
-                  </div>
-                </div>
-                <div>
-                  <label className="bc-body font-semibold text-sm block mb-2">Email</label>
-                  <div className="bc-input-wrap">
-                    <input
-                      required
-                      type="email"
-                      value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      className="bc-contact-input bc-body"
-                      placeholder="you@company.com"
-                    />
-                    <Mail size={16} className="bc-input-icon" />
-                  </div>
-                </div>
-                <div>
-                  <label className="bc-body font-semibold text-sm block mb-2">Project brief</label>
-                  <div className="bc-input-wrap">
-                    <textarea
-                      required
-                      rows={4}
-                      value={form.brief}
-                      onChange={(e) => setForm({ ...form, brief: e.target.value })}
-                      className="bc-contact-input bc-body resize-none"
-                      placeholder="What are you trying to build?"
-                    />
-                    <PenLine size={16} className="bc-input-icon bc-input-icon-area" />
-                  </div>
-                </div>
-                <button type="submit" className="bc-send-btn">
-                  Send message <Send size={16} />
-                </button>
-                <div className="bc-trust-line">
-                  <ShieldCheck size={15} color="var(--bc-cyan)" />
-                  We respect your privacy. Your information is safe with us.
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      </section>
-
-      <footer ref={footerRef}>
-        <div className={`w-full bc-reveal ${footerInView ? "bc-in-view" : ""}`}>
-          <div className="bc-footer-card py-16 md:py-20 px-8 md:px-12">
-            <div className="bc-footer-decor-dots" />
-            <svg className="bc-footer-decor-wave" viewBox="0 0 300 160" fill="none">
-              <path d="M0 40 C 60 10, 100 70, 160 40 S 260 -10, 300 30" stroke="var(--bc-cyan)" strokeWidth="1" />
-              <path d="M0 70 C 60 40, 100 100, 160 70 S 260 20, 300 60" stroke="var(--bc-cyan)" strokeWidth="1" opacity="0.6" />
-            </svg>
-
-            <div className="grid md:grid-cols-[1.2fr_auto_1fr_auto_1fr_auto_1fr] gap-x-8 gap-y-12">
-              <div>
-                <div className="bc-display font-bold text-lg flex items-center gap-2">
-                  <span style={{ color: "var(--bc-cyan)" }}>&#9634;</span> Bluecode
-                </div>
-                <div className="bc-footer-underline" />
-                <p className="bc-body text-sm mb-6" style={{ color: "var(--bc-muted)" }}>
-                  A software house building systems companies can rely on.
-                </p>
-                <div className="flex gap-3">
-                  <a href="#" className="bc-footer-social" aria-label="Website">
-                    <Globe2 size={17} color="var(--bc-cyan)" />
-                  </a>
-                  <a href="#" className="bc-footer-social" aria-label="LinkedIn">
-                    <Link2 size={17} color="var(--bc-cyan)" />
-                  </a>
-                  <a href="#" className="bc-footer-social" aria-label="Message us">
-                    <MessageCircle size={17} color="var(--bc-cyan)" />
-                  </a>
-                </div>
-              </div>
-
-              <div className="bc-footer-col-divider" />
-
-              <div>
-                <div className="bc-footer-heading-row">
-                  <div className="bc-footer-heading-badge">
-                    <Layers size={16} color="var(--bc-cyan)" />
-                  </div>
-                  <span className="bc-footer-heading">SERVICES</span>
-                </div>
-                <div className="bc-body text-sm">
-                  {["Custom Software", "Web Applications", "Mobile Apps", "Cloud & DevOps"].map((item, i) => (
-                    <div key={i} className="bc-footer-item">
-                      <ChevronRight size={14} color="var(--bc-cyan)" />
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="bc-footer-col-divider" />
-
-              <div>
-                <div className="bc-footer-heading-row">
-                  <div className="bc-footer-heading-badge">
-                    <Users size={16} color="var(--bc-cyan)" />
-                  </div>
-                  <span className="bc-footer-heading">COMPANY</span>
-                </div>
-                <div className="bc-body text-sm">
-                  {[
-                    { label: "Our Work", href: "#projects" },
-                    { label: "Industries", href: "#about" },
-                    { label: "Clients", href: "#blogs" },
-                    { label: "Contact", href: "#contact" },
-                  ].map((item, i) => (
-                    <a key={i} href={item.href} className="bc-footer-item">
-                      <ChevronRight size={14} color="var(--bc-cyan)" />
-                      {item.label}
-                    </a>
-                  ))}
-                </div>
-              </div>
-
-              <div className="bc-footer-col-divider" />
-
-              <div>
-                <div className="bc-footer-heading-row">
-                  <div className="bc-footer-heading-badge">
-                    <Send size={15} color="var(--bc-cyan)" />
-                  </div>
-                  <span className="bc-footer-heading">CONTACT</span>
-                </div>
-                <div className="bc-body text-sm">
-                  <div className="bc-footer-contact-item">
-                    <Mail size={16} color="var(--bc-cyan)" /> hello@bluecode.dev
-                  </div>
-                  <div className="bc-footer-contact-item">
-                    <Phone size={16} color="var(--bc-cyan)" /> +92 300 0000000
-                  </div>
-                  <div className="bc-footer-contact-item">
-                    <MapPin size={16} color="var(--bc-cyan)" /> Islamabad, Pakistan
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bc-footer-bottom">
-              <div className="bc-footer-bottom-badge">
-                <ShieldCheck size={14} color="var(--bc-cyan)" />
-              </div>
-              © 2026 <span style={{ color: "var(--bc-cyan)", fontWeight: 600 }}>Bluecode</span>. All rights reserved.
-            </div>
-          </div>
-        </div>
-      </footer>
       </div>
     </div>
   );

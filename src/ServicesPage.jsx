@@ -74,7 +74,7 @@ function useReveal(options) {
 }
 
 export default function ServicesPage() {
-  const [theme, setTheme] = useState("light");
+ const [theme, setTheme] = useState(() => localStorage.getItem("bc-theme") || "light");
   const [loading, setLoading] = useState(true);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -196,7 +196,14 @@ export default function ServicesPage() {
     };
   }, []);
 
-  const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
+  const toggleTheme = () => {
+  setTheme((t) => {
+    const newTheme = t === "light" ? "dark" : "light";
+    localStorage.setItem("bc-theme", newTheme);
+    window.dispatchEvent(new Event("bc-theme-change"));
+    return newTheme;
+  });
+};
 
   // subtle 3-5px mouse parallax helpers
   const makeParallaxHandlers = (setter, strength = 6) => ({
@@ -218,7 +225,7 @@ export default function ServicesPage() {
   {
     label: "About Us",
     dropdown: [
-      { label: "Our History", desc: "How Bluecode got started", href: "/our-history" },
+      { label: "Our History", desc: "How Trikonix got started", href: "/our-history" },
       { label: "Blogs", desc: "Insights from our studio", href: "/blogs" },
     ],
   },
@@ -282,7 +289,7 @@ export default function ServicesPage() {
         <span className="bc-mock-dot" style={{ background: "#f2795a" }} />
         <span className="bc-mock-dot" style={{ background: "#f2a93b" }} />
         <span className="bc-mock-dot" style={{ background: "#34d399" }} />
-        <span className="bc-mock-url">app.bluecode.dev</span>
+        <span className="bc-mock-url">app.Trikonix.dev</span>
       </div>
       <div className="bc-mock-body">
         <div className="bc-mock-stats-row">
@@ -319,7 +326,7 @@ export default function ServicesPage() {
         <div className="bc-term-line"><span style={{ color: "var(--bc-cyan)" }}>$</span> npm run deploy</div>
         <div className="bc-term-line bc-term-muted">Building for production...</div>
         <div className="bc-term-line" style={{ color: "#34d399" }}>✓ Build complete in 12.4s</div>
-        <div className="bc-term-line" style={{ color: "#34d399" }}>✓ Deployed to bluecode.dev</div>
+        <div className="bc-term-line" style={{ color: "#34d399" }}>✓ Deployed to Trikonix.dev</div>
       </div>
     </div>
   );
@@ -687,7 +694,7 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
       {/* custom cursor: trailing glow ring + rotating "B" badge */}
       <div ref={cursorRingRef} className={`bc-cursor-ring ${cursorHover ? "bc-cursor-ring-hover" : ""}`} />
       <div ref={cursorBRef} className="bc-cursor-b">
-        <span className={`bc-cursor-b-inner bc-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>B</span>
+        <span className={`bc-cursor-b-inner bc-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>T</span>
       </div>
 
       {/* LOADING SCREEN */}
@@ -699,7 +706,7 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
             <span className="bc-loader-sq bc-loader-sq-b" />
             <span className="bc-loader-sq bc-loader-sq-a" />
           </div>
-          <div className="bc-loader-name bc-display">Bluecode</div>
+          <div className="bc-loader-name bc-display">Trikonix</div>
           <div className="bc-loader-label bc-mono">Loading</div>
         </div>
       </div>
@@ -710,8 +717,8 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
   <div className="bc-navbar-row">
     <div className="bc-navbar-pill">
       <Link to="/" className="bc-navbar-brand">
-        <span className="bc-navbar-logo bc-display">B</span>
-        <span className="bc-navbar-name bc-display">Bluecode</span>
+        <span className="bc-navbar-logo bc-display">T</span>
+        <span className="bc-navbar-name bc-display">Trikonix</span>
       </Link>
 
       <nav className="bc-navbar-links bc-body">
@@ -770,7 +777,7 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
 <div className={`bc-mobile-overlay ${mobileMenuOpen ? "bc-mobile-open" : ""}`} onClick={() => setMobileMenuOpen(false)} />
 <div className={`bc-mobile-panel ${mobileMenuOpen ? "bc-mobile-open" : ""}`}>
   <div className="bc-mobile-panel-header">
-    <span className="bc-navbar-name bc-display">Bluecode</span>
+    <span className="bc-navbar-name bc-display">Trikonix</span>
     <button className="bc-mobile-close" onClick={() => setMobileMenuOpen(false)}>
       <X size={17} />
     </button>
@@ -835,7 +842,7 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
                     <span className="bc-hero-avatar bc-hero-avatar-count">120+</span>
                   </div>
                   <div>
-                    <div className="bc-body font-semibold text-sm">120+ teams trust Bluecode</div>
+                    <div className="bc-body font-semibold text-sm">120+ teams trust Trikonix</div>
                     <div className="flex items-center gap-1.5">
                       <div className="bc-hero-stars">
                         {Array.from({ length: 5 }).map((_, i) => (
@@ -854,7 +861,7 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
                   className="bc-hero-photo-frame bc-cursor-hover"
                   style={{ transform: `translate(${heroParallax.x}px, ${heroParallax.y}px)` }}
                 >
-                  <img src={teamPhoto} alt="Bluecode team collaborating on a project" />
+                  <img src={teamPhoto} alt="Trikonix team collaborating on a project" />
                 </div>
                 <div className="bc-hero-photo-badge bc-hero-photo-badge-code">
                   <span className="bc-scene-badge-icon"><Code2 size={16} color="var(--bc-cyan)" /></span>
@@ -957,7 +964,7 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
                 Real Products. <br /> Real Engineering.
               </h2>
               <p className="bc-body mb-6" style={{ color: "var(--bc-muted)" }}>
-                See what shipping with Bluecode looks like — dashboards, portals, and
+                See what shipping with Trikonix looks like — dashboards, portals, and
                 mobile apps built for daily, production use.
               </p>
               <a href="/#projects" className="group bc-btn-ghost bc-body font-semibold px-6 py-3 rounded inline-flex items-center gap-2">
@@ -987,7 +994,7 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
             ref={whyRef}
             className={`bc-reveal bc-reveal-center ${whyInView ? "bc-reveal-in" : ""} text-center max-w-xl mx-auto mb-12`}
           >
-            <div className="bc-eyebrow mb-3">Why Bluecode</div>
+            <div className="bc-eyebrow mb-3">Why Trikonix</div>
             <h2 className="bc-display font-bold text-3xl md:text-4xl">A studio built to be easy to work with</h2>
           </div>
           <div className="bc-why-row">
@@ -1078,7 +1085,7 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
                     Ready to Build Your Next Product?
                   </p>
                   <p className="bc-body text-sm" style={{ color: "rgba(241,245,249,0.65)" }}>
-                    Join 120+ teams already shipping faster with Bluecode.
+                    Join 120+ teams already shipping faster with Trikonix.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-3">
@@ -1094,112 +1101,7 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
           </div>
         </section>
 
-       {/* FOOTER */}
-<footer ref={footerRef}>
-  <div className={`w-full bc-reveal bc-reveal-center ${footerInView ? "bc-reveal-in" : ""}`}>
-    <div className="bc-footer-card py-16 md:py-20 px-8 md:px-12">
-      <div className="bc-footer-decor-dots" />
-      <svg className="bc-footer-decor-wave" viewBox="0 0 300 160" fill="none">
-        <path d="M0 40 C 60 10, 100 70, 160 40 S 260 -10, 300 30" stroke="var(--bc-cyan)" strokeWidth="1" />
-        <path d="M0 70 C 60 40, 100 100, 160 70 S 260 20, 300 60" stroke="var(--bc-cyan)" strokeWidth="1" opacity="0.6" />
-      </svg>
-      <div className="grid md:grid-cols-[1.2fr_auto_1fr_auto_1fr_auto_1fr] gap-x-8 gap-y-12">
-                <div>
-                  <div className="bc-display font-bold text-lg flex items-center gap-2">
-                    <span style={{ color: "var(--bc-cyan)" }}>&#9634;</span> Bluecode
-                  </div>
-                  <div className="bc-footer-underline" />
-                  <p className="bc-body text-sm mb-6" style={{ color: "var(--bc-muted)" }}>
-                    A software house building systems companies can rely on.
-                  </p>
-                  <div className="flex gap-3">
-                    <a href="#" className="bc-footer-social" aria-label="Website">
-                      <Globe2 size={17} color="var(--bc-cyan)" />
-                    </a>
-                    <a href="#" className="bc-footer-social" aria-label="LinkedIn">
-                      <Link2 size={17} color="var(--bc-cyan)" />
-                    </a>
-                    <a href="#" className="bc-footer-social" aria-label="Message us">
-                      <MessageCircle size={17} color="var(--bc-cyan)" />
-                    </a>
-                  </div>
-                </div>
-
-                <div className="bc-footer-col-divider" />
-
-                <div>
-                  <div className="bc-footer-heading-row">
-                    <div className="bc-footer-heading-badge">
-                      <Layers size={16} color="var(--bc-cyan)" />
-                    </div>
-                    <span className="bc-footer-heading">SERVICES</span>
-                  </div>
-                  <div className="bc-body text-sm">
-                    {services.slice(0, 4).map((s, i) => (
-                      <a key={i} href="#service-list" className="bc-footer-item">
-                        <ChevronRight size={14} color="var(--bc-cyan)" />
-                        {s.title}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="bc-footer-col-divider" />
-
-                <div>
-                  <div className="bc-footer-heading-row">
-                    <div className="bc-footer-heading-badge">
-                      <Users size={16} color="var(--bc-cyan)" />
-                    </div>
-                    <span className="bc-footer-heading">COMPANY</span>
-                  </div>
-                  <div className="bc-body text-sm">
-                    {[
-                      { label: "Our Work", href: "/#projects" },
-                      { label: "Industries", href: "/#about" },
-                      { label: "Clients", href: "/#blogs" },
-                      { label: "Contact", href: "/#contact" },
-                    ].map((item, i) => (
-                      <a key={i} href={item.href} className="bc-footer-item">
-                        <ChevronRight size={14} color="var(--bc-cyan)" />
-                        {item.label}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="bc-footer-col-divider" />
-
-                <div>
-                  <div className="bc-footer-heading-row">
-                    <div className="bc-footer-heading-badge">
-                    <Send size={15} color="var(--bc-cyan)" />
-                    </div>
-                    <span className="bc-footer-heading">CONTACT</span>
-                  </div>
-                  <div className="bc-body text-sm">
-                    <div className="bc-footer-contact-item">
-                      <Mail size={16} color="var(--bc-cyan)" /> hello@bluecode.dev
-                    </div>
-                    <div className="bc-footer-contact-item">
-                      <Phone size={16} color="var(--bc-cyan)" /> +92 300 0000000
-                    </div>
-                    <div className="bc-footer-contact-item">
-                      <MapPin size={16} color="var(--bc-cyan)" /> Islamabad, Pakistan
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bc-footer-bottom">
-                <div className="bc-footer-bottom-badge">
-                  <ShieldCheck size={14} color="var(--bc-cyan)" />
-                </div>
-                © 2026 <span style={{ color: "var(--bc-cyan)", fontWeight: 600 }}>Bluecode</span>. All rights reserved.
-              </div>
-            </div>
-          </div>
-        </footer>
+      
       </div>
 
       {/* back to top */}

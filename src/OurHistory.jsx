@@ -39,7 +39,7 @@ function useReveal() {
 }
 
 export default function OurHistory() {
-  const [theme, setTheme] = useState("light");
+ const [theme, setTheme] = useState(() => localStorage.getItem("bc-theme") || "light");
 const [historyExpanded, setHistoryExpanded] = useState(false); // ye naya add karein
   const [loading, setLoading] = useState(true);
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -156,7 +156,14 @@ const [historyExpanded, setHistoryExpanded] = useState(false); // ye naya add ka
     };
   }, []);
 
-  const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
+ const toggleTheme = () => {
+  setTheme((t) => {
+    const newTheme = t === "light" ? "dark" : "light";
+    localStorage.setItem("bc-theme", newTheme);
+    window.dispatchEvent(new Event("bc-theme-change"));
+    return newTheme;
+  });
+};
 
  const navItems = [
   { label: "Home", href: "/", isRoute: true },
@@ -166,7 +173,7 @@ const [historyExpanded, setHistoryExpanded] = useState(false); // ye naya add ka
   {
     label: "About Us",
     dropdown: [
-      { label: "Our History", desc: "How Bluecode got started", href: "/our-history", isRoute: true },
+      { label: "Our History", desc: "How Trikonix got started", href: "/our-history", isRoute: true },
       { label: "Blogs", desc: "Insights from our studio", href: "/blogs", isRoute: true },
     ],
   },
@@ -177,7 +184,7 @@ const [historyExpanded, setHistoryExpanded] = useState(false); // ye naya add ka
     {
       year: "2018",
       title: "The Beginning",
-      desc: "Bluecode started with three engineers, one laptop each, and a shared frustration with software vendors who disappeared after launch.",
+      desc: "Trikonix started with three engineers, one laptop each, and a shared frustration with software vendors who disappeared after launch.",
       Icon: Flag,
       refHook: [milestone1Ref, milestone1InView],
       img: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=900&auto=format&fit=crop",
@@ -462,7 +469,7 @@ const [historyExpanded, setHistoryExpanded] = useState(false); // ye naya add ka
       {/* custom cursor: trailing glow ring + rotating "B" badge */}
       <div ref={cursorRingRef} className={`bc-cursor-ring ${cursorHover ? "bc-cursor-ring-hover" : ""}`} />
       <div ref={cursorBRef} className="bc-cursor-b">
-        <span className={`bc-cursor-b-inner bc-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>B</span>
+        <span className={`bc-cursor-b-inner bc-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>T</span>
       </div>
 
       {/* LOADING SCREEN */}
@@ -474,7 +481,7 @@ const [historyExpanded, setHistoryExpanded] = useState(false); // ye naya add ka
             <span className="bc-loader-sq bc-loader-sq-b" />
             <span className="bc-loader-sq bc-loader-sq-a" />
           </div>
-          <div className="bc-loader-name bc-display">Bluecode</div>
+          <div className="bc-loader-name bc-display">Trikonix</div>
           <div className="bc-loader-label bc-mono">Loading</div>
         </div>
       </div>
@@ -485,8 +492,8 @@ const [historyExpanded, setHistoryExpanded] = useState(false); // ye naya add ka
           <div className="bc-navbar-row">
             <div className="bc-navbar-pill">
               <Link to="/" className="bc-navbar-brand">
-                <span className="bc-navbar-logo bc-display">B</span>
-                <span className="bc-navbar-name bc-display">Bluecode</span>
+                <span className="bc-navbar-logo bc-display">T</span>
+                <span className="bc-navbar-name bc-display">Trikonix</span>
               </Link>
 
               <nav className="bc-navbar-links bc-body">
@@ -557,7 +564,7 @@ const [historyExpanded, setHistoryExpanded] = useState(false); // ye naya add ka
         <div className={`bc-mobile-overlay ${mobileMenuOpen ? "bc-mobile-open" : ""}`} onClick={() => setMobileMenuOpen(false)} />
         <div className={`bc-mobile-panel ${mobileMenuOpen ? "bc-mobile-open" : ""}`}>
           <div className="bc-mobile-panel-header">
-            <span className="bc-navbar-name bc-display">Bluecode</span>
+            <span className="bc-navbar-name bc-display">Trikonix</span>
             <button className="bc-mobile-close" onClick={() => setMobileMenuOpen(false)}>
               <X size={17} />
             </button>
@@ -648,7 +655,7 @@ const [historyExpanded, setHistoryExpanded] = useState(false); // ye naya add ka
             <div className="bc-history-hero-media bc-cursor-hover">
               <img
                 src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1200&auto=format&fit=crop"
-                alt="Bluecode's office"
+                alt="Trikonix's office"
               />
             </div>
           </div>
@@ -711,16 +718,7 @@ const [historyExpanded, setHistoryExpanded] = useState(false); // ye naya add ka
           </div>
         </section>
 
-        {/* FOOTER */}
-        <footer style={{ background: "var(--bc-band)" }}>
-          <div ref={footerRef} className={`bc-reveal ${footerInView ? "bc-in-view" : ""} max-w-7xl mx-auto px-6 py-16 md:py-20`}>
-            <div className="bc-footer-card p-8 md:p-12 text-center">
-              <p className="bc-body text-sm" style={{ color: "var(--bc-muted)" }}>
-                © 2026 <span style={{ color: "var(--bc-cyan)", fontWeight: 600 }}>Bluecode</span>. All rights reserved.
-              </p>
-            </div>
-          </div>
-        </footer>
+       
       </div>
 
       {/* back to top */}

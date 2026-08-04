@@ -39,7 +39,7 @@ export default function Navbar({ theme = "light", toggleTheme, active = "" }) {
       key: "about",
       label: "About Us",
       dropdown: [
-        { label: "Our History", desc: "How Bluecode got started", href: "/our-history" },
+        { label: "Our History", desc: "How Trikonix got started", href: "/our-history" },
         { label: "Blogs", desc: "Insights from our studio", href: "/blogs" },
       ],
     },
@@ -92,8 +92,8 @@ export default function Navbar({ theme = "light", toggleTheme, active = "" }) {
         <div className="bc-shared-navbar-row">
           <div className="bc-shared-navbar-pill">
             <Link to="/" className="bc-shared-navbar-brand">
-              <span className="bc-shared-navbar-logo" style={{ background: cyan }}>B</span>
-              <span className="bc-shared-navbar-name">Bluecode</span>
+              <span className="bc-shared-navbar-logo" style={{ background: cyan }}>T</span>
+              <span className="bc-shared-navbar-name">Trikonix</span>
             </Link>
 
             <nav className="bc-shared-navbar-links">
@@ -156,7 +156,7 @@ export default function Navbar({ theme = "light", toggleTheme, active = "" }) {
       <div className={`bc-shared-mobile-overlay ${mobileMenuOpen ? "bc-shared-mobile-open" : ""}`} onClick={() => setMobileMenuOpen(false)} />
       <div className={`bc-shared-mobile-panel ${mobileMenuOpen ? "bc-shared-mobile-open" : ""}`}>
         <div className="bc-shared-mobile-panel-header">
-          <span className="bc-shared-navbar-name">Bluecode</span>
+          <span className="bc-shared-navbar-name">Trikonix</span>
           <button className="bc-shared-mobile-close" onClick={() => setMobileMenuOpen(false)}>
             <X size={17} />
           </button>

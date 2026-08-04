@@ -55,7 +55,7 @@ function useReveal() {
 // 2. MAIN COMPONENT FUNCTION
 // ==========================================
 export default function ContactUs() {
-  const [darkMode, setDarkMode] = useState(false); // Default mode: Light
+  const [darkMode, setDarkMode] = useState(() => (localStorage.getItem("bc-theme") || "light") === "dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1200
@@ -167,7 +167,7 @@ export default function ContactUs() {
 
     const { fullName, emailAddress, phoneNumber, country, subject, message } = formData;
 
-    const recipient = "hello@bluecode.com";
+    const recipient = "hello@Trikonix.com";
     const mailSubject = subject && subject.trim() !== "" ? subject : "New Consultancy Inquiry";
     const mailBody =
       `Name: ${fullName}\n` +
@@ -307,7 +307,7 @@ export default function ContactUs() {
       {/* -------------------------------------------------------------
           NAVBAR: Floating Capsule Design (Responsive)
           ------------------------------------------------------------- */}
-      <Navbar theme={darkMode ? "dark" : "light"} toggleTheme={() => setDarkMode(!darkMode)} active="contact" />
+    <Navbar theme={darkMode ? "dark" : "light"} toggleTheme={() => setDarkMode((prev) => { const newVal = !prev; localStorage.setItem("bc-theme", newVal ? "dark" : "light"); window.dispatchEvent(new Event("bc-theme-change")); return newVal; })} active="contact" />
 
 {/* --- SECTION 1: HERO --- */}
 <section
@@ -446,7 +446,7 @@ export default function ContactUs() {
                 <Mail size={22} className="bc-icon-hover" style={{ color: "#6366F1", marginTop: "4px", flexShrink: 0 }} />
                 <div>
                   <span style={{ fontWeight: "600", display: "block", color: "#ffffff", fontSize: "16px", marginBottom: "4px" }}>Email Us</span>
-                  <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>hello@bluecode.com</span>
+                  <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>hello@Trikonix.com</span>
                 </div>
               </div>
 
@@ -673,21 +673,8 @@ export default function ContactUs() {
         </div>
       </div>
 
-      {/* --- FOOTER --- */}
-      <footer
-        ref={footerRef}
-        className={`bc-reveal ${footerInView ? "bc-in-view" : ""}`}
-        style={{
-          backgroundColor: "#1E1B4B",
-          color: "#A8A29E",
-          padding: "30px 5%",
-          textAlign: "center",
-          fontSize: "14px",
-          borderTop: "1px solid #332D55",
-        }}
-      >
-        <p>&copy; 2026 BLUECODE Landing Platform. All rights reserved.</p>
-      </footer>
+     
+     
     </div>
   );
 }

@@ -106,7 +106,7 @@ export default function Portfolio() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
-  const [theme, setTheme] = useState("light"); // "light" | "dark" — kept in sync with landing page's system
+ const [theme, setTheme] = useState(() => localStorage.getItem("bc-theme") || "light");
 
   // ---- animation-related state (same system as the Services page) ----
   const [loading, setLoading] = useState(true);
@@ -219,7 +219,14 @@ export default function Portfolio() {
   }, []);
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
-  const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
+ const toggleTheme = () => {
+  setTheme((t) => {
+    const newTheme = t === "light" ? "dark" : "light";
+    localStorage.setItem("bc-theme", newTheme);
+    window.dispatchEvent(new Event("bc-theme-change"));
+    return newTheme;
+  });
+};
 
   // subtle mouse parallax on hero photo, same helper shape as Services page
   const heroParallaxHandlers = {
@@ -274,7 +281,7 @@ export default function Portfolio() {
   ];
 
   const journey = [
-    { year: "2023 – Present", role: "UI/UX Designer & Frontend Developer", org: "Bluecode Solutions", desc: "Designing and developing modern web applications and interfaces for clients across different industries.", icon: Hexagon },
+    { year: "2023 – Present", role: "UI/UX Designer & Frontend Developer", org: "Trikonix Solutions", desc: "Designing and developing modern web applications and interfaces for clients across different industries.", icon: Hexagon },
     { year: "2022 – 2023", role: "Frontend Developer", org: "Pixel Craft", desc: "Built responsive websites and collaborated with designers to bring ideas to life on the web.", icon: Code2 },
     { year: "2021 – 2022", role: "UI/UX Designer", org: "Creative Studio", desc: "Designed user interfaces, wireframes and prototypes for web and mobile applications.", icon: Palette },
   ];
@@ -287,7 +294,7 @@ export default function Portfolio() {
     {
       label: "About Us",
       dropdown: [
-        { label: "Our History", desc: "How Bluecode got started", href: "/about" },
+        { label: "Our History", desc: "How Trikonix got started", href: "/about" },
         { label: "Blogs", desc: "Insights from our studio", href: "/blogs" },
       ],
     },
@@ -546,7 +553,7 @@ export default function Portfolio() {
       {/* custom cursor: trailing glow ring + rotating "B" badge */}
       <div ref={cursorRingRef} className={`bc-cursor-ring ${cursorHover ? "bc-cursor-ring-hover" : ""}`} />
       <div ref={cursorBRef} className="bc-cursor-b">
-        <span className={`bc-cursor-b-inner pf-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>B</span>
+        <span className={`bc-cursor-b-inner pf-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>T</span>
       </div>
 
       {/* LOADING SCREEN */}
@@ -558,7 +565,7 @@ export default function Portfolio() {
             <span className="bc-loader-sq bc-loader-sq-b" />
             <span className="bc-loader-sq bc-loader-sq-a" />
           </div>
-          <div className="bc-loader-name pf-display">Bluecode</div>
+          <div className="bc-loader-name pf-display">Trikonix</div>
           <div className="bc-loader-label pf-mono">Loading</div>
         </div>
       </div>
@@ -570,7 +577,7 @@ export default function Portfolio() {
             <div className="bc-navbar-pill">
               <Link to="/" className="bc-navbar-brand">
                 <span className="bc-navbar-logo pf-display">B</span>
-                <span className="bc-navbar-name pf-display">Bluecode</span>
+                <span className="bc-navbar-name pf-display">Trikonix</span>
               </Link>
 
               <nav className="bc-navbar-links pf-body">
@@ -650,7 +657,7 @@ export default function Portfolio() {
         />
         <div className={`bc-mobile-panel ${mobileMenuOpen ? "bc-mobile-open" : ""}`}>
           <div className="bc-mobile-panel-header">
-            <span className="bc-navbar-name pf-display">Bluecode</span>
+            <span className="bc-navbar-name pf-display">Trikonix</span>
             <button
               className="bc-mobile-close"
               aria-label="Close menu"
@@ -734,7 +741,7 @@ export default function Portfolio() {
             <div className="pf-hero-blob" />
             <img
               src="/team-photo.jpg"
-              alt="The Bluecode team"
+              alt="The Trikonix team"
               className="pf-hero-photo"
               style={{ transform: `translate(${heroParallax.x}px, ${heroParallax.y}px)` }}
             />
@@ -918,101 +925,13 @@ export default function Portfolio() {
                 </p>
               </div>
             </div>
-            <a href="mailto:hello@bluecode.dev" className="pf-cta-btn">
+            <a href="mailto:hello@Trikonix.dev" className="pf-cta-btn">
               Let's Talk <ArrowRight size={16} />
             </a>
           </div>
         </section>
 
-        {/* Footer */}
-        <footer ref={footerRef} style={{ borderTop: "1px solid var(--bc-line)" }}>
-          <div className={`max-w-7xl mx-auto px-6 pt-14 pb-8 pf-reveal ${footerInView ? "pf-in-view" : ""}`}>
-            <div className="grid md:grid-cols-[1.3fr_0.8fr_0.9fr_0.9fr_1fr] gap-10">
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <Hexagon size={22} color="var(--bc-cyan)" fill="color-mix(in srgb, var(--bc-cyan) 18%, transparent)" />
-                  <span className="pf-display font-bold text-lg">Bluecode</span>
-                </div>
-                <p className="pf-body text-sm mb-5" style={{ color: "var(--bc-muted)" }}>
-                  We build clean, user-focused digital experiences that help
-                  businesses grow, innovate and lead in a digital world.
-                </p>
-                <div className="flex gap-3">
-                  <a href="#" className="pf-social" aria-label="LinkedIn"><Linkedin size={15} /></a>
-                  <a href="#" className="pf-social" aria-label="GitHub"><Github size={15} /></a>
-                  <a href="#" className="pf-social" aria-label="Instagram"><Instagram size={15} /></a>
-                  <a href="#" className="pf-social" aria-label="Behance"><Palette size={15} /></a>
-                </div>
-              </div>
-
-              <div>
-                <div className="pf-footer-heading pf-body">Quick Links</div>
-                {navItems.map((item, i) =>
-                  item.dropdown ? (
-                    item.dropdown.map((sub, j) => (
-                      <Link key={j} to={sub.href} className="pf-footer-link pf-body">{sub.label}</Link>
-                    ))
-                  ) : item.isRoute ? (
-                    <Link key={i} to={item.href} className="pf-footer-link pf-body">{item.label}</Link>
-                  ) : (
-                    <a key={i} href={item.href} className="pf-footer-link pf-body">{item.label}</a>
-                  )
-                )}
-              </div>
-
-              <div>
-                <div className="pf-footer-heading pf-body">Services</div>
-                {["UI/UX Design", "Web Development", "Frontend Development", "Responsive Design"].map((s, i) => (
-                  <a key={i} href="#" className="pf-footer-link pf-body">{s}</a>
-                ))}
-              </div>
-
-              <div>
-                <div className="pf-footer-heading pf-body">Contact</div>
-                <div className="pf-body text-sm flex items-center gap-2 mb-2.5" style={{ color: "var(--bc-muted)" }}>
-                  <Mail size={14} color="var(--bc-cyan)" /> hello@bluecode.dev
-                </div>
-                <div className="pf-body text-sm flex items-center gap-2 mb-2.5" style={{ color: "var(--bc-muted)" }}>
-                  <Phone size={14} color="var(--bc-cyan)" /> +92 312 3456789
-                </div>
-                <div className="pf-body text-sm flex items-center gap-2" style={{ color: "var(--bc-muted)" }}>
-                  <MapPin size={14} color="var(--bc-cyan)" /> Karachi, Pakistan
-                </div>
-              </div>
-
-              <div>
-                <div className="pf-footer-heading pf-body">Stay Updated</div>
-                <p className="pf-body text-sm mb-3" style={{ color: "var(--bc-muted)" }}>
-                  Subscribe to my newsletter for the latest updates and insights.
-                </p>
-                {subscribed ? (
-                  <p className="pf-body text-sm font-semibold" style={{ color: "var(--bc-cyan)" }}>Subscribed — thank you!</p>
-                ) : (
-                  <form
-                    className="flex"
-                    onSubmit={(e) => { e.preventDefault(); setSubscribed(true); }}
-                  >
-                    <input
-                      required
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Your email"
-                      className="pf-newsletter-input pf-body"
-                    />
-                    <button type="submit" className="pf-newsletter-btn" aria-label="Subscribe">
-                      <Send size={15} />
-                    </button>
-                  </form>
-                )}
-              </div>
-            </div>
-
-            <div className="mt-10 pt-6 text-center pf-body text-sm" style={{ borderTop: "1px solid var(--bc-line)", color: "var(--bc-muted)" }}>
-              © 2026 Bluecode. All rights reserved.
-            </div>
-          </div>
-        </footer>
+      
       </div>
 
       <button

@@ -41,7 +41,7 @@ const CATEGORIES = [
 ];
 
 export default function Blogs() {
- const [theme, setTheme] = useState("light");
+const [theme, setTheme] = useState(() => localStorage.getItem("bc-theme") || "light");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -62,7 +62,14 @@ export default function Blogs() {
     }
   }, [theme]);
 
-  const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
+ const toggleTheme = () => {
+  setTheme((t) => {
+    const newTheme = t === "light" ? "dark" : "light";
+    localStorage.setItem("bc-theme", newTheme);
+    window.dispatchEvent(new Event("bc-theme-change"));
+    return newTheme;
+  });
+};
   const isDark = theme === "dark";
 
   // ---------------------------------------------------------
@@ -118,7 +125,7 @@ export default function Blogs() {
   {
     label: "About Us",
     dropdown: [
-      { label: "Our History", desc: "How Bluecode got started", href: "/our-history", isRoute: true },
+      { label: "Our History", desc: "How Trikonix got started", href: "/our-history", isRoute: true },
       { label: "Blogs", desc: "Insights from our studio", href: "/blogs", isRoute: true },
     ],
   },
@@ -151,7 +158,7 @@ export default function Blogs() {
             <div className="bc-loader-diamond bc-loader-diamond-accent" />
             <div className="bc-loader-diamond bc-loader-diamond-dark" />
           </div>
-          <span className="font-bold text-lg" style={{ color: c.text }}>Bluecode</span>
+          <span className="font-bold text-lg" style={{ color: c.text }}>Trikonix</span>
           <div className="bc-loader-label">Loading</div>
         </div>
       </div>
@@ -166,10 +173,10 @@ export default function Blogs() {
         >
           <Link to="/" className="flex items-center gap-2 group">
             <span className="w-8 h-8 rounded-full bg-[#6366F1] text-white flex items-center justify-center font-bold text-base shadow-sm">
-              B
+              T
             </span>
             <span className="font-bold tracking-wide text-lg" style={{ color: "#ffffff" }}>
-              Bluecode
+              Trikonix
             </span>
           </Link>
 
