@@ -1,3 +1,5 @@
+import { useReveal } from "./shared/useReveal";
+import "./shared/animations.css";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import teamPhoto from "./assets/team-meeting.jpg"; // apna actual image path/naam yahan daalein
@@ -47,31 +49,6 @@ import {
   CheckCircle2,
   Circle,
 } from "lucide-react";
-
-/* ---------------------------------------------------------------------
-   useReveal — small IntersectionObserver hook used for "scroll into
-   view" section animations (fade + move, alternating direction).
---------------------------------------------------------------------- */
-function useReveal(options) {
-  const ref = useRef(null);
-  const [inView, setInView] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          observer.unobserve(el);
-        }
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -60px 0px", ...options }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-  return [ref, inView];
-}
 
 export default function ServicesPage() {
  const [theme, setTheme] = useState(() => localStorage.getItem("bc-theme") || "light");
@@ -335,6 +312,7 @@ export default function ServicesPage() {
     <div data-theme={theme} style={{ background: "var(--bc-base)", color: "var(--bc-text)" }} className="min-h-screen w-full">
       <style>{`
         [data-theme="light"] {
+        --bc-accent: var(--bc-cyan);
           --bc-base: #FAFAF9; --bc-panel: #ffffff; --bc-panel-2: #F5F5F4; --bc-line: #E7E5E4; --bc-line-soft: #F0EFED;
           --bc-text: #1C1917; --bc-muted: #78716C; --bc-cyan: #6366F1; --bc-amber: #C2410C;
           --bc-btn-primary-text: #ffffff;
@@ -343,6 +321,7 @@ export default function ServicesPage() {
           --bc-shadow-lg: 0 4px 6px rgba(28,25,23,0.03), 0 20px 40px -16px rgba(28,25,23,0.16);
         }
         [data-theme="dark"] {
+        --bc-accent: var(--bc-cyan);
           --bc-base: #17151F; --bc-panel: #201D2E; --bc-panel-2: #262238; --bc-line: #322C47; --bc-line-soft: #2A2539;
           --bc-text: #F5F5F4; --bc-muted: #A8A29E; --bc-cyan: #818CF8; --bc-amber: #FB923C;
           --bc-btn-primary-text: #1E1B4B;

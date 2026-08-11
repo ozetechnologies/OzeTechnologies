@@ -71,7 +71,11 @@ export default function Blogs() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showFeaturedModal, setShowFeaturedModal] = useState(false);
+  const [expandedFeatured, setExpandedFeatured] = useState(false);
+  const [cursorHover, setCursorHover] = useState(false);
+const cursorBRef = useRef(null);
+const cursorRingRef = useRef(null);
+const cursorGlowRef = useRef(null);
 
   // ---- scroll-reveal refs for each major section (alternating directions,
   // mirrors the pattern used on the Services page) ----
@@ -118,7 +122,60 @@ export default function Blogs() {
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+// custom cursor (desktop / fine-pointer only)
+useEffect(() => {
+  const badge = cursorBRef.current;
+  const ring = cursorRingRef.current;
+  if (!badge || !ring) return;
+  if (!window.matchMedia("(pointer: fine)").matches) return;
 
+  const moveCursor = (e) => {
+    badge.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    ring.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+  };
+  const handleOver = (e) => {
+    if (e.target.closest && e.target.closest("a, button, .bc-cursor-hover")) setCursorHover(true);
+  };
+  const handleOut = (e) => {
+    if (e.target.closest && e.target.closest("a, button, .bc-cursor-hover")) setCursorHover(false);
+  };
+  window.addEventListener("mousemove", moveCursor);
+  document.addEventListener("mouseover", handleOver);
+  document.addEventListener("mouseout", handleOut);
+  return () => {
+    window.removeEventListener("mousemove", moveCursor);
+    document.removeEventListener("mouseover", handleOver);
+    document.removeEventListener("mouseout", handleOut);
+  };
+}, []);
+
+// trailing glow blob
+useEffect(() => {
+  const glow = cursorGlowRef.current;
+  if (!glow) return;
+  if (!window.matchMedia("(pointer: fine)").matches) return;
+
+  const target = { x: window.innerWidth / 2, y: window.innerHeight / 3 };
+  const current = { ...target };
+  let raf;
+
+  const onMove = (e) => {
+    target.x = e.clientX;
+    target.y = e.clientY;
+  };
+  const tick = () => {
+    current.x += (target.x - current.x) * 0.07;
+    current.y += (target.y - current.y) * 0.07;
+    glow.style.transform = `translate(${current.x}px, ${current.y}px) translate(-50%, -50%)`;
+    raf = requestAnimationFrame(tick);
+  };
+  window.addEventListener("mousemove", onMove);
+  raf = requestAnimationFrame(tick);
+  return () => {
+    window.removeEventListener("mousemove", onMove);
+    cancelAnimationFrame(raf);
+  };
+}, []);
   const toggleTheme = () => {
     setTheme((t) => {
       const newTheme = t === "light" ? "dark" : "light";
@@ -221,7 +278,9 @@ export default function Blogs() {
         /* ---------- HERO IMAGE: slow float, ported from Services ---------- */
         .bc-float { animation: bc-float 9s ease-in-out infinite; }
         @keyframes bc-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
-
+.bc-featured-img-wrap:hover .bc-featured-img { transform: scale(1.06); }
+.bc-featured-img-wrap { transition: box-shadow 0.4s ease; }
+.bc-featured-img-wrap:hover { box-shadow: 0 24px 50px -16px rgba(99,102,241,0.4); }
         /* ---------- HERO SIDE-CARD BADGES: pop in on load ---------- */
         .bc-hero-photo-badge { opacity: 0; transform: scale(0.6); transition: transform 0.3s ease, box-shadow 0.3s ease; }
         .bc-hero-photo-badge:hover { transform: translateY(-4px) scale(1.04) !important; box-shadow: 0 16px 32px -10px rgba(99,102,241,0.35); }
@@ -245,7 +304,38 @@ export default function Blogs() {
         }
         .bc-back-to-top-visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
         .bc-back-to-top:hover { transform: translateY(-3px) scale(1.06); }
+.bc-cursor-glow {
+  position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none;
+  width: 380px; height: 380px; border-radius: 999px;
+  background: radial-gradient(circle, rgba(99,102,241,0.42) 0%, rgba(99,102,241,0.16) 40%, transparent 72%);
+  filter: blur(10px);
+  opacity: ${isDark ? 0.55 : 0.8};
+  will-change: transform;
+}
+@media (pointer: coarse) { .bc-cursor-glow { display: none; } }
 
+.bc-cursor-ring {
+  width: 34px; height: 34px; border-radius: 999px; border: 1.5px solid #6366F1; position: fixed; top: 0; left: 0; z-index: 9998;
+  pointer-events: none; opacity: 0.45; transition: transform 0.18s ease-out, width 0.25s ease, height 0.25s ease, opacity 0.25s ease, background 0.25s ease;
+}
+.bc-cursor-ring-hover { width: 58px; height: 58px; opacity: 0.9; background: rgba(99,102,241,0.12); }
+.bc-cursor-b { position: fixed; top: 0; left: 0; z-index: 9999; pointer-events: none; }
+.bc-cursor-b-inner {
+  display: flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 8px;
+  background: #6366F1; color: #ffffff;
+  font-weight: 700; font-size: 0.82rem; line-height: 1;
+  box-shadow: 0 6px 16px -6px rgba(99,102,241,0.65), 0 1px 2px rgba(0,0,0,0.15);
+  transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), border-radius 0.3s ease, width 0.3s ease, height 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+.bc-cursor-b-inner-hover {
+  width: 40px; height: 40px; border-radius: 999px;
+  transform: translate(-50%, -50%) rotate(-18deg) scale(1.15);
+  box-shadow: 0 10px 26px -8px rgba(99,102,241,0.7), 0 2px 4px rgba(0,0,0,0.2);
+}
+@media (pointer: coarse) { .bc-cursor-b, .bc-cursor-ring, .bc-scroll-progress { display: none; } }
+@media (pointer: fine) { body { cursor: none; } }
         /* ---------- ARTICLE CARD HOVER LIFT (ported from Services .bc-svc-card) ---------- */
         .bc-article-card { transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
         .bc-article-card:hover { transform: translateY(-10px); border-color: #6366F1 !important; box-shadow: 0 24px 50px -16px rgba(99,102,241,0.35); }
@@ -270,7 +360,11 @@ export default function Blogs() {
 
       {/* scroll progress bar */}
       <div className="bc-scroll-progress" style={{ width: `${scrollProgress}%` }} />
-
+<div ref={cursorGlowRef} className="bc-cursor-glow" aria-hidden="true" />
+<div ref={cursorRingRef} className={`bc-cursor-ring ${cursorHover ? "bc-cursor-ring-hover" : ""}`} />
+<div ref={cursorBRef} className="bc-cursor-b">
+  <span className={`bc-cursor-b-inner ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>T</span>
+</div>
       <div className={`bc-page-content ${!loading ? "bc-page-visible" : ""}`}>
 
         {/* ==========================================
@@ -498,39 +592,32 @@ export default function Blogs() {
               <p className="text-base leading-relaxed mb-8 transition-colors duration-500" style={{ color: c.muted }}>
                 How businesses are leveraging next-gen cloud structures, robust automation patterns, and modular software designs to create deep operational impact and build lasting customer pipelines.
               </p>
-             <button
-                onClick={() => setShowFeaturedModal(true)}
-                className="inline-flex items-center gap-2 font-bold text-sm bg-[#6366F1] hover:bg-[#4F46E5] text-white px-6 py-3 rounded-xl transition-all duration-200 shadow-md hover:-translate-y-0.5 hover:scale-105 active:scale-95"
-              >
-                Read More <ArrowUpRight size={16} />
-              </button>
+             
 
-              {showFeaturedModal && (
-                <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-                  <div className="w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden" style={{ background: c.cardBg }}>
-                    <div className="w-full h-64 overflow-hidden">
-                      <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800" alt="Article" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="p-8">
-                      <h2 className="text-3xl font-bold mb-4" style={{ color: c.text }}>The Future of Digital Innovation</h2>
-                      <p className="text-base leading-relaxed mb-6" style={{ color: c.muted }}>How businesses are leveraging next-gen cloud structures, robust automation patterns, and modular software designs to create deep operational impact and build lasting customer pipelines.</p>
-                      <p className="text-base leading-relaxed mb-8" style={{ color: c.muted }}>This comprehensive guide explores how industry leaders reshape technical foundations for digital-first competitiveness.</p>
-                      <button onClick={() => setShowFeaturedModal(false)} className="w-full bg-[#6366F1] hover:bg-[#4F46E5] text-white py-3 rounded-xl font-bold transition-all hover:scale-105">Close</button>
-                    </div>
-                  </div>
-                </div>
-              )}
+             {expandedFeatured && (
+  <p className="text-base leading-relaxed mb-8 transition-colors duration-500" style={{ color: c.muted }}>
+    This comprehensive guide explores how industry leaders reshape technical foundations for digital-first competitiveness. Discover the strategies powering long-term growth and innovation.
+  </p>
+)}
+
+<button
+  onClick={() => setExpandedFeatured((prev) => !prev)}
+  className="inline-flex items-center gap-2 font-bold text-sm bg-[#6366F1] hover:bg-[#4F46E5] text-white px-6 py-3 rounded-xl transition-all duration-200 shadow-md hover:-translate-y-0.5 hover:scale-105 active:scale-95"
+>
+  {expandedFeatured ? "Read Less" : "Read More"}
+  <ArrowUpRight size={16} className={`transition-transform duration-300 ${expandedFeatured ? "rotate-90" : ""}`} />
+</button>
             </div>
 
-            <div className="flex-1 relative w-full">
+           <div className="flex-1 relative w-full bc-float">
               <div
-                className="w-full aspect-[16/10] rounded-2xl overflow-hidden p-0 shadow-lg border transition-colors duration-500"
+                className="w-full aspect-[16/10] rounded-2xl overflow-hidden p-0 shadow-lg border transition-colors duration-500 bc-featured-img-wrap"
                 style={{ background: c.cardBg, borderColor: c.cardBorder }}
               >
                 <img
                   src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800"
                   alt="Architecture Setup"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-500 bc-featured-img"
                 />
               </div>
               <div

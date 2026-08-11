@@ -289,7 +289,7 @@ export default function Portfolio() {
   const navItems = [
     { label: "Home", href: "/", isRoute: true },
     { label: "Services", href: "/services", isRoute: true },
-    { label: "Products", href: "/#products" },
+    { label: "Products", href: "/products", isRoute: true },
     { label: "Portfolio", href: "/portfolio", isRoute: true, active: true },
     {
       label: "About Us",

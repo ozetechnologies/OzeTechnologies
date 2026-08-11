@@ -193,19 +193,20 @@ export default function Products() {
   });
   const heroParallaxHandlers = makeParallaxHandlers(setHeroParallax, 8);
 
-  const navItems = [
-    { label: "Home", href: "/", isRoute: true },
-    { label: "Products", href: "/products", isRoute: true },
-    { label: "Services", href: "/services", isRoute: true },
-    {
-      label: "About Us",
-      dropdown: [
-        { label: "Our History", desc: "How Trikonix got started", href: "/our-history" },
-        { label: "Blogs", desc: "Insights from our studio", href: "/blogs" },
-      ],
-    },
-    { label: "Contact", href: "/contact", isRoute: true },
-  ];
+ const navItems = [
+  { label: "Home", href: "/", isRoute: true },
+  { label: "Services", href: "/services", isRoute: true },
+  { label: "Products", href: "/products", isRoute: true },
+  { label: "Portfolio", href: "/portfolio", isRoute: true },
+  {
+    label: "About Us",
+    dropdown: [
+      { label: "Our History", desc: "How Trikonix got started", href: "/our-history" },
+      { label: "Blogs", desc: "Insights from our studio", href: "/blogs" },
+    ],
+  },
+  { label: "Contact", href: "/contact", isRoute: true },
+];
 
   const categories = ["All", "IT Development", "Specialized Solutions", "Web Development", "Android Development", "Data Analytics"];
 
