@@ -160,6 +160,9 @@ export default function LandingPage() {
 
   // Cursor glow: soft drifting "smoke" glow that eases toward the mouse position
   const cursorGlowRef = useRef(null);
+  const [cursorHover, setCursorHover] = useState(false);
+const cursorBRef = useRef(null);
+const cursorRingRef = useRef(null);
   useEffect(() => {
     const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -204,7 +207,31 @@ export default function LandingPage() {
       if (raf) cancelAnimationFrame(raf);
     };
   }, []);
+useEffect(() => {
+  const badge = cursorBRef.current;
+  const ring = cursorRingRef.current;
+  if (!badge || !ring) return;
+  if (!window.matchMedia("(pointer: fine)").matches) return;
 
+  const moveCursor = (e) => {
+    badge.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    ring.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+  };
+  const handleOver = (e) => {
+    if (e.target.closest && e.target.closest("a, button, .bc-cursor-hover")) setCursorHover(true);
+  };
+  const handleOut = (e) => {
+    if (e.target.closest && e.target.closest("a, button, .bc-cursor-hover")) setCursorHover(false);
+  };
+  window.addEventListener("mousemove", moveCursor);
+  document.addEventListener("mouseover", handleOver);
+  document.addEventListener("mouseout", handleOut);
+  return () => {
+    window.removeEventListener("mousemove", moveCursor);
+    document.removeEventListener("mouseover", handleOver);
+    document.removeEventListener("mouseout", handleOut);
+  };
+}, []);
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1400);
     return () => clearTimeout(timer);
@@ -397,6 +424,28 @@ const productTabs = [
         .bc-cursor-glow-warm { background: radial-gradient(circle at 62% 55%, color-mix(in srgb, var(--bc-amber) 40%, transparent) 0%, transparent 55%); }
         .bc-cursor-glow-soft { background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--bc-cyan) 20%, transparent) 0%, transparent 70%); filter: blur(90px); }
         @media (hover: none), (pointer: coarse) { .bc-cursor-glow { display: none; } }
+        .bc-cursor-ring {
+  width: 34px; height: 34px; border-radius: 999px; border: 1.5px solid var(--bc-cyan); position: fixed; top: 0; left: 0; z-index: 9998;
+  pointer-events: none; opacity: 0.45; transition: transform 0.18s ease-out, width 0.25s ease, height 0.25s ease, opacity 0.25s ease, background 0.25s ease;
+}
+.bc-cursor-ring-hover { width: 58px; height: 58px; opacity: 0.9; background: color-mix(in srgb, var(--bc-cyan) 12%, transparent); }
+.bc-cursor-b { position: fixed; top: 0; left: 0; z-index: 9999; pointer-events: none; }
+.bc-cursor-b-inner {
+  display: flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 8px;
+  background: var(--bc-cyan); color: #ffffff;
+  font-weight: 700; font-size: 0.82rem; line-height: 1;
+  box-shadow: 0 6px 16px -6px color-mix(in srgb, var(--bc-cyan) 65%, transparent), 0 1px 2px rgba(0,0,0,0.15);
+  transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), border-radius 0.3s ease, width 0.3s ease, height 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+.bc-cursor-b-inner-hover {
+  width: 40px; height: 40px; border-radius: 999px;
+  transform: translate(-50%, -50%) rotate(-18deg) scale(1.15);
+  box-shadow: 0 10px 26px -8px color-mix(in srgb, var(--bc-cyan) 70%, transparent), 0 2px 4px rgba(0,0,0,0.2);
+}
+@media (pointer: coarse) { .bc-cursor-b, .bc-cursor-ring { display: none; } }
+@media (pointer: fine) { body { cursor: none; } }
         @keyframes bc-fadeInUp { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
         @keyframes bc-slideInLeft { 0% { opacity: 0; transform: translateX(-40px); } 100% { opacity: 1; transform: translateX(0); } }
         @keyframes bc-slideInRight { 0% { opacity: 0; transform: translateX(40px); } 100% { opacity: 1; transform: translateX(0); } }
@@ -603,7 +652,10 @@ const productTabs = [
         <div className="bc-cursor-glow-layer bc-cursor-glow-core" />
         <div className="bc-cursor-glow-layer bc-cursor-glow-warm" />
       </div>
-
+      <div ref={cursorRingRef} className={`bc-cursor-ring ${cursorHover ? "bc-cursor-ring-hover" : ""}`} />
+<div ref={cursorBRef} className="bc-cursor-b">
+  <span className={`bc-cursor-b-inner bc-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>T</span>
+</div>
       <button
         className={`bc-back-to-top ${showBackToTop ? "bc-back-to-top-visible" : ""}`}
         onClick={scrollToTop}
