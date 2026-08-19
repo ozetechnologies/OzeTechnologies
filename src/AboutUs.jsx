@@ -1,3 +1,4 @@
+ import Navbar from "./Navbar";
 import teamMeetingImg from "./assets/team-meeting.jpg";
 import loadingGif from "./assets/loading.gif";
 import processFlowImg from "./assets/process-flow.png";
@@ -265,7 +266,7 @@ const navItems = [
   {
     label: "About Us",
     dropdown: [
-      { label: "Our History", desc: "How Trikonix got started", href: "/our-history" },
+      { label: "Our History", desc: "How OZE Technologies got started", href: "/our-history" },
       { label: "Blogs", desc: "Insights from our studio", href: "/blogs" },
     ],
   },
@@ -299,7 +300,7 @@ const navItems = [
   ];
 
   const contactCards = [
-    { Icon: Mail, label: "Email Us", value: "hello@Trikonix.com" },
+    { Icon: Mail, label: "Email Us", value: "hello@ozetechnologies.com" },
     { Icon: Phone, label: "Call Us", value: "+92 300 1234567" },
     { Icon: MapPin, label: "Visit Us", value: "Islamabad, Pakistan" },
   ];
@@ -612,7 +613,7 @@ const navItems = [
           <div className="bc-loader-mark">
             <img src={loadingGif} alt="Loading" />
           </div>
-          <span className="bc-loader-label bc-mono">About Trikonix</span>
+          <span className="bc-loader-label bc-mono">About OZE Technologies</span>
         </div>
       </div>
 
@@ -649,100 +650,7 @@ const navItems = [
       )}
 
       <div className={`bc-page-content ${!loading ? "bc-page-visible" : ""}`}>
-        {/* Navigation */}
-        <header className="bc-navbar-wrap">
-          <div className="bc-navbar-row">
-            <div className={`bc-navbar-pill ${isScrolled ? "bc-navbar-scrolled" : ""}`}>
-              <Link to="/" className="bc-navbar-brand">
-                <span className="bc-navbar-logo bc-display">T</span>
-                <span className="bc-navbar-name bc-display">Trikonix</span>
-              </Link>
-              <nav className="bc-navbar-links">
-                {navItems.map((item, idx) =>
-                  item.dropdown ? (
-                    <div key={idx} className="bc-nav-dropdown-wrap">
-                      <button
-                        className="bc-navbar-link"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setOpenDropdown(openDropdown === idx ? null : idx);
-                        }}
-                      >
-                        {item.label}
-                        <ChevronDown size={14} className={`bc-nav-dropdown-chevron ${openDropdown === idx ? "bc-nav-dropdown-chevron-open" : ""}`} />
-                      </button>
-                      <div className={`bc-nav-dropdown-panel ${openDropdown === idx ? "bc-nav-dropdown-open" : ""}`}>
-                        {item.dropdown.map((sub, sIdx) => (
-                          <a key={sIdx} href={sub.href} className="bc-nav-dropdown-item">
-                            <span className="bc-nav-dropdown-item-label">{sub.label}</span>
-                            {sub.desc && <span className="bc-nav-dropdown-item-desc">{sub.desc}</span>}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  ) : item.isRoute ? (
-                    <Link key={idx} to={item.href} className={`bc-navbar-link ${item.href === "/about" ? "bc-navbar-link-active" : ""}`}>
-                      {item.label}
-                    </Link>
-                  ) : (
-                    <a key={idx} href={item.href} className="bc-navbar-link">
-                      {item.label}
-                    </a>
-                  )
-                )}
-              </nav>
-              <div className="bc-navbar-right">
-                <button onClick={toggleTheme} className="bc-navbar-theme-btn" aria-label="Toggle Theme">
-                  {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
-                </button>
-                <a href="/#contact" className="bc-navbar-cta">
-                  Get Started
-                </a>
-                <button className="bc-navbar-hamburger" onClick={() => setMobileMenuOpen(true)} aria-label="Open Menu">
-                  <Menu size={18} />
-                </button>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Mobile Nav Overlay */}
-        <div className={`bc-mobile-overlay ${mobileMenuOpen ? "bc-mobile-open" : ""}`} onClick={() => setMobileMenuOpen(false)} />
-        <div className={`bc-mobile-panel ${mobileMenuOpen ? "bc-mobile-open" : ""}`}>
-          <div className="bc-mobile-panel-header">
-            <span className="bc-navbar-name bc-display">Trikonix</span>
-            <button className="bc-mobile-close" onClick={() => setMobileMenuOpen(false)}>
-              <X size={18} />
-            </button>
-          </div>
-          <div className="flex flex-col gap-1">
-            {navItems.map((item, idx) => (
-              <div key={idx}>
-                {item.isRoute ? (
-                  <Link to={item.href} className="bc-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-                    {item.label}
-                  </Link>
-                ) : (
-                  <a href={item.href} className="bc-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-                    {item.label}
-                  </a>
-                )}
-                {item.dropdown && (
-                  <div className="pl-2">
-                    {item.dropdown.map((sub, sIdx) => (
-                      <a key={sIdx} href={sub.href} className="bc-mobile-sublink" onClick={() => setMobileMenuOpen(false)}>
-                        {sub.label}
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-          <a href="/#contact" className="bc-mobile-cta" onClick={() => setMobileMenuOpen(false)}>
-            Get Started
-          </a>
-        </div>
+<Navbar theme={theme} toggleTheme={toggleTheme} active="about" />
 
         {/* SECTION 1: HERO / INTRO */}
         <section className="py-16 md:py-24 px-6 max-w-7xl mx-auto">
@@ -775,7 +683,7 @@ const navItems = [
               <Reveal delay={120} direction="up" className="bc-hero-image-wrapper bc-float">
                 <img
                  src={teamMeetingImg}
-                  alt="Trikonix Office Team Work"
+                  alt="OZE Technologies Office Team Work"
                   className="bc-hero-image"
                 />
               </Reveal>
@@ -792,7 +700,7 @@ const navItems = [
                 Empowering Teams Through Thoughtful Engineering
               </Reveal>
               <Reveal as="p" delay={140} direction="left" className="text-sm md:text-base opacity-80 leading-relaxed">
-                Trikonix is a product engineering studio focused on building intelligent software experiences for businesses and growing teams. We combine automation, workflow design, and user-centered interfaces to solve real operational challenges.
+                OZE Technologies is a product engineering studio focused on building intelligent software experiences for businesses and growing teams. We combine automation, workflow design, and user-centered interfaces to solve real operational challenges.
               </Reveal>
               <Reveal as="p" delay={200} direction="left" className="text-sm md:text-base opacity-80 leading-relaxed">
                 We believe technology should feel simple, reliable, and purposeful — instead of adding complexity, we build systems that quietly remove friction from everyday work.
@@ -881,7 +789,7 @@ const navItems = [
         <section className="py-16 px-6 max-w-7xl mx-auto">
           <div className="flex flex-col items-center text-center gap-3 mb-14 max-w-xl mx-auto">
             <Reveal as="span" direction="up" className="bc-eyebrow">Meet The Team</Reveal>
-            <Reveal as="h2" delay={70} direction="up" className="bc-display text-3xl md:text-4xl font-bold">The People Behind Trikonix</Reveal>
+            <Reveal as="h2" delay={70} direction="up" className="bc-display text-3xl md:text-4xl font-bold">The People Behind OZE Technologies</Reveal>
             <Reveal as="p" delay={140} direction="up" className="text-sm opacity-75 leading-relaxed">
               A small, senior team that stays hands-on with every project from first sprint to long-term support.
             </Reveal>

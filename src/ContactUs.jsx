@@ -55,7 +55,7 @@ function useReveal() {
 // 2. MAIN COMPONENT FUNCTION
 // ==========================================
 export default function ContactUs() {
-  const [darkMode, setDarkMode] = useState(() => (localStorage.getItem("bc-theme") || "light") === "dark");
+  const [darkMode, setDarkMode] = useState(() => (localStorage.getItem("bc-theme") || "dark") === "dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1200
@@ -195,7 +195,7 @@ useEffect(() => {
 
     const { fullName, emailAddress, phoneNumber, country, subject, message } = formData;
 
-    const recipient = "hello@Trikonix.com";
+    const recipient = "hello@ozetechnologies.com";
     const mailSubject = subject && subject.trim() !== "" ? subject : "New Consultancy Inquiry";
     const mailBody =
       `Name: ${fullName}\n` +
@@ -348,7 +348,7 @@ useEffect(() => {
       </div>
       <div ref={cursorRingRef} className={`bc-cursor-ring ${cursorHover ? "bc-cursor-ring-hover" : ""}`} />
 <div ref={cursorBRef} className="bc-cursor-b">
-  <span className={`bc-cursor-b-inner ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`} style={{ fontFamily: "'Space Grotesk', sans-serif" }}>T</span>
+  <span className={`bc-cursor-b-inner ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`} style={{ fontFamily: "'Space Grotesk', sans-serif" }}>O</span>
 </div>
       <button
         className={`bc-back-to-top ${showBackToTop ? "bc-back-to-top-visible" : ""}`}
@@ -500,7 +500,7 @@ useEffect(() => {
                 <Mail size={22} className="bc-icon-hover" style={{ color: "#6366F1", marginTop: "4px", flexShrink: 0 }} />
                 <div>
                   <span style={{ fontWeight: "600", display: "block", color: "#ffffff", fontSize: "16px", marginBottom: "4px" }}>Email Us</span>
-                  <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>hello@Trikonix.com</span>
+                  <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>hello@ozetechnologies.com</span>
                 </div>
               </div>
 

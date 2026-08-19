@@ -1,5 +1,7 @@
+ import Navbar from "./Navbar";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import ozeIcon from "./assets/oze-icon-logo-themed.png";
 import {
   Code2,
   Smartphone,
@@ -103,7 +105,7 @@ function CountUpValue({ value, trigger, duration }) {
 export default function LandingPage() {
   const [form, setForm] = useState({ name: "", email: "", brief: "" });
   const [sent, setSent] = useState(false);
- const [theme, setTheme] = useState(() => localStorage.getItem("bc-theme") || "light");// "light" | "dark"
+ const [theme, setTheme] = useState(() => localStorage.getItem("bc-theme") || "dark");// "light" | "dark"
   const [loading, setLoading] = useState(true);
   const [activeProductTab, setActiveProductTab] = useState(0);
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -257,13 +259,13 @@ useEffect(() => {
   };
 
 const toggleTheme = () => {
-  setTheme((t) => {
-    const newTheme = t === "light" ? "dark" : "light";
-    localStorage.setItem("bc-theme", newTheme);
-    window.dispatchEvent(new Event("bc-theme-change"));
-    return newTheme;
-  });
+  setTheme((t) => (t === "light" ? "dark" : "light"));
 };
+
+useEffect(() => {
+  localStorage.setItem("bc-theme", theme);
+  window.dispatchEvent(new Event("bc-theme-change"));
+}, [theme]);
 
   const navItems = [
     { label: "Home", href: "/", isRoute: true },
@@ -273,7 +275,7 @@ const toggleTheme = () => {
     {
       label: "About Us",
       dropdown: [
-       { label: "Our History", desc: "How Trikonix got started", href: "/our-history", isRoute: true },
+       { label: "Our History", desc: "How OZE Technologies got started", href: "/our-history", isRoute: true },
         { label: "Blogs", desc: "Insights from our studio", href: "/blogs" },
       ],
     },
@@ -403,6 +405,17 @@ const productTabs = [
   .bc-loader-center { transform: translate(-150px, -200px); }
 }
         .bc-loader-diamonds { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; width: 46px; height: 46px; animation: bc-diamond-spin 1.6s linear infinite; }
+        .bc-loader-mark { position: relative; width: 76px; height: 76px; display: flex; align-items: center; justify-content: center; }
+.bc-loader-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent, var(--bc-cyan), transparent 65%);
+  animation: bc-ring-spin 1.1s linear infinite;
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+}
+@keyframes bc-ring-spin { to { transform: rotate(360deg); } }
+.bc-loader-pulse-icon { width: 42px; height: 42px; position: relative; z-index: 1; animation: bc-icon-pulse 1.6s ease-in-out infinite; }
+@keyframes bc-icon-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.85); opacity: 0.7; } }
         .bc-loader-diamond { width: 100%; height: 100%; border-radius: 4px; }
         .bc-loader-diamond-dark { background: #1E1B4B; }
         .bc-loader-diamond-accent { background: var(--bc-cyan); }
@@ -632,15 +645,11 @@ const productTabs = [
       <div className={`bc-loader-screen ${!loading ? "bc-loader-hidden" : ""}`} aria-hidden={!loading}>
         <div className="bc-loader-center">
           <div className="bc-loader-mark">
-            <div className="bc-loader-diamonds">
-              <div className="bc-loader-diamond bc-loader-diamond-dark" />
-              <div className="bc-loader-diamond bc-loader-diamond-accent" />
-              <div className="bc-loader-diamond bc-loader-diamond-accent" />
-              <div className="bc-loader-diamond bc-loader-diamond-dark" />
-            </div>
+         <div className="bc-loader-ring" />
+<img src={ozeIcon} alt="Loading" className="bc-loader-pulse-icon" />
           </div>
           <div className="bc-loader-word">
-            <span className="bc-display font-bold text-lg" style={{ color: "var(--bc-text)" }}>Trikonix</span>
+            <span className="bc-display font-bold text-lg" style={{ color: "var(--bc-text)" }}>OZE Technologies</span>
           </div>
           <div className="bc-loader-label bc-mono">Loading</div>
         </div>
@@ -654,7 +663,7 @@ const productTabs = [
       </div>
       <div ref={cursorRingRef} className={`bc-cursor-ring ${cursorHover ? "bc-cursor-ring-hover" : ""}`} />
 <div ref={cursorBRef} className="bc-cursor-b">
-  <span className={`bc-cursor-b-inner bc-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>T</span>
+  <span className={`bc-cursor-b-inner bc-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>O</span>
 </div>
       <button
         className={`bc-back-to-top ${showBackToTop ? "bc-back-to-top-visible" : ""}`}
@@ -665,166 +674,7 @@ const productTabs = [
       </button>
 
       <div className={`bc-page-content ${!loading ? "bc-page-visible" : ""}`}>
-      <div className="bc-navbar-wrap sticky top-0 z-50">
-        <div className="bc-navbar-row">
-          <div className="bc-navbar-pill">
-            <Link to="/" className="bc-navbar-brand">
-              <span className="bc-navbar-logo bc-display">T</span>
-              <span className="bc-navbar-name bc-display">Trikonix</span>
-            </Link>
-
-            <nav className="bc-navbar-links bc-body">
-              {navItems.map((item, i) =>
-                item.dropdown ? (
-                  <div
-                    key={i}
-                    className="bc-nav-dropdown-wrap"
-                    onMouseEnter={() => setOpenDropdown(item.label)}
-                    onMouseLeave={() => setOpenDropdown(null)}
-                  >
-                    <button
-                      type="button"
-                      className="bc-navbar-link bc-nav-dropdown-trigger"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setOpenDropdown((cur) => (cur === item.label ? null : item.label));
-                      }}
-                      aria-expanded={openDropdown === item.label}
-                    >
-                      {item.label}
-                      <ChevronDown
-                        size={13}
-                        className={`bc-nav-dropdown-chevron ${openDropdown === item.label ? "bc-nav-dropdown-chevron-open" : ""}`}
-                      />
-                    </button>
-                    <div className={`bc-nav-dropdown-panel ${openDropdown === item.label ? "bc-nav-dropdown-open" : ""}`}>
-                      {item.dropdown.map((sub, j) =>
-                        sub.href.startsWith("/") ? (
-                          <Link
-                            key={j}
-                            to={sub.href}
-                            className="bc-nav-dropdown-item"
-                            onClick={() => setOpenDropdown(null)}
-                          >
-                            <span className="bc-nav-dropdown-item-label">{sub.label}</span>
-                            {sub.desc && <span className="bc-nav-dropdown-item-desc">{sub.desc}</span>}
-                          </Link>
-                        ) : (
-                          <a
-                            key={j}
-                            href={sub.href}
-                            className="bc-nav-dropdown-item"
-                            onClick={() => setOpenDropdown(null)}
-                          >
-                            <span className="bc-nav-dropdown-item-label">{sub.label}</span>
-                            {sub.desc && <span className="bc-nav-dropdown-item-desc">{sub.desc}</span>}
-                          </a>
-                        )
-                      )}
-                    </div>
-                  </div>
-                ) : item.isRoute ? (
-                  <Link key={i} to={item.href} className="bc-navbar-link">
-                    {item.label}
-                  </Link>
-                ) : (
-                  <a key={i} href={item.href} className="bc-navbar-link">
-                    {item.label}
-                  </a>
-                )
-              )}
-            </nav>
-
-            <div className="bc-navbar-right">
-              <button
-                onClick={toggleTheme}
-                className="bc-navbar-theme-btn"
-                aria-label="Toggle dark/light theme"
-                title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
-              >
-                {theme === "light" ? <Moon size={15} /> : <Sun size={15} />}
-              </button>
-              <button
-                className="bc-navbar-hamburger"
-                aria-label="Open menu"
-                onClick={() => setMobileMenuOpen(true)}
-              >
-                <Menu size={17} />
-              </button>
-            </div>
-          </div>
-
-          
-        </div>
-      </div>
-
-      <div
-        className={`bc-mobile-overlay ${mobileMenuOpen ? "bc-mobile-open" : ""}`}
-        onClick={() => setMobileMenuOpen(false)}
-      />
-      <div className={`bc-mobile-panel ${mobileMenuOpen ? "bc-mobile-open" : ""}`}>
-        <div className="bc-mobile-panel-header">
-          <span className="bc-navbar-name bc-display">Trikonix</span>
-          <button
-            className="bc-mobile-close"
-            aria-label="Close menu"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            <X size={17} />
-          </button>
-        </div>
-        <div>
-          {navItems.map((item, i) => (
-            <div key={i}>
-              {item.isRoute ? (
-                <Link
-                  to={item.href}
-                  className="bc-mobile-link"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ) : item.href ? (
-                <a
-                  href={item.href}
-                  className="bc-mobile-link"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.label}
-                </a>
-              ) : (
-                <span className="bc-mobile-link" style={{ opacity: 0.6, cursor: "default" }}>
-                  {item.label}
-                </span>
-              )}
-              {item.dropdown &&
-                item.dropdown.map((sub, j) =>
-                  sub.href.startsWith("/") ? (
-                    <Link
-                      key={j}
-                      to={sub.href}
-                      className="bc-mobile-sublink"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {sub.label}
-                    </Link>
-                  ) : (
-                    <a
-                      key={j}
-                      href={sub.href}
-                      className="bc-mobile-sublink"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {sub.label}
-                    </a>
-                  )
-                )}
-            </div>
-          ))}
-        </div>
-       
-      </div>
-
+     <Navbar theme={theme} toggleTheme={toggleTheme} active="home" />
       <section id="home" className="bc-grid-bg relative overflow-hidden">
         <div className="bc-hero-decor-dots" />
         <svg className="bc-hero-wave" viewBox="0 0 300 120" fill="none">
@@ -845,7 +695,7 @@ const productTabs = [
               className={`bc-body text-base md:text-lg mb-8 bc-reveal ${!loading ? "bc-in-view" : ""}`}
               style={{ color: "var(--bc-muted)", animationDelay: "0.3s" }}
             >
-              Trikonix partners with growing businesses to build custom software,
+              OZE Technologies partners with growing businesses to build custom software,
               web platforms, and mobile apps that stay reliable long after launch.
             </p>
             <div className={`flex flex-wrap gap-4 bc-reveal ${!loading ? "bc-in-view" : ""}`} style={{ animationDelay: "0.4s" }}>
@@ -1093,13 +943,7 @@ const productTabs = [
         </div>
         <h3 className="bc-display font-bold text-lg mb-2">{s.title}</h3>
         <p className="bc-body text-sm mb-4" style={{ color: "var(--bc-muted)" }}>{s.desc}</p>
-        <Link
-          to="/contact"
-          className="bc-body font-semibold text-sm flex items-center gap-1.5"
-          style={{ color: ["#6366F1","#38bdf8","#8b7ff0","#f2795a","#34d399","#f2a93b"][i % 6] }}
-        >
-          Discuss this service <ArrowRight size={14} />
-        </Link>
+        
       </div>
     ))}
   </div>

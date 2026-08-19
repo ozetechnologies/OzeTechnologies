@@ -4,6 +4,8 @@ import {
   Calendar, Clock, ArrowUpRight, Mail, Sparkles, LayoutGrid, CheckCircle,
   Code2, Layers, Smartphone, Menu, X, Sun, Moon, ChevronDown, BookOpen, TrendingUp, Users
 } from "lucide-react";
+import Navbar from "./Navbar";
+import ozeIcon from "./assets/oze-icon-logo-themed.png";
 
 /* ---------------------------------------------------------------------
    useReveal — IntersectionObserver hook for scroll-into-view section
@@ -67,7 +69,7 @@ const CATEGORIES = [
 ];
 
 export default function Blogs() {
-  const [theme, setTheme] = useState(() => localStorage.getItem("bc-theme") || "light");
+  const [theme, setTheme] = useState(() => localStorage.getItem("bc-theme") || "dark");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -239,7 +241,7 @@ useEffect(() => {
     {
       label: "About Us",
       dropdown: [
-        { label: "Our History", desc: "How Trikonix got started", href: "/our-history", isRoute: true },
+        { label: "Our History", desc: "How OZE Technologies got started", href: "/our-history", isRoute: true },
         { label: "Blogs", desc: "Insights from our studio", href: "/blogs", isRoute: true },
       ],
     },
@@ -255,13 +257,18 @@ useEffect(() => {
         .bc-loader-screen { position: fixed; inset: 0; z-index: 999; overflow: hidden; background: ${c.pageBg}; transition: opacity 0.5s ease, visibility 0.5s ease; }
         .bc-loader-screen.bc-loader-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
         .bc-loader-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; width: max-content; }
-        .bc-loader-diamonds { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; width: 46px; height: 46px; animation: bc-diamond-spin 1.6s linear infinite; }
-        .bc-loader-diamond { width: 100%; height: 100%; border-radius: 4px; }
-        .bc-loader-diamond-dark { background: #1E1B4B; }
-        .bc-loader-diamond-accent { background: #6366F1; }
-        @keyframes bc-diamond-spin { from { transform: rotate(45deg); } to { transform: rotate(405deg); } }
-        .bc-loader-label { font-size: 0.68rem; letter-spacing: 0.32em; text-transform: uppercase; color: ${c.muted}; }
-        @media (prefers-reduced-motion: reduce) { .bc-loader-diamonds { animation: none !important; } }
+        .bc-loader-mark { position: relative; width: 76px; height: 76px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+.bc-loader-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent, var(--bc-cyan, #6366F1), transparent 65%);
+  animation: bc-ring-spin 1.1s linear infinite;
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+}
+@keyframes bc-ring-spin { to { transform: rotate(360deg); } }
+.bc-loader-pulse-icon { width: 42px; height: 42px; position: relative; z-index: 1; animation: bc-icon-pulse 1.6s ease-in-out infinite; }
+@keyframes bc-icon-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.85); opacity: 0.7; } }
+.bc-loader-label { font-size: 0.68rem; letter-spacing: 0.32em; text-transform: uppercase; }
 
         /* ---------- PAGE-LOAD REVEAL (page content fade-in once loader clears) ---------- */
         .bc-page-content { opacity: 0; transform: translateY(6px); transition: opacity 0.6s ease, transform 0.6s ease; }
@@ -347,13 +354,11 @@ useEffect(() => {
 
       <div className={`bc-loader-screen ${!loading ? "bc-loader-hidden" : ""}`} aria-hidden={!loading}>
         <div className="bc-loader-center">
-          <div className="bc-loader-diamonds">
-            <div className="bc-loader-diamond bc-loader-diamond-dark" />
-            <div className="bc-loader-diamond bc-loader-diamond-accent" />
-            <div className="bc-loader-diamond bc-loader-diamond-accent" />
-            <div className="bc-loader-diamond bc-loader-diamond-dark" />
-          </div>
-          <span className="font-bold text-lg" style={{ color: c.text }}>Trikonix</span>
+         <div className="bc-loader-mark">
+  <div className="bc-loader-ring" />
+  <img src={ozeIcon} alt="Loading" className="bc-loader-pulse-icon" />
+</div>
+          <span className="font-bold text-lg" style={{ color: c.text }}>OZE Technologies</span>
           <div className="bc-loader-label">Loading</div>
         </div>
       </div>
@@ -363,118 +368,17 @@ useEffect(() => {
 <div ref={cursorGlowRef} className="bc-cursor-glow" aria-hidden="true" />
 <div ref={cursorRingRef} className={`bc-cursor-ring ${cursorHover ? "bc-cursor-ring-hover" : ""}`} />
 <div ref={cursorBRef} className="bc-cursor-b">
-  <span className={`bc-cursor-b-inner ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>T</span>
+  <span className={`bc-cursor-b-inner ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>O</span>
 </div>
       <div className={`bc-page-content ${!loading ? "bc-page-visible" : ""}`}>
 
         {/* ==========================================
             PILL NAVBAR
            ========================================== */}
-        <header className="w-full sticky top-0 z-50 px-4 md:px-8 pt-4">
-          <div
-            className="max-w-6xl mx-auto flex items-center justify-between px-4 md:px-6 py-3 rounded-full shadow-xl transition-all duration-500 ease-in-out"
-            style={{ background: c.navBg, color: "#ffffff", border: c.navBorder }}
-          >
-            <Link to="/" className="flex items-center gap-2 group">
-              <span className="w-8 h-8 rounded-full bg-[#6366F1] text-white flex items-center justify-center font-bold text-base shadow-sm">
-                T
-              </span>
-              <span className="font-bold tracking-wide text-lg" style={{ color: "#ffffff" }}>
-                Trikonix
-              </span>
-            </Link>
-
-            <nav className="hidden md:flex items-center gap-6">
-              {navItems.map((item, i) =>
-                item.dropdown ? (
-                  <div
-                    key={i}
-                    className="relative cursor-pointer py-1"
-                    onMouseEnter={() => setOpenDropdown(item.label)}
-                    onMouseLeave={() => setOpenDropdown(null)}
-                  >
-                    <button
-                      type="button"
-                      className={`text-[14px] font-medium ${c.navText} ${c.navTextHover} flex items-center gap-1 transition-colors duration-300`}
-                    >
-                      {item.label} <ChevronDown size={14} className="opacity-70" />
-                    </button>
-
-                    {openDropdown === item.label && (
-                      <div
-                        className="absolute top-full left-0 mt-2 w-48 rounded-xl p-2 shadow-2xl flex flex-col gap-1 z-50 transition-all duration-500"
-                        style={{ background: c.dropdownBg, border: isDark ? "1px solid rgba(99, 102, 241, 0.4)" : "1px solid #332D55" }}
-                      >
-                        {item.dropdown.map((sub, si) => (
-                          <a
-                            key={si}
-                            href={sub.href}
-                            className={`px-3 py-2 text-xs ${c.dropdownText} ${c.navTextHover} rounded-lg ${c.dropdownHover} transition-colors duration-300 block text-left`}
-                          >
-                            {sub.label}
-                          </a>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <Link
-                    key={i}
-                    to={item.href}
-                    className={`text-[14px] font-medium ${c.navText} ${c.navTextHover} transition-colors duration-300`}
-                  >
-                    {item.label}
-                  </Link>
-                )
-              )}
-            </nav>
-
-            <div className="flex items-center gap-3">
-              <button
-                onClick={toggleTheme}
-                className={`w-9 h-9 rounded-full border ${c.toggleBtnBorder} flex items-center justify-center hover:opacity-80 transition-all duration-300 text-[#6366F1]`}
-                style={{ background: c.toggleBtnBg }}
-                title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-              >
-                <span className="transition-transform duration-500 ease-in-out" style={{ transform: isDark ? "rotate(0deg)" : "rotate(180deg)" }}>
-                  {isDark ? <Sun size={16} /> : <Moon size={16} />}
-                </span>
-              </button>
-
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className={`md:hidden p-2 ${c.navText} ${c.navTextHover} transition-colors duration-300`}
-              >
-                {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
-            </div>
-          </div>
-        </header>
+<Navbar theme={theme} toggleTheme={toggleTheme} active="blogs" />
 
         {/* Mobile Drawer */}
-        {mobileMenuOpen && (
-          <div
-            className="fixed inset-0 z-50 p-6 flex flex-col gap-4 w-64 right-0 top-0 bottom-0 transition-all duration-500"
-            style={{ background: c.navBg, color: "#ffffff", borderLeft: c.navBorder }}
-          >
-            <div className="flex items-center justify-between pb-4 border-b border-stone-800">
-              <span className="font-bold">Menu</span>
-              <button onClick={() => setMobileMenuOpen(false)}><X size={20} /></button>
-            </div>
-            <div className="flex flex-col gap-2 overflow-y-auto mt-2">
-              {navItems.map((item, i) => (
-                <Link
-                  key={i}
-                  to={item.isRoute ? item.href : "#"}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`text-sm py-2 ${c.navText} transition-colors duration-300`}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
+        
 
         {/* ==========================================
             1. DYNAMIC HERO SECTION

@@ -66,10 +66,10 @@ export default function Footer() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
   const [footerRef, footerInView] = useReveal();
-const [theme, setThemeState] = useState(() => localStorage.getItem("bc-theme") || "light");
+const [theme, setThemeState] = useState(() => localStorage.getItem("bc-theme") || "dark");
 
   useEffect(() => {
-    const syncTheme = () => setThemeState(localStorage.getItem("bc-theme") || "light");
+    const syncTheme = () => setThemeState(localStorage.getItem("bc-theme") || "dark");
     window.addEventListener("bc-theme-change", syncTheme);
     window.addEventListener("storage", syncTheme);
     return () => {
@@ -103,7 +103,7 @@ const [theme, setThemeState] = useState(() => localStorage.getItem("bc-theme") |
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Hexagon size={22} color="var(--bc-cyan)" fill="color-mix(in srgb, var(--bc-cyan) 18%, transparent)" />
-              <span className="pf-display font-bold text-lg">Trikonix</span>
+              <span className="pf-display font-bold text-lg">OZE Technologies</span>
             </div>
             <p className="pf-body text-sm mb-5" style={{ color: "var(--bc-muted)" }}>
               We build clean, user-focused digital experiences that help
@@ -134,7 +134,7 @@ const [theme, setThemeState] = useState(() => localStorage.getItem("bc-theme") |
           <div>
             <div className="pf-footer-heading pf-body">Contact</div>
             <div className="pf-body text-sm flex items-center gap-2 mb-2.5" style={{ color: "var(--bc-muted)" }}>
-              <Mail size={14} color="var(--bc-cyan)" /> hello@Trikonix.dev
+              <Mail size={14} color="var(--bc-cyan)" /> hello@OZE Technologies.dev
             </div>
             <div className="pf-body text-sm flex items-center gap-2 mb-2.5" style={{ color: "var(--bc-muted)" }}>
               <Phone size={14} color="var(--bc-cyan)" /> +92 312 3456789
@@ -170,7 +170,7 @@ const [theme, setThemeState] = useState(() => localStorage.getItem("bc-theme") |
         </div>
 
         <div className="mt-10 pt-6 text-center pf-body text-sm" style={{ borderTop: "1px solid var(--bc-line)", color: "var(--bc-muted)" }}>
-          © 2026 Trikonix. All rights reserved.
+          © 2026 OZE Technologies. All rights reserved.
         </div>
       </div>
     </footer>

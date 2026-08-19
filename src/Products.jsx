@@ -54,7 +54,7 @@ function useReveal(options) {
 }
 
 export default function Products() {
- const [theme, setTheme] = useState(() => localStorage.getItem("bc-theme") || "light");
+ const [theme, setTheme] = useState(() => localStorage.getItem("bc-theme") || "dark");
   const [loading, setLoading] = useState(true);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -201,7 +201,7 @@ export default function Products() {
   {
     label: "About Us",
     dropdown: [
-      { label: "Our History", desc: "How Trikonix got started", href: "/our-history" },
+      { label: "Our History", desc: "How OZE Technologies got started", href: "/our-history" },
       { label: "Blogs", desc: "Insights from our studio", href: "/blogs" },
     ],
   },
@@ -483,7 +483,7 @@ export default function Products() {
       {/* custom cursor: trailing glow ring + rotating "B" badge */}
       <div ref={cursorRingRef} className={`bc-cursor-ring ${cursorHover ? "bc-cursor-ring-hover" : ""}`} />
       <div ref={cursorBRef} className="bc-cursor-b">
-        <span className={`bc-cursor-b-inner bc-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>T</span>
+        <span className={`bc-cursor-b-inner bc-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>O</span>
       </div>
 
       {/* LOADING SCREEN */}
@@ -495,7 +495,7 @@ export default function Products() {
             <span className="bc-loader-sq bc-loader-sq-b" />
             <span className="bc-loader-sq bc-loader-sq-a" />
           </div>
-          <div className="bc-loader-name bc-display">Trikonix</div>
+          <div className="bc-loader-name bc-display">OZE Technologies</div>
           <div className="bc-loader-label bc-mono">Loading</div>
         </div>
       </div>
@@ -506,8 +506,8 @@ export default function Products() {
           <div className="bc-navbar-row">
             <div className="bc-navbar-pill">
               <Link to="/" className="bc-navbar-brand">
-                <span className="bc-navbar-logo bc-display">T</span>
-                <span className="bc-navbar-name bc-display">Trikonix</span>
+                <span className="bc-navbar-logo bc-display">O</span>
+                <span className="bc-navbar-name bc-display">OZE Technologies</span>
               </Link>
 
               <nav className="bc-navbar-links bc-body">
@@ -567,7 +567,7 @@ export default function Products() {
         <div className={`bc-mobile-overlay ${mobileMenuOpen ? "bc-mobile-open" : ""}`} onClick={() => setMobileMenuOpen(false)} />
         <div className={`bc-mobile-panel ${mobileMenuOpen ? "bc-mobile-open" : ""}`}>
           <div className="bc-mobile-panel-header">
-            <span className="bc-navbar-name bc-display">Trikonix</span>
+            <span className="bc-navbar-name bc-display">OZE Technologies</span>
             <button className="bc-mobile-close" onClick={() => setMobileMenuOpen(false)}>
               <X size={17} />
             </button>
@@ -622,7 +622,7 @@ export default function Products() {
                 >
                   <img
                     src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1200&auto=format&fit=crop"
-                    alt="Trikonix engineering team at work"
+                    alt="OZE Technologies engineering team at work"
                   />
                 </div>
                 <div className="bc-hero-photo-badge bc-hero-photo-badge-left">

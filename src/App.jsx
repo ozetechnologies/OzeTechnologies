@@ -1,13 +1,17 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Footer from "./Footer";  // ✅ Sahi - Footer.jsx src root mein hai
 import LandingPage from "./LandingPage";
 import ServicesPage from "./ServicesPage";
 import AboutUs from "./AboutUs"; 
-import ContactUs from "./ContactUs"; // 1. Imported your new ContactUs page
-import Blogs from "./Blogs";         // ⚡ Imported your new Blogs portal
-import Portfolio from "./Portfolio"; // 3. Imported your new Portfolio page
-import OurHistory from "./OurHistory"; // 5. Imported your new Our History page
-import Products from "./Products"; // 6. Imported your new Products page
-import Footer from "./Footer"; // 7. Imported the shared Footer
+import ContactUs from "./ContactUs";
+import Blogs from "./Blogs";
+import Portfolio from "./Portfolio";
+import OurHistory from "./OurHistory";
+import Products from "./Products";
+import GoldLaboratorySoftware from "./GoldLaboratorySoftware";
+import BlinkoJewelryManagementSoftware from "./BlinkoJewelryManagementSoftware";
+import KarkhanaSoftware from "./KarkhanaSoftware";
+import StockHandlerPro from "./StockHandlerPro";
 
 export default function App() {
   return (
@@ -16,13 +20,17 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/about" element={<AboutUs />} />
-        <Route path="/contact" element={<ContactUs />} /> {/* 2. Added the route for /contact */}
-        <Route path="/blogs" element={<Blogs />} />       {/* ⚡ Added the route for /blogs */}
-        <Route path="/portfolio" element={<Portfolio />} /> {/* 4. Added the route for /portfolio */}
-        <Route path="/our-history" element={<OurHistory />} /> {/* 5. Added the route for /our-history */}
-        <Route path="/products" element={<Products />} /> {/* 6. Added the route for /products */}
+        <Route path="/contact" element={<ContactUs />} />
+        <Route path="/blogs" element={<Blogs />} />
+        <Route path="/portfolio" element={<Portfolio />} />
+        <Route path="/our-history" element={<OurHistory />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/products/gold-laboratory-software" element={<GoldLaboratorySoftware />} />
+        <Route path="/products/blinko-jewelry-management-software" element={<BlinkoJewelryManagementSoftware />} />
+        <Route path="/products/karkhana-software" element={<KarkhanaSoftware />} />
+        <Route path="/products/stock-handler-pro" element={<StockHandlerPro />} />
       </Routes>
-      <Footer />
+      <Footer />  {/* ✅ Footer ko yahin add karo - sab pages mein dikhega */}
     </BrowserRouter>
   );
 }

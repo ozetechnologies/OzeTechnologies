@@ -1,8 +1,10 @@
+import Navbar from "./Navbar";
 import { useReveal } from "./shared/useReveal";
 import "./shared/animations.css";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import teamPhoto from "./assets/team-meeting.jpg"; // apna actual image path/naam yahan daalein
+import ozeIcon from "./assets/oze-icon-logo-themed.png";
 import {
   Code2,
   Smartphone,
@@ -48,14 +50,17 @@ import {
   Terminal,
   CheckCircle2,
   Circle,
+  Cpu,
+  BarChart3,
 } from "lucide-react";
 
 export default function ServicesPage() {
- const [theme, setTheme] = useState(() => localStorage.getItem("bc-theme") || "light");
+ const [theme, setTheme] = useState(() => localStorage.getItem("bc-theme") || "dark");
   const [loading, setLoading] = useState(true);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
+  const [activeCategory, setActiveCategory] = useState("All");
 
   // ---- animation-related state ----
   const [scrolled, setScrolled] = useState(false);
@@ -202,7 +207,7 @@ export default function ServicesPage() {
   {
     label: "About Us",
     dropdown: [
-      { label: "Our History", desc: "How Trikonix got started", href: "/our-history" },
+      { label: "Our History", desc: "How OZE Technologies got started", href: "/our-history" },
       { label: "Blogs", desc: "Insights from our studio", href: "/blogs" },
     ],
   },
@@ -217,6 +222,22 @@ export default function ServicesPage() {
     { Icon: Cloud, title: "Cloud & DevOps", desc: "Infrastructure, CI/CD and monitoring so releases are routine, not risky.", color: "#34d399" },
     { Icon: ShieldCheck, title: "QA & Testing", desc: "Automated and manual coverage built in from sprint one.", color: "#f2a93b" },
   ];
+
+  const categories = ["All", "IT Development", "Specialized Solutions", "Web Development", "Android Development", "Data Analytics"];
+
+  const products = [
+    { category: "IT Development", Icon: Code2, title: "Custom Software", desc: "Line-of-business systems built around how your team actually works.", color: "#6366F1" },
+    { category: "Web Development", Icon: Globe2, title: "Web Applications", desc: "Fast, accessible products — from customer portals to internal dashboards.", color: "#38bdf8" },
+    { category: "Android Development", Icon: Smartphone, title: "Mobile Apps", desc: "Native and cross-platform apps for iOS and Android, shipped long-term.", color: "#8b7ff0" },
+    { category: "Specialized Solutions", Icon: Cpu, title: "AI & LLM Integrations", desc: "Custom AI automation and chatbot builds wired into your existing stack.", color: "#f2795a" },
+    { category: "Data Analytics", Icon: BarChart3, title: "Data & Analytics Platforms", desc: "Dashboards and reporting tools that turn raw data into daily decisions.", color: "#f2a93b" },
+    { category: "IT Development", Icon: ShieldCheck, title: "QA & Testing", desc: "Automated and manual coverage built in from sprint one, not bolted on.", color: "#34d399" },
+    { category: "Specialized Solutions", Icon: Zap, title: "Fintech Solutions", desc: "Trading products, payment flows, and compliance-ready platforms.", color: "#6366F1" },
+    { category: "Web Development", Icon: Globe2, title: "E-Commerce Websites", desc: "Storefronts built to convert, with checkout flows that don't break.", color: "#38bdf8" },
+    { category: "Data Analytics", Icon: BarChart3, title: "Business Intelligence", desc: "Real-time dashboards so decisions stop waiting on monthly reports.", color: "#f2a93b" },
+  ];
+
+  const filteredProducts = activeCategory === "All" ? products : products.filter((p) => p.category === activeCategory);
 
   const process = [
     { step: "01", title: "Discover", desc: "We map your workflows, constraints and goals before writing a spec.", Icon: Search },
@@ -242,7 +263,7 @@ export default function ServicesPage() {
     { label: "Real Estate", Icon: HomeIcon },
   ];
 
-  const clientLogos = ["Tanishq Labs", "Kalyan Systems", "Malabar Digital", "Senco Cloud", "PCJ Fintech", "Joya Health"];
+  const clientLogos = ["AI Chatbot", "AI LLM Integrations", "Trading Products", "Fin Tech", "LMS", "CMS", "Gold", "Healthcare"];
 
   const avatarInitials = [
     { text: "AK", bg: "#6366F1" },
@@ -266,7 +287,7 @@ export default function ServicesPage() {
         <span className="bc-mock-dot" style={{ background: "#f2795a" }} />
         <span className="bc-mock-dot" style={{ background: "#f2a93b" }} />
         <span className="bc-mock-dot" style={{ background: "#34d399" }} />
-        <span className="bc-mock-url">app.Trikonix.dev</span>
+        <span className="bc-mock-url">app.OZE Technologies.dev</span>
       </div>
       <div className="bc-mock-body">
         <div className="bc-mock-stats-row">
@@ -303,7 +324,7 @@ export default function ServicesPage() {
         <div className="bc-term-line"><span style={{ color: "var(--bc-cyan)" }}>$</span> npm run deploy</div>
         <div className="bc-term-line bc-term-muted">Building for production...</div>
         <div className="bc-term-line" style={{ color: "#34d399" }}>✓ Build complete in 12.4s</div>
-        <div className="bc-term-line" style={{ color: "#34d399" }}>✓ Deployed to Trikonix.dev</div>
+        <div className="bc-term-line" style={{ color: "#34d399" }}>✓ Deployed to OZE Technologies.dev</div>
       </div>
     </div>
   );
@@ -340,15 +361,17 @@ export default function ServicesPage() {
        @media (max-width: 768px) {
   .bc-loader-brand { transform: translate(-140px, -140px); }
 }
-        .bc-loader-logo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; width: 40px; height: 40px; margin-bottom: 10px; }
-        .bc-loader-sq { width: 18px; height: 18px; border-radius: 6px; animation: bc-loader-sq-pulse 1.2s ease-in-out infinite; }
-        .bc-loader-sq-a { background: var(--bc-cyan); }
-        .bc-loader-sq-b { background: #1E1B4B; }
-        .bc-loader-sq:nth-child(1) { animation-delay: 0s; }
-        .bc-loader-sq:nth-child(2) { animation-delay: 0.15s; }
-        .bc-loader-sq:nth-child(3) { animation-delay: 0.3s; }
-        .bc-loader-sq:nth-child(4) { animation-delay: 0.45s; }
-        @keyframes bc-loader-sq-pulse { 0%, 100% { opacity: 0.35; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1); } }
+       .bc-loader-mark { position: relative; width: 76px; height: 76px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+.bc-loader-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent, var(--bc-cyan), transparent 65%);
+  animation: bc-ring-spin 1.1s linear infinite;
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+}
+@keyframes bc-ring-spin { to { transform: rotate(360deg); } }
+.bc-loader-pulse-icon { width: 42px; height: 42px; position: relative; z-index: 1; animation: bc-icon-pulse 1.6s ease-in-out infinite; }
+@keyframes bc-icon-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.85); opacity: 0.7; } }
         .bc-loader-name { font-weight: 700; font-size: 1.05rem; color: var(--bc-text); line-height: 1.2; }
         .bc-loader-label { font-size: 0.68rem; letter-spacing: 0.32em; text-transform: uppercase; color: var(--bc-muted); margin-top: 2px; }
         .bc-page-content { position: relative; z-index: 1; opacity: 0; transform: translateY(6px); transition: opacity 0.6s ease, transform 0.6s ease; }
@@ -587,6 +610,21 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
         .bc-svc-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; transition: transform 0.35s ease; }
         .bc-svc-card:hover .bc-svc-icon { transform: rotate(10deg) scale(1.08); }
 
+        /* ---------- CATEGORY FILTER PILLS (from Products page) ---------- */
+        .bc-filter-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+        .bc-filter-pill { border: 1px solid var(--bc-line); background: var(--bc-panel); color: var(--bc-text); border-radius: 999px; padding: 9px 18px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
+        .bc-filter-pill:hover { border-color: var(--bc-cyan); transform: translateY(-1px); }
+        .bc-filter-pill.bc-filter-active { background: var(--bc-cyan); color: var(--bc-btn-primary-text); border-color: var(--bc-cyan); }
+
+        /* ---------- PRODUCT CARDS (from Products page) ---------- */
+        .bc-product-card { background: var(--bc-panel); border: 1px solid var(--bc-line); border-radius: 16px; padding: 26px; box-shadow: var(--bc-shadow); transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease; }
+        .bc-product-card:hover { transform: translateY(-10px); border-color: var(--bc-cyan); box-shadow: 0 24px 50px -16px color-mix(in srgb, var(--bc-cyan) 35%, transparent), var(--bc-shadow-lg); filter: brightness(1.02); }
+        .bc-product-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; transition: transform 0.35s ease; }
+        .bc-product-card:hover .bc-product-icon { transform: rotate(10deg) scale(1.08); }
+        .bc-product-link { display: inline-flex; align-items: center; gap: 6px; }
+        .bc-product-link-arrow { transition: transform 0.25s ease; }
+        .bc-product-card:hover .bc-product-link-arrow { transform: translateX(4px); }
+
         /* ---------- HOW IT WORKS / TIMELINE (dark band) ---------- */
         .bc-process-band { background: #0b1220; border-radius: 22px; padding: 44px 28px 50px; position: relative; overflow: hidden; }
         [data-theme="dark"] .bc-process-band { background: var(--bc-panel-2); border: 1px solid var(--bc-line); }
@@ -673,115 +711,23 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
       {/* custom cursor: trailing glow ring + rotating "B" badge */}
       <div ref={cursorRingRef} className={`bc-cursor-ring ${cursorHover ? "bc-cursor-ring-hover" : ""}`} />
       <div ref={cursorBRef} className="bc-cursor-b">
-        <span className={`bc-cursor-b-inner bc-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>T</span>
+        <span className={`bc-cursor-b-inner bc-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>O</span>
       </div>
 
       {/* LOADING SCREEN */}
       <div className={`bc-loader-screen ${!loading ? "bc-loader-hidden" : ""}`} aria-hidden={!loading}>
         <div className="bc-loader-brand">
-          <div className="bc-loader-logo-grid">
-            <span className="bc-loader-sq bc-loader-sq-a" />
-            <span className="bc-loader-sq bc-loader-sq-b" />
-            <span className="bc-loader-sq bc-loader-sq-b" />
-            <span className="bc-loader-sq bc-loader-sq-a" />
-          </div>
-          <div className="bc-loader-name bc-display">Trikonix</div>
+          <div className="bc-loader-mark">
+  <div className="bc-loader-ring" />
+  <img src={ozeIcon} alt="Loading" className="bc-loader-pulse-icon" />
+</div>
+          <div className="bc-loader-name bc-display">OZE Technologies</div>
           <div className="bc-loader-label bc-mono">Loading</div>
         </div>
       </div>
 
       <div className={`bc-page-content ${!loading ? "bc-page-visible" : ""}`}>
-        {/* NAV */}
-   <div className="bc-navbar-wrap sticky top-0 z-50">
-  <div className="bc-navbar-row">
-    <div className="bc-navbar-pill">
-      <Link to="/" className="bc-navbar-brand">
-        <span className="bc-navbar-logo bc-display">T</span>
-        <span className="bc-navbar-name bc-display">Trikonix</span>
-      </Link>
-
-      <nav className="bc-navbar-links bc-body">
-        {navItems.map((item, i) =>
-          item.dropdown ? (
-            <div
-              key={i}
-              className="bc-nav-dropdown-wrap"
-              onMouseEnter={() => setOpenDropdown(item.label)}
-              onMouseLeave={() => setOpenDropdown(null)}
-            >
-              <button
-                type="button"
-                className="bc-navbar-link"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setOpenDropdown((cur) => (cur === item.label ? null : item.label));
-                }}
-                aria-expanded={openDropdown === item.label}
-              >
-                {item.label}
-                <ChevronDown
-                  size={13}
-                  className={`bc-nav-dropdown-chevron ${openDropdown === item.label ? "bc-nav-dropdown-chevron-open" : ""}`}
-                />
-              </button>
-              <div className={`bc-nav-dropdown-panel ${openDropdown === item.label ? "bc-nav-dropdown-open" : ""}`}>
-                {item.dropdown.map((sub, j) => (
-                  <Link key={j} to={sub.href} className="bc-nav-dropdown-item" onClick={() => setOpenDropdown(null)}>
-                    <span className="bc-nav-dropdown-item-label">{sub.label}</span>
-                    {sub.desc && <span className="bc-nav-dropdown-item-desc">{sub.desc}</span>}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <Link key={i} to={item.href} className="bc-navbar-link">
-              {item.label}
-            </Link>
-          )
-        )}
-      </nav>
-
-      <div className="bc-navbar-right">
-        <button onClick={toggleTheme} className="bc-navbar-theme-btn" aria-label="Toggle theme">
-          {theme === "light" ? <Moon size={15} /> : <Sun size={15} />}
-        </button>
-        <button className="bc-navbar-hamburger" aria-label="Open menu" onClick={() => setMobileMenuOpen(true)}>
-          <Menu size={17} />
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div className={`bc-mobile-overlay ${mobileMenuOpen ? "bc-mobile-open" : ""}`} onClick={() => setMobileMenuOpen(false)} />
-<div className={`bc-mobile-panel ${mobileMenuOpen ? "bc-mobile-open" : ""}`}>
-  <div className="bc-mobile-panel-header">
-    <span className="bc-navbar-name bc-display">Trikonix</span>
-    <button className="bc-mobile-close" onClick={() => setMobileMenuOpen(false)}>
-      <X size={17} />
-    </button>
-  </div>
-  <div>
-    {navItems.map((item, i) => (
-      <div key={i}>
-        {item.dropdown ? (
-          <>
-            <span className="bc-mobile-link" style={{ opacity: 0.6, cursor: "default" }}>{item.label}</span>
-            {item.dropdown.map((sub, j) => (
-              <Link key={j} to={sub.href} className="bc-mobile-sublink" onClick={() => setMobileMenuOpen(false)}>
-                {sub.label}
-              </Link>
-            ))}
-          </>
-        ) : (
-          <Link to={item.href} className="bc-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-            {item.label}
-          </Link>
-        )}
-      </div>
-    ))}
-  </div>
-</div>
+    <Navbar theme={theme} toggleTheme={toggleTheme} active="services" />
         {/* HERO */}
         <section className="bc-grid-bg">
           <div className="max-w-7xl mx-auto px-6 pt-16 pb-20 md:pt-20 md:pb-24">
@@ -803,9 +749,9 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
                   needs, handled by engineers you can actually reach.
                 </p>
                 <div className="flex flex-wrap gap-4 mb-9 bc-hero-anim bc-hero-anim-buttons">
-                  <a href="/#contact" className="group bc-btn-primary bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
+                <Link to="/contact" className="group bc-btn-primary bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
                     Get a quote <ArrowRight size={18} className="bc-btn-arrow" />
-                  </a>
+                  </Link>
                   <a href="#service-list" className="group bc-btn-ghost bc-body font-semibold px-6 py-3 rounded flex items-center gap-2">
                     Browse services <ArrowUpRight size={18} className="bc-btn-arrow" />
                   </a>
@@ -821,7 +767,7 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
                     <span className="bc-hero-avatar bc-hero-avatar-count">120+</span>
                   </div>
                   <div>
-                    <div className="bc-body font-semibold text-sm">120+ teams trust Trikonix</div>
+                    <div className="bc-body font-semibold text-sm">120+ teams trust OZE Technologies</div>
                     <div className="flex items-center gap-1.5">
                       <div className="bc-hero-stars">
                         {Array.from({ length: 5 }).map((_, i) => (
@@ -840,7 +786,7 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
                   className="bc-hero-photo-frame bc-cursor-hover"
                   style={{ transform: `translate(${heroParallax.x}px, ${heroParallax.y}px)` }}
                 >
-                  <img src={teamPhoto} alt="Trikonix team collaborating on a project" />
+                  <img src={teamPhoto} alt="OZE Technologies team collaborating on a project" />
                 </div>
                 <div className="bc-hero-photo-badge bc-hero-photo-badge-code">
                   <span className="bc-scene-badge-icon"><Code2 size={16} color="var(--bc-cyan)" /></span>
@@ -868,34 +814,36 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
           </div>
         </section>
 
-        {/* SERVICE CARDS */}
+        {/* CATEGORY FILTER + PRODUCT GRID (replaces original Service Cards section) */}
         <section id="service-list" className="max-w-7xl mx-auto px-6 py-16 md:py-20">
           <div
             ref={svcRef}
-            className={`bc-reveal bc-reveal-center ${svcInView ? "bc-reveal-in" : ""} text-center max-w-2xl mx-auto mb-12`}
+            className={`bc-filter-row mb-12 bc-reveal bc-reveal-center ${svcInView ? "bc-reveal-in" : ""}`}
           >
-            <div className="bc-eyebrow mb-3">Our Services</div>
-            <h2 className="bc-display font-bold text-3xl md:text-4xl mb-4">
-              Everything You Need to <span style={{ color: "var(--bc-cyan)" }}>Ship & Scale</span>
-            </h2>
-            <p className="bc-body" style={{ color: "var(--bc-muted)" }}>
-              One team covering the full lifecycle of your product, from first sketch to long-term support.
-            </p>
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                className={`bc-filter-pill ${activeCategory === cat ? "bc-filter-active" : ""}`}
+                onClick={() => setActiveCategory(cat)}
+              >
+                {cat}
+              </button>
+            ))}
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {services.map((s, i) => (
+            {filteredProducts.map((p, i) => (
               <div
                 key={i}
-                className={`bc-svc-card bc-reveal bc-reveal-center ${svcInView ? "bc-reveal-in" : ""}`}
+                className={`bc-product-card bc-reveal bc-reveal-center ${svcInView ? "bc-reveal-in" : ""}`}
                 style={{ transitionDelay: `${i * 90}ms` }}
               >
-                <div className="bc-svc-icon" style={{ background: `${s.color}1a`, border: `1px solid ${s.color}55` }}>
-                  <s.Icon size={22} color={s.color} strokeWidth={1.75} />
+                <div className="bc-product-icon" style={{ background: `${p.color}1a`, border: `1px solid ${p.color}55` }}>
+                  <p.Icon size={22} color={p.color} strokeWidth={1.75} />
                 </div>
-                <h3 className="bc-display font-bold text-lg mb-2">{s.title}</h3>
-                <p className="bc-body text-sm mb-4" style={{ color: "var(--bc-muted)" }}>{s.desc}</p>
-                <a href="/#contact" className="group bc-body font-semibold text-sm flex items-center gap-1.5" style={{ color: s.color }}>
-                  Discuss this service <ArrowRight size={14} className="bc-btn-arrow" />
+                <h3 className="bc-display font-bold text-lg mb-2">{p.title}</h3>
+                <p className="bc-body text-sm mb-4" style={{ color: "var(--bc-muted)" }}>{p.desc}</p>
+                <a href="/#contact" className="group bc-product-link bc-body font-semibold text-sm" style={{ color: p.color }}>
+                  View Details <ChevronRight size={14} className="bc-product-link-arrow" />
                 </a>
               </div>
             ))}
@@ -931,49 +879,14 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
           </div>
         </section>
 
-        {/* SHOWCASE */}
-        <section style={{ background: "var(--bc-band)" }}>
-          <div
-            ref={showcaseRef}
-            className={`bc-reveal bc-reveal-right ${showcaseInView ? "bc-reveal-in" : ""} max-w-7xl mx-auto px-6 py-16 md:py-20 grid md:grid-cols-[0.9fr_1.1fr] gap-12 items-center`}
-          >
-            <div>
-              <div className="bc-eyebrow mb-3">Recent Work</div>
-              <h2 className="bc-display font-bold text-3xl md:text-4xl mb-4">
-                Real Products. <br /> Real Engineering.
-              </h2>
-              <p className="bc-body mb-6" style={{ color: "var(--bc-muted)" }}>
-                See what shipping with Trikonix looks like — dashboards, portals, and
-                mobile apps built for daily, production use.
-              </p>
-              <a href="/#projects" className="group bc-btn-ghost bc-body font-semibold px-6 py-3 rounded inline-flex items-center gap-2">
-                View all projects <ArrowUpRight size={18} className="bc-btn-arrow" />
-              </a>
-            </div>
-            <div className="bc-showcase-visual">
-              <span className="bc-showcase-tag">Latest Build</span>
-              <div className="bc-showcase-main">
-                <DashboardMock compact={false} />
-              </div>
-              <div className="bc-showcase-badge bc-showcase-badge-left bc-cursor-hover">
-                <span className="bc-scene-badge-icon"><CheckCircle2 size={16} color="var(--bc-cyan)" /></span>
-                <span className="bc-body font-semibold text-xs leading-tight">128 Tests<br />All Passing</span>
-              </div>
-              <div className="bc-showcase-badge bc-showcase-badge-right bc-cursor-hover">
-                <span className="bc-scene-badge-icon"><Rocket size={16} color="var(--bc-cyan)" /></span>
-                <span className="bc-body font-semibold text-xs leading-tight">Deployed<br />12.4s Build</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
+       
         {/* WHY CHOOSE */}
         <section className="max-w-7xl mx-auto px-6 py-16 md:py-20">
           <div
             ref={whyRef}
             className={`bc-reveal bc-reveal-center ${whyInView ? "bc-reveal-in" : ""} text-center max-w-xl mx-auto mb-12`}
           >
-            <div className="bc-eyebrow mb-3">Why Trikonix</div>
+            <div className="bc-eyebrow mb-3">Why OZE Technologies</div>
             <h2 className="bc-display font-bold text-3xl md:text-4xl">A studio built to be easy to work with</h2>
           </div>
           <div className="bc-why-row">
@@ -1064,16 +977,16 @@ button.bc-navbar-link { background: none; border: none; padding: 0; font-family:
                     Ready to Build Your Next Product?
                   </p>
                   <p className="bc-body text-sm" style={{ color: "rgba(241,245,249,0.65)" }}>
-                    Join 120+ teams already shipping faster with Trikonix.
+                    Join 120+ teams already shipping faster with OZE Technologies.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                  <a href="/#contact" className="group bc-cta-btn">
-                    Start a Project <ArrowRight size={16} className="bc-btn-arrow" />
-                  </a>
-                  <a href="/#contact" className="bc-cta-btn-outline">
-                    Book a Call
-                  </a>
+                 <Link to="/portfolio" className="group bc-cta-btn">
+  Portfolio <ArrowRight size={16} className="bc-btn-arrow" />
+</Link>
+<Link to="/contact" className="bc-cta-btn-outline">
+  Book Appointment
+</Link>
                 </div>
               </div>
             </div>

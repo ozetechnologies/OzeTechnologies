@@ -1,5 +1,7 @@
+import Navbar from "./Navbar";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import ozeIcon from "./assets/oze-icon-logo-themed.png";
 import {
   ChevronDown,
   Menu,
@@ -39,7 +41,7 @@ function useReveal() {
 }
 
 export default function OurHistory() {
- const [theme, setTheme] = useState(() => localStorage.getItem("bc-theme") || "light");
+ const [theme, setTheme] = useState(() => localStorage.getItem("bc-theme") || "dark");
 const [historyExpanded, setHistoryExpanded] = useState(false); // ye naya add karein
   const [loading, setLoading] = useState(true);
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -173,7 +175,7 @@ const [historyExpanded, setHistoryExpanded] = useState(false); // ye naya add ka
   {
     label: "About Us",
     dropdown: [
-      { label: "Our History", desc: "How Trikonix got started", href: "/our-history", isRoute: true },
+      { label: "Our History", desc: "How OZE Technologies got started", href: "/our-history", isRoute: true },
       { label: "Blogs", desc: "Insights from our studio", href: "/blogs", isRoute: true },
     ],
   },
@@ -184,7 +186,7 @@ const [historyExpanded, setHistoryExpanded] = useState(false); // ye naya add ka
     {
       year: "2018",
       title: "The Beginning",
-      desc: "Trikonix started with three engineers, one laptop each, and a shared frustration with software vendors who disappeared after launch.",
+      desc: "OZE Technologies started with three engineers, one laptop each, and a shared frustration with software vendors who disappeared after launch.",
       Icon: Flag,
       refHook: [milestone1Ref, milestone1InView],
       img: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=900&auto=format&fit=crop",
@@ -263,15 +265,17 @@ const [historyExpanded, setHistoryExpanded] = useState(false); // ye naya add ka
         .bc-loader-screen { position: fixed; inset: 0; z-index: 999; background: var(--bc-base); transition: opacity 0.5s ease, visibility 0.5s ease; display: flex; align-items: center; justify-content: center; }
         .bc-loader-screen.bc-loader-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
         .bc-loader-brand { display: flex; flex-direction: column; align-items: center; }
-        .bc-loader-logo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; width: 40px; height: 40px; margin-bottom: 10px; }
-        .bc-loader-sq { width: 18px; height: 18px; border-radius: 6px; animation: bc-loader-sq-pulse 1.2s ease-in-out infinite; }
-        .bc-loader-sq-a { background: var(--bc-cyan); }
-        .bc-loader-sq-b { background: #1E1B4B; }
-        .bc-loader-sq:nth-child(1) { animation-delay: 0s; }
-        .bc-loader-sq:nth-child(2) { animation-delay: 0.15s; }
-        .bc-loader-sq:nth-child(3) { animation-delay: 0.3s; }
-        .bc-loader-sq:nth-child(4) { animation-delay: 0.45s; }
-        @keyframes bc-loader-sq-pulse { 0%, 100% { opacity: 0.35; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1); } }
+        .bc-loader-mark { position: relative; width: 76px; height: 76px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+.bc-loader-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent, var(--bc-cyan), transparent 65%);
+  animation: bc-ring-spin 1.1s linear infinite;
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+}
+@keyframes bc-ring-spin { to { transform: rotate(360deg); } }
+.bc-loader-pulse-icon { width: 42px; height: 42px; position: relative; z-index: 1; animation: bc-icon-pulse 1.6s ease-in-out infinite; }
+@keyframes bc-icon-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.85); opacity: 0.7; } }
         .bc-loader-name { font-weight: 700; font-size: 1.05rem; color: var(--bc-text); line-height: 1.2; }
         .bc-loader-label { font-size: 0.68rem; letter-spacing: 0.32em; text-transform: uppercase; color: var(--bc-muted); margin-top: 2px; }
         @media (max-width: 767px) {
@@ -469,136 +473,24 @@ const [historyExpanded, setHistoryExpanded] = useState(false); // ye naya add ka
       {/* custom cursor: trailing glow ring + rotating "B" badge */}
       <div ref={cursorRingRef} className={`bc-cursor-ring ${cursorHover ? "bc-cursor-ring-hover" : ""}`} />
       <div ref={cursorBRef} className="bc-cursor-b">
-        <span className={`bc-cursor-b-inner bc-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>T</span>
+        <span className={`bc-cursor-b-inner bc-display ${cursorHover ? "bc-cursor-b-inner-hover" : ""}`}>O</span>
       </div>
 
       {/* LOADING SCREEN */}
       <div className={`bc-loader-screen ${!loading ? "bc-loader-hidden" : ""}`} aria-hidden={!loading}>
         <div className="bc-loader-brand">
-          <div className="bc-loader-logo-grid">
-            <span className="bc-loader-sq bc-loader-sq-a" />
-            <span className="bc-loader-sq bc-loader-sq-b" />
-            <span className="bc-loader-sq bc-loader-sq-b" />
-            <span className="bc-loader-sq bc-loader-sq-a" />
-          </div>
-          <div className="bc-loader-name bc-display">Trikonix</div>
+        <div className="bc-loader-mark">
+  <div className="bc-loader-ring" />
+  <img src={ozeIcon} alt="Loading" className="bc-loader-pulse-icon" />
+</div>
+          <div className="bc-loader-name bc-display">OZE Technologies</div>
           <div className="bc-loader-label bc-mono">Loading</div>
         </div>
       </div>
 
       <div className={`bc-page-content ${!loading ? "bc-page-visible" : ""}`}>
         {/* NAVBAR */}
-        <div className="bc-navbar-wrap sticky top-0 z-50">
-          <div className="bc-navbar-row">
-            <div className="bc-navbar-pill">
-              <Link to="/" className="bc-navbar-brand">
-                <span className="bc-navbar-logo bc-display">T</span>
-                <span className="bc-navbar-name bc-display">Trikonix</span>
-              </Link>
-
-              <nav className="bc-navbar-links bc-body">
-                {navItems.map((item, i) =>
-                  item.dropdown ? (
-                    <div
-                      key={i}
-                      className="bc-nav-dropdown-wrap"
-                      onMouseEnter={() => setOpenDropdown(item.label)}
-                      onMouseLeave={() => setOpenDropdown(null)}
-                    >
-                      <button
-                        type="button"
-                        className="bc-navbar-link"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setOpenDropdown((cur) => (cur === item.label ? null : item.label));
-                        }}
-                        aria-expanded={openDropdown === item.label}
-                      >
-                        {item.label}
-                        <ChevronDown
-                          size={13}
-                          className={`bc-nav-dropdown-chevron ${openDropdown === item.label ? "bc-nav-dropdown-chevron-open" : ""}`}
-                        />
-                      </button>
-                      <div className={`bc-nav-dropdown-panel ${openDropdown === item.label ? "bc-nav-dropdown-open" : ""}`}>
-                        {item.dropdown.map((sub, j) =>
-                          sub.isRoute ? (
-                            <Link key={j} to={sub.href} className="bc-nav-dropdown-item" onClick={() => setOpenDropdown(null)}>
-                              <span className="bc-nav-dropdown-item-label">{sub.label}</span>
-                              {sub.desc && <span className="bc-nav-dropdown-item-desc">{sub.desc}</span>}
-                            </Link>
-                          ) : (
-                            <a key={j} href={sub.href} className="bc-nav-dropdown-item" onClick={() => setOpenDropdown(null)}>
-                              <span className="bc-nav-dropdown-item-label">{sub.label}</span>
-                              {sub.desc && <span className="bc-nav-dropdown-item-desc">{sub.desc}</span>}
-                            </a>
-                          )
-                        )}
-                      </div>
-                    </div>
-                  ) : item.isRoute ? (
-                    <Link key={i} to={item.href} className="bc-navbar-link">
-                      {item.label}
-                    </Link>
-                  ) : (
-                    <a key={i} href={item.href} className="bc-navbar-link">
-                      {item.label}
-                    </a>
-                  )
-                )}
-              </nav>
-
-              <div className="bc-navbar-right">
-                <button onClick={toggleTheme} className="bc-navbar-theme-btn" aria-label="Toggle theme">
-                  {theme === "light" ? <Moon size={15} /> : <Sun size={15} />}
-                </button>
-                <button className="bc-navbar-hamburger" aria-label="Open menu" onClick={() => setMobileMenuOpen(true)}>
-                  <Menu size={17} />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* MOBILE MENU */}
-        <div className={`bc-mobile-overlay ${mobileMenuOpen ? "bc-mobile-open" : ""}`} onClick={() => setMobileMenuOpen(false)} />
-        <div className={`bc-mobile-panel ${mobileMenuOpen ? "bc-mobile-open" : ""}`}>
-          <div className="bc-mobile-panel-header">
-            <span className="bc-navbar-name bc-display">Trikonix</span>
-            <button className="bc-mobile-close" onClick={() => setMobileMenuOpen(false)}>
-              <X size={17} />
-            </button>
-          </div>
-          <div>
-            {navItems.map((item, i) => (
-              <div key={i}>
-                {item.isRoute ? (
-                  <Link to={item.href} className="bc-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-                    {item.label}
-                  </Link>
-                ) : item.href ? (
-                  <a href={item.href} className="bc-mobile-link" onClick={() => setMobileMenuOpen(false)}>
-                    {item.label}
-                  </a>
-                ) : (
-                  <span className="bc-mobile-link" style={{ opacity: 0.6 }}>{item.label}</span>
-                )}
-                {item.dropdown &&
-                  item.dropdown.map((sub, j) =>
-                    sub.isRoute ? (
-                      <Link key={j} to={sub.href} className="bc-mobile-sublink" onClick={() => setMobileMenuOpen(false)}>
-                        {sub.label}
-                      </Link>
-                    ) : (
-                      <a key={j} href={sub.href} className="bc-mobile-sublink" onClick={() => setMobileMenuOpen(false)}>
-                        {sub.label}
-                      </a>
-                    )
-                  )}
-              </div>
-            ))}
-          </div>
-        </div>
+<Navbar theme={theme} toggleTheme={toggleTheme} active="about" />
 
         {/* HERO */}
         <section className="bc-history-hero">
@@ -655,7 +547,7 @@ const [historyExpanded, setHistoryExpanded] = useState(false); // ye naya add ka
             <div className="bc-history-hero-media bc-cursor-hover">
               <img
                 src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1200&auto=format&fit=crop"
-                alt="Trikonix's office"
+                alt="OZE Technologies's office"
               />
             </div>
           </div>
