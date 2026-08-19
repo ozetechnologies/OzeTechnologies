@@ -566,7 +566,11 @@ export default function Portfolio() {
         .bc-page-visible .pf-hero-float-card { animation: bc-badge-pop 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.9s forwards; }
         @keyframes bc-badge-pop { to { opacity: 1; transform: scale(1); } }
         .pf-hero-float-card:hover { transform: translateY(-4px) scale(1.04) !important; box-shadow: 0 16px 32px -10px color-mix(in srgb, var(--bc-cyan) 45%, transparent), var(--bc-shadow-lg); }
-        @media (max-width: 767px) { .pf-hero-photo-wrap { animation: none; } .pf-hero-float-card { position: static; margin-top: 16px; width: 100%; opacity: 1; transform: none; animation: none !important; } }
+       @media (max-width: 767px) {
+  .pf-hero-photo-wrap { animation: none; }
+  .pf-hero-float-card { position: static; margin-top: 16px; width: 100%; opacity: 1; transform: none; animation: none !important; }
+  .pf-hero-blob { display: none; }
+}
         .pf-avail-dot { width: 7px; height: 7px; border-radius: 999px; background: #22C55E; display: inline-block; }
 
         /* hero text reveal: heading -> paragraph -> buttons -> socials, staggered (same timing as Services) */
@@ -832,9 +836,7 @@ export default function Portfolio() {
                 A quick overview of our team's journey and the milestones we've
                 reached along the way.
               </p>
-              <a href="#" className="pf-btn-ghost pf-body font-semibold px-5 py-2.5 rounded-lg inline-flex items-center gap-2 text-sm">
-                Download CV <Download size={15} />
-              </a>
+             
             </div>
             <div className="relative pl-2">
               <div className="pf-timeline-line" />

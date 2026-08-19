@@ -256,7 +256,7 @@ useEffect(() => {
       <style>{`
         .bc-loader-screen { position: fixed; inset: 0; z-index: 999; overflow: hidden; background: ${c.pageBg}; transition: opacity 0.5s ease, visibility 0.5s ease; }
         .bc-loader-screen.bc-loader-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .bc-loader-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; width: max-content; }
+        .bc-loader-center { position: absolute; top: 39%; left: 31%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; width: max-content; }
         .bc-loader-mark { position: relative; width: 76px; height: 76px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
 .bc-loader-ring {
   position: absolute; inset: 0; border-radius: 50%;
@@ -349,7 +349,15 @@ useEffect(() => {
 
         /* ---------- CATEGORY ICON HOVER (ported from Services .bc-industry-icon-circle) ---------- */
         .bc-category-icon { transition: transform 0.35s ease, box-shadow 0.35s ease; }
-        .bc-category-card:hover .bc-category-icon { transform: rotate(-10deg) scale(1.12); box-shadow: 0 10px 22px -8px rgba(99,102,241,0.5); }
+        
+      .bc-category-card:hover .bc-category-icon { transform: rotate(-10deg) scale(1.12); box-shadow: 0 10px 22px -8px rgba(99,102,241,0.5); }
+      @media (min-width: 768px) {
+  .bc-loader-center { top: 50%; left: 50%; }
+}
+
+@media (max-width: 767px) {
+  .bc-loader-center { top: 39%; left: 31%; }
+}
       `}</style>
 
       <div className={`bc-loader-screen ${!loading ? "bc-loader-hidden" : ""}`} aria-hidden={!loading}>
