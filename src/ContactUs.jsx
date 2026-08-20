@@ -195,7 +195,7 @@ useEffect(() => {
 
     const { fullName, emailAddress, phoneNumber, country, subject, message } = formData;
 
-    const recipient = "hello@ozetechnologies.com";
+   const recipient = "haroonsiddique34@gmail.com";
     const mailSubject = subject && subject.trim() !== "" ? subject : "New Consultancy Inquiry";
     const mailBody =
       `Name: ${fullName}\n` +
