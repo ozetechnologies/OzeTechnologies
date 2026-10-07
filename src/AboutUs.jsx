@@ -300,8 +300,8 @@ const navItems = [
   ];
 
   const contactCards = [
-    { Icon: Mail, label: "Email Us", value: "hello@ozetechnologies.com" },
-    { Icon: Phone, label: "Call Us", value: "+92 300 1234567" },
+    { Icon: Mail, label: "Email Us", value: "ozetechnologies07@gmail.com" },
+    { Icon: Phone, label: "Call Us", value: "+92 322 1192003" },
     { Icon: MapPin, label: "Visit Us", value: "Islamabad, Pakistan" },
   ];
 

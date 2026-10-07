@@ -134,13 +134,13 @@ const [theme, setThemeState] = useState(() => localStorage.getItem("bc-theme") |
           <div>
             <div className="pf-footer-heading pf-body">Contact</div>
             <div className="pf-body text-sm flex items-center gap-2 mb-2.5" style={{ color: "var(--bc-muted)" }}>
-              <Mail size={14} color="var(--bc-cyan)" /> hello@OZE Technologies.dev
+              <Mail size={14} color="var(--bc-cyan)" /> ozetechnologies07@gmail.com
             </div>
             <div className="pf-body text-sm flex items-center gap-2 mb-2.5" style={{ color: "var(--bc-muted)" }}>
-              <Phone size={14} color="var(--bc-cyan)" /> +92 312 3456789
+              <Phone size={14} color="var(--bc-cyan)" /> +92 322 1192003
             </div>
             <div className="pf-body text-sm flex items-center gap-2" style={{ color: "var(--bc-muted)" }}>
-              <MapPin size={14} color="var(--bc-cyan)" /> Karachi, Pakistan
+              <MapPin size={14} color="var(--bc-cyan)" /> Islamabad, Pakistan
             </div>
           </div>
 
