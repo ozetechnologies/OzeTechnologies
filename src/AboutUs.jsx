@@ -300,9 +300,9 @@ const navItems = [
   ];
 
   const contactCards = [
-    { Icon: Mail, label: "Email Us", value: "ozetechnologies07@gmail.com" },
+    { Icon: Mail, label: "Email Us", value: "info@ozetechnologies.com" },
     { Icon: Phone, label: "Call Us", value: "+92 322 1192003" },
-    { Icon: MapPin, label: "Visit Us", value: "Islamabad, Pakistan" },
+    { Icon: MapPin, label: "Visit Us", value: "I-8 Markaz, Islamabad" },
   ];
 
   // NOTE: swap the img URLs below for your real team photos whenever you have them —

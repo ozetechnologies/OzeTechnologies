@@ -29,7 +29,6 @@ import {
   MessageCircle,
   Sun,
   Moon,
-  Quote,
   Landmark,
   HeartPulse,
   ShoppingCart,
@@ -115,7 +114,6 @@ export default function LandingPage() {
   const [productsRef, productsInView] = useReveal();
   const [industriesRef, industriesInView] = useReveal();
   const [stackRef, stackInView] = useReveal();
-  const [testimonialsRef, testimonialsInView] = useReveal();
   const [contactRef, contactInView] = useReveal();
   const [footerRef, footerInView] = useReveal();
 
@@ -355,12 +353,6 @@ const productTabs = [
   ];
 
   const stack = ["React","Node.js","Python","Flutter","PostgreSQL","AWS","Docker","GraphQL"];
-
-  const testimonials = [
-    { quote: "They shipped our claims portal in twelve weeks and it's been in production, untouched, for a year.", name: "Operations Director", company: "Regional Insurer", Icon: ShieldCheck, color: "#f2795a" },
-    { quote: "The team writes code like they'll be the ones on call for it. Because they are.", name: "VP Engineering", company: "Logistics Platform", Icon: Truck, color: "#38bdf8" },
-    { quote: "We came in with a rough sketch. We left with an architecture doc, a working app, and a team that still answers our emails.", name: "Founder", company: "Healthtech Startup", Icon: HeartPulse, color: "#34d399" },
-  ];
 
   const heroChecks = [
     { title: "Deep engineering expertise", desc: "Fintech, healthtech, logistics, and e-commerce systems", Icon: Cpu },
@@ -948,49 +940,6 @@ const productTabs = [
     ))}
   </div>
 </section>    
-
-      <section id="blogs" ref={testimonialsRef} style={{ background: "var(--bc-band)" }}>
-        <div className={`max-w-7xl mx-auto px-6 py-20 md:py-24 bc-reveal ${testimonialsInView ? "bc-in-view" : ""}`}>
-        <div className="bc-mono bc-eyebrow mb-3">In their words</div>
-        <h2 className="bc-display font-bold text-3xl md:text-4xl mb-4">Clients</h2>
-        <div className="bc-underline-fade mb-5" />
-        <p className="bc-body mb-12" style={{ color: "var(--bc-muted)" }}>
-          Trusted by teams building what's next.
-        </p>
-        <div className="grid md:grid-cols-3 gap-6">
-          {testimonials.map((t, i) => (
-            <div
-              key={i}
-              className={`bc-testimonial-card bc-reveal ${testimonialsInView ? "bc-in-view" : ""}`}
-              style={{ "--bc-tcolor": t.color, animationDelay: `${0.15 + i * 0.12}s` }}
-            >
-              <div
-                className="bc-quote-badge"
-                style={{ background: `${t.color}22`, border: `1px solid ${t.color}55` }}
-              >
-                <Quote size={18} color={t.color} fill={t.color} strokeWidth={0} />
-              </div>
-              <p className="bc-body text-sm leading-relaxed">&ldquo;{t.quote}&rdquo;</p>
-              <div className="bc-testimonial-divider" />
-              <div className="flex items-center gap-3">
-                <div
-                  className="bc-testimonial-avatar"
-                  style={{ background: `${t.color}1a`, border: `1px solid ${t.color}55` }}
-                >
-                  <t.Icon size={20} color={t.color} strokeWidth={1.75} />
-                </div>
-                <div>
-                  <div className="bc-body font-semibold text-sm">{t.name}</div>
-                  <div className="bc-body text-xs" style={{ color: "var(--bc-muted)" }}>{t.company}</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        </div>
-      </section>
-
-    
 
       </div>
     </div>

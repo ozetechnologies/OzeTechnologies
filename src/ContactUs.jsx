@@ -195,7 +195,7 @@ useEffect(() => {
 
     const { fullName, emailAddress, phoneNumber, country, subject, message } = formData;
 
-   const recipient = "haroonsiddique34@gmail.com";
+    const recipient = "info@ozetechnologies.com";
     const mailSubject = subject && subject.trim() !== "" ? subject : "New Consultancy Inquiry";
     const mailBody =
       `Name: ${fullName}\n` +
@@ -500,7 +500,7 @@ useEffect(() => {
                 <Mail size={22} className="bc-icon-hover" style={{ color: "#6366F1", marginTop: "4px", flexShrink: 0 }} />
                 <div>
                   <span style={{ fontWeight: "600", display: "block", color: "#ffffff", fontSize: "16px", marginBottom: "4px" }}>Email Us</span>
-                  <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>hello@ozetechnologies.com</span>
+                  <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>info@ozetechnologies.com</span>
                 </div>
               </div>
 
@@ -508,7 +508,7 @@ useEffect(() => {
                 <Phone size={22} className="bc-icon-hover" style={{ color: "#6366F1", marginTop: "4px", flexShrink: 0 }} />
                 <div>
                   <span style={{ fontWeight: "600", display: "block", color: "#ffffff", fontSize: "16px", marginBottom: "4px" }}>Call Us</span>
-                  <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>+1 (555) 123-4567</span>
+                  <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>+92 322 1192003</span>
                 </div>
               </div>
 
@@ -517,7 +517,7 @@ useEffect(() => {
                 <div>
                   <span style={{ fontWeight: "600", display: "block", color: "#ffffff", fontSize: "16px", marginBottom: "4px" }}>Visit Us</span>
                   <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>
-                    123 Innovation Drive,<br />Suite 100,<br />San Francisco, CA 94103
+                    I-8 Markaz, Islamabad
                   </span>
                 </div>
               </div>
@@ -527,7 +527,7 @@ useEffect(() => {
                 <div>
                   <span style={{ fontWeight: "600", display: "block", color: "#ffffff", fontSize: "16px", marginBottom: "4px" }}>Business Hours</span>
                   <span style={{ color: "#A8A29E", fontSize: "14px", lineHeight: "1.5" }}>
-                    Monday – Friday<br />9:00 AM – 6:00 PM
+                    Monday – Saturday<br />9:00 AM – 6:00 PM (PKT)
                   </span>
                 </div>
               </div>
@@ -693,7 +693,7 @@ useEffect(() => {
   <div style={{ width: "100%", height: isMobile ? "320px" : "480px", borderRadius: "12px", overflow: "hidden" }}>
     <iframe
       title="Office Location Map"
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.086307432244!2d-122.40381628468205!3d37.77979697975878!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808f7e2aae43a5c7%3A0xe54952ddc40049!2sSan%20Francisco%2C%20CA!5e0!3m2!1sen!2s!4v1710000000000!5m2!1sen!2s"
+      src="https://www.google.com/maps?q=I-8%20Markaz%2C%20Islamabad&output=embed"
       style={{ width: "100%", height: "100%", border: "0" }}
       allowFullScreen=""
       loading="lazy"

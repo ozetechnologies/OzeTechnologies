@@ -368,7 +368,7 @@ export default function Portfolio() {
   };
 
   const journey = [
-    { year: "2023 – Present", role: "UI/UX Designer & Frontend Developer", org: "OZE Technologies Solutions", desc: "Designing and developing modern web applications and interfaces for clients across different industries.", icon: Hexagon },
+    { year: "Jan 2022 – Present", role: "UI/UX Designer & Frontend Developer", org: "OZE Technologies Solutions", desc: "Designing and developing modern web applications and interfaces for clients across different industries.", icon: Hexagon },
     { year: "2022 – 2023", role: "Frontend Developer", org: "Pixel Craft", desc: "Built responsive websites and collaborated with designers to bring ideas to life on the web.", icon: Code2 },
     { year: "2021 – 2022", role: "UI/UX Designer", org: "Creative Studio", desc: "Designed user interfaces, wireframes and prototypes for web and mobile applications.", icon: Palette },
   ];
