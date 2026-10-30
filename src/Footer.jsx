@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Hexagon, Mail, Phone, MapPin, Send, Palette } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Palette } from "lucide-react";
+import ozeLogo from "./assets/oze-icon-logo-themed.png";
 
 // lucide-react removed brand/logo icons, so these are simple local SVG replacements.
 function Github(props) {
@@ -102,7 +103,7 @@ const [theme, setThemeState] = useState(() => localStorage.getItem("bc-theme") |
         <div className="grid md:grid-cols-[1.3fr_0.8fr_0.9fr_0.9fr_1fr] gap-10">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Hexagon size={22} color="var(--bc-cyan)" fill="color-mix(in srgb, var(--bc-cyan) 18%, transparent)" />
+              <img src={ozeLogo} alt="OZE Technologies" width="28" height="28" style={{ objectFit: "contain" }} />
               <span className="pf-display font-bold text-lg">OZE Technologies</span>
             </div>
             <p className="pf-body text-sm mb-5" style={{ color: "var(--bc-muted)" }}>
